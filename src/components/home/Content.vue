@@ -25,9 +25,9 @@
           <a-menu-item>
             <span @click.self="showLookUserInfoChange">个人信息</span>
           </a-menu-item>
-          <a-menu-item>
+          <!-- <a-menu-item>
             <span @click.self="updatePasswordHander">修改密码</span>
-          </a-menu-item>
+          </a-menu-item> -->
           <a-menu-item @click.self="logoutHandle">
             <span>退出登陆</span>
           </a-menu-item>
@@ -46,18 +46,6 @@
           @click="handleMeunItem"
         >
           <a-menu-item key="/"> <a-icon type="home" /> 首页 </a-menu-item>
-
-          <a-sub-menu key="sub1">
-            <span slot="title">
-              <a-icon type="deployment-unit" /> 设备信息
-            </span>
-            <a-menu-item key="/equipment"> 设备列表 </a-menu-item>
-          </a-sub-menu>
-
-          <a-sub-menu key="sub2">
-            <span slot="title"> <a-icon type="warning" /> 报警系统 </span>
-            <a-menu-item key="/warnning"> 报警列表 </a-menu-item>
-          </a-sub-menu>
 
           <a-sub-menu key="sub3" v-show="userType !== 4">
             <span slot="title"> <a-icon type="usergroup-add" /> 用户中心 </span>
@@ -81,12 +69,24 @@
             </a-menu-item>
           </a-sub-menu>
 
-          <a-sub-menu key="sub4">
+          <!-- <a-sub-menu key="sub1">
+            <span slot="title">
+              <a-icon type="deployment-unit" /> 设备信息
+            </span>
+            <a-menu-item key="/equipment"> 设备列表 </a-menu-item>
+          </a-sub-menu> -->
+
+          <!-- <a-sub-menu key="sub2">
+            <span slot="title"> <a-icon type="warning" /> 报警系统 </span>
+            <a-menu-item key="/warnning"> 报警列表 </a-menu-item>
+          </a-sub-menu> -->
+
+          <!-- <a-sub-menu key="sub4">
             <span slot="title"> <a-icon type="block" /> 配置 </span>
             <a-menu-item key="/unit" v-if="userType !== 4">
               单位管理
             </a-menu-item>
-          </a-sub-menu>
+          </a-sub-menu> -->
         </a-menu>
       </a-layout-sider>
       <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
@@ -103,7 +103,9 @@
         align-items: center;
         justify-content: center;
       "
-      >{{ $t("footer.icp") }}</a-layout-footer
+      >{{
+        "《释格物联使用许可》，沪公网安备沪ICP备15035311号-1"
+      }}</a-layout-footer
     >
   </a-layout>
 </template>
@@ -181,9 +183,9 @@ export default {
       this.updateLogin(false);
       this.updateToken();
       sessionStorage.clear();
-      if (this.$route.path !== "/" || this.$route.path !== "/test") {
-        this.$router.push({ path: "/test" });
-      }
+      // if (this.$route.path !== "/" || this.$route.path !== "/test") {
+      //   this.$router.push({ path: "/test" });
+      // }
     },
   },
 };

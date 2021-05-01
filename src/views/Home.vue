@@ -10,7 +10,7 @@
     <CusModule
       v-if="updateUserInfoModuleShow"
       :visible="updateUserInfoModuleShow"
-      title="修改用户信息"
+      title="用户信息"
       @cancel="modifyUserInfo"
     >
       <Register

@@ -14,6 +14,7 @@
           },
         ]"
         placeholder="请输入用户名"
+        :disabled="adminType"
       />
     </a-form-item>
     <a-form-item
@@ -32,6 +33,7 @@
           },
         ]"
         placeholder="请输入密码"
+        :disabled="adminType"
       />
     </a-form-item>
     <a-form-item
@@ -48,6 +50,7 @@
           },
         ]"
         placeholder="请输入姓名"
+        :disabled="adminType"
       />
     </a-form-item>
     <a-form-item
@@ -70,6 +73,7 @@
           },
         ]"
         placeholder="请输入手机号"
+        :disabled="adminType"
       />
     </a-form-item>
     <a-form-item
@@ -92,9 +96,10 @@
           },
         ]"
         placeholder="请输入邮箱"
+        :disabled="adminType"
       />
     </a-form-item>
-    <a-form-item
+    <!-- <a-form-item
       label="角色"
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
@@ -108,10 +113,10 @@
         ]"
         @change="handleTypeSelectChange"
       ></SelectUserType>
-    </a-form-item>
+    </a-form-item> -->
     <div class="__flex __rfec btn-wrapper">
       <a-button style="margin-right: 20px" @click="cancelHandle">取消</a-button>
-      <a-button type="primary" @click.self="submit">确定</a-button>
+      <a-button v-show="!adminType" type="primary" @click.self="submit">确定</a-button>
     </div>
   </a-form>
 </template>
@@ -119,7 +124,7 @@
 <script>
 import { areaList } from "@/constant/province-data";
 import api from "@/axios/api";
-import SelectUserType from "@/components/common/SelectType.vue";
+// import SelectUserType from "@/components/common/SelectType.vue";
 
 import { createNamespacedHelpers } from "vuex";
 const {
@@ -146,7 +151,7 @@ export default {
   name: "register-com",
 
   components: {
-    SelectUserType,
+    // SelectUserType,
   },
 
   props: {
@@ -188,6 +193,10 @@ export default {
       userId: (state) => state.userInfo.userId,
       userType: (state) => state.userInfo.userType,
     }),
+
+    adminType() {
+      return this.userInfo.adminType;
+    }
   },
 
   mounted() {
@@ -304,11 +313,11 @@ export default {
       }
     },
 
-    handleTypeSelectChange(value) {
-      this.form.setFieldsValue({
-        userType: value,
-      });
-    },
+    // handleTypeSelectChange(value) {
+    //   this.form.setFieldsValue({
+    //     userType: value,
+    //   });
+    // },
   },
 };
 </script>

@@ -14,28 +14,23 @@ const routes = [
         component: () => import("../views/Test.vue"),
       },
       {
-        path: "/test",
-        name: "test-home",
-        component: () => import("../views/Test.vue"),
-      },
-      {
         path: "manage-list",
         name: "manage-list-page",
         component: () => import("../views/user/Manage.vue"),
       },
       {
         path: "company-list",
-        name: "manage-list-page",
+        name: "company-list-page",
         component: () => import("../views/user/Company.vue"),
       },
       {
         path: "agent-list",
-        name: "manage-list-page",
+        name: "agent-list-page",
         component: () => import("../views/user/Agent.vue"),
       },
       {
         path: "user-list",
-        name: "manage-list-page",
+        name: "user-list-page",
         component: () => import("../views/user/User.vue"),
       },
       {
@@ -44,7 +39,7 @@ const routes = [
         component: () => import("../views/user/OptionLog.vue"),
       },
       {
-        path: "",
+        path: "equipment-page",
         name: "equipment-page",
         component: () => import("../views/equipment/Index.vue"),
       },
@@ -55,7 +50,7 @@ const routes = [
       },
       {
         path: "unit",
-        name: "company-manage-page",
+        name: "unit-manage-page",
         component: () => import("../views/base-manage/Company.vue"),
       },
     ],

@@ -36,12 +36,14 @@
 </template>
 
 <script>
-import api from "@/axios/api";
 import sessionStorage from "@/utils/session-storage";
 import { TOKEN, USER_INFO } from "@/constant";
 
 import { mapMutations, createNamespacedHelpers } from "vuex";
-const { mapMutations: mapMutationsUser } = createNamespacedHelpers("user");
+const {
+  mapMutations: mapMutationsUser,
+  mapActions: mapActionsUser,
+} = createNamespacedHelpers("user");
 
 export default {
   name: "login-com",
@@ -59,6 +61,7 @@ export default {
   methods: {
     ...mapMutations(["updateLogin", "updateToken"]),
     ...mapMutationsUser(["updateUserInfo"]),
+    ...mapActionsUser(["loginAct"]),
 
     submit() {
       this.form.validateFields(async (err, values) => {
@@ -68,39 +71,15 @@ export default {
         }
         const {
           code,
-          data: {
-            userType,
-            token,
-            username,
-            trueName,
-            roleName,
-            id: userId,
-            phone,
-            email,
-          },
-        } = await api.user.login(values);
+          data: { user = {}, token },
+        } = await this.loginAct(values);
         // 接口请求
         if (code === 200) {
-          this.updateUserInfo({
-            userType,
-            username,
-            trueName,
-            roleName,
-            userId,
-            phone,
-            email,
-          });
+          this.updateUserInfo(user);
           this.updateToken(token);
           this.updateLogin(true);
           sessionStorage.set(TOKEN, token);
-          sessionStorage.set(USER_INFO, {
-            userType,
-            username,
-            trueName,
-            userId,
-            phone,
-            email,
-          });
+          sessionStorage.set(USER_INFO, user);
         } else if (code === 10038) {
           this.$message.error("用户名不存在");
         } else {

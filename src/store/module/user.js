@@ -7,9 +7,10 @@ import api from "@/axios/api";
 
 const state = {
   userInfo: {
-    userType: 0, // 1: 超管 2: 管理员 3: 单位管理员 4: 普通用户 5: 代理用户
-    username: "",
+    adminType: null, // 1: 超级管理员 2: 管理员 3: 审核员 4: 信息录入员
+    userType: null,  // 1: 管理员 2: 普通用户
     phone: null,
+    username: "",
     tureName: "",
     userId: "",
     email: "",
@@ -18,9 +19,8 @@ const state = {
 
 const mutations = {
   updateUserInfo(state, userinfo) {
-    const { userInfo } = state;
     state.userInfo = {
-      ...userInfo,
+      ...state.userInfo,
       ...userinfo,
     };
   },
@@ -34,6 +34,15 @@ const actions = {
   // 获取用户信息
   updateUserInfoAct: async ({ commit, state, rootState }, params) => {
     const { code, data } = await api.user.getUserInfo(params);
+    if (code === 200) {
+      commit('updateUserInfo', data);
+    }
+    return { code, data };
+  },
+
+  // 用户登陆
+  loginAct: async ({ commit, state, rootState }, params) => {
+    const { code, data } = await api.user.login(params);
     if (code === 200) {
       commit('updateUserInfo', data);
     }
