@@ -1,10 +1,9 @@
 import Vue from "vue";
 import App from "./App.vue";
-import "./registerServiceWorker";
 import router from "./router";
 import store from "./store";
-
-import Antd from "ant-design-vue";
+import i18n from "@/i18n/index";
+import Antd from 'ant-design-vue'
 
 import "@/assets/style/reset.scss";
 import "@/assets/style/common.scss";
@@ -18,5 +17,6 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
+  i18n,
   render: (h) => h(App),
 }).$mount("#app");

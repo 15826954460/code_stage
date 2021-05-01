@@ -1,32 +1,37 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <router-view></router-view>
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+export default {
+  name: "app-home",
 
-#nav {
-  padding: 30px;
+  data() {
+    return {};
+  },
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+  computed: {},
 
-    &.router-link-exact-active {
-      color: #42b983;
+  methods: {
+    handleMeunItem({ keyPath, key }) {
+      console.log(keyPath, key);
+      this.$router.push({ path: `${key}` });
     }
-  }
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+#components-layout-demo-top-side {
+  height: 100vh;
+}
+.logo {
+  width: 120px;
+  height: 31px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px 28px 16px 0;
+  float: left;
 }
 </style>
