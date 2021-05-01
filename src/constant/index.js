@@ -11,11 +11,15 @@ const DEFAULT_SELECT_KEYS = "DEFAULT_SELECT_KEYS";
 const DEFAULT_OPEN_KEYS = "DEFAULT_OPEN_KEYS";
 
 const USER_ROLE_TYPE = [
-  { label: '超级管理员', value: 1, userType: 1 },
-  { label: '管理员', value: 2, userType: 2 },
-  { label: '单位管理员', value: 3, userType: 3 },
-  { label: '普通用户', value: 4, userType: 4 },
-  { label: '代理用户', value: 5, userType: 5 }
+  { label: '管理员', value: 1, adminType: 1 },
+  { label: '普通用户', value: 2, adminType: 2 },
+]
+
+const ADMIN_ROLE_TYPE_LIST = [
+  { label: '超级管理员', value: 1, adminType: 1 },
+  { label: '管理员', value: 2, adminType: 2 },
+  { label: '审核员', value: 3, adminType: 3 },
+  { label: '信息录入员', value: 4, adminType: 4 },
 ]
 
 export {
@@ -25,4 +29,5 @@ export {
   USER_ROLE_TYPE,
   DEFAULT_OPEN_KEYS,
   DEFAULT_SELECT_KEYS,
+  ADMIN_ROLE_TYPE_LIST,
 }

@@ -14,7 +14,7 @@
           },
         ]"
         placeholder="请输入用户名"
-        :disabled="adminType"
+        :disabled="isAdminUser"
       />
     </a-form-item>
     <a-form-item
@@ -33,7 +33,7 @@
           },
         ]"
         placeholder="请输入密码"
-        :disabled="adminType"
+        :disabled="isAdminUser"
       />
     </a-form-item>
     <a-form-item
@@ -50,7 +50,7 @@
           },
         ]"
         placeholder="请输入姓名"
-        :disabled="adminType"
+        :disabled="isAdminUser"
       />
     </a-form-item>
     <a-form-item
@@ -73,7 +73,7 @@
           },
         ]"
         placeholder="请输入手机号"
-        :disabled="adminType"
+        :disabled="isAdminUser"
       />
     </a-form-item>
     <a-form-item
@@ -96,10 +96,11 @@
           },
         ]"
         placeholder="请输入邮箱"
-        :disabled="adminType"
+        :disabled="isAdminUser"
       />
     </a-form-item>
-    <!-- <a-form-item
+    <a-form-item
+      v-show="!isAdminUser"
       label="角色"
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
@@ -113,10 +114,29 @@
         ]"
         @change="handleTypeSelectChange"
       ></SelectUserType>
-    </a-form-item> -->
+    </a-form-item>
+    <a-form-item
+      v-show="isAdminUser"
+      label="角色"
+      :label-col="formItemLayout.labelCol"
+      :wrapper-col="formItemLayout.wrapperCol"
+    >
+      <SelectAdminType
+        :disabled="isAdminUser"
+        v-decorator="[
+          'adminType',
+          {
+            initialValue: Number(userInfo.adminType) || '',
+          },
+        ]"
+        @change="handleAdminTypeSelectChange"
+      ></SelectAdminType>
+    </a-form-item>
     <div class="__flex __rfec btn-wrapper">
       <a-button style="margin-right: 20px" @click="cancelHandle">取消</a-button>
-      <a-button v-show="!adminType" type="primary" @click.self="submit">确定</a-button>
+      <a-button v-show="!isAdminUser" type="primary" @click.self="submit">
+        确定
+      </a-button>
     </div>
   </a-form>
 </template>
@@ -124,7 +144,8 @@
 <script>
 import { areaList } from "@/constant/province-data";
 import api from "@/axios/api";
-// import SelectUserType from "@/components/common/SelectType.vue";
+import SelectUserType from "@/components/common/SelectType.vue";
+import SelectAdminType from "@/components/common/SelectAdminType.vue";
 
 import { createNamespacedHelpers } from "vuex";
 const {
@@ -151,7 +172,8 @@ export default {
   name: "register-com",
 
   components: {
-    // SelectUserType,
+    SelectUserType,
+    SelectAdminType,
   },
 
   props: {
@@ -194,9 +216,9 @@ export default {
       userType: (state) => state.userInfo.userType,
     }),
 
-    adminType() {
-      return this.userInfo.adminType;
-    }
+    isAdminUser() {
+      return this.userInfo.adminType ? true : false;
+    },
   },
 
   mounted() {
@@ -313,11 +335,13 @@ export default {
       }
     },
 
-    // handleTypeSelectChange(value) {
-    //   this.form.setFieldsValue({
-    //     userType: value,
-    //   });
-    // },
+    handleTypeSelectChange(value) {
+      this.form.setFieldsValue({
+        userType: value,
+      });
+    },
+
+    handleAdminTypeSelectChange() {},
   },
 };
 </script>
