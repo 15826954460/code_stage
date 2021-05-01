@@ -29,7 +29,7 @@ export default {
     },
     isCenter: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     isShowClose: {
       type: Boolean,

@@ -69,6 +69,13 @@
             </a-menu-item>
           </a-sub-menu>
 
+          <a-sub-menu>
+            <span slot="title"> <a-icon type="setting" /> 管理中心 </span>
+            <a-menu-item key="/manage-list">
+              单位管理
+            </a-menu-item>
+          </a-sub-menu>
+
           <!-- <a-sub-menu key="sub1">
             <span slot="title">
               <a-icon type="deployment-unit" /> 设备信息

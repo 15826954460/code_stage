@@ -49,6 +49,7 @@ export default {
   ::v-deep .ant-modal-body {
     padding-bottom: 0;
   }
+
   ::v-deep .ant-modal-footer {
     border: none;
   }

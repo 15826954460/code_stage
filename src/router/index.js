@@ -13,11 +13,11 @@ const routes = [
         name: "test-home",
         component: () => import("../views/Test.vue"),
       },
-      {
-        path: "manage-list",
-        name: "manage-list-page",
-        component: () => import("../views/user/Manage.vue"),
-      },
+      // {
+      //   path: "manage-list",
+      //   name: "manage-list-page",
+      //   component: () => import("../views/user/Manage.vue"),
+      // },
       {
         path: "company-list",
         name: "company-list-page",
@@ -49,9 +49,9 @@ const routes = [
         component: () => import("../views/warning/Index.vue"),
       },
       {
-        path: "unit",
-        name: "unit-manage-page",
-        component: () => import("../views/base-manage/Company.vue"),
+        path: "manage-list",
+        name: "manage-page",
+        component: () => import("../views/manage/Company.vue"),
       },
     ],
   },
