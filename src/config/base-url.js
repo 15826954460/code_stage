@@ -13,7 +13,7 @@ if (isTest) {
 }
 
 if (isPro) {
-  // baseUrl = 'https://template.wps.com/client-server';
+  baseUrl = 'http://47.100.25.58:8080/';
 }
 
 export {
