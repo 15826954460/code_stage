@@ -71,7 +71,7 @@
 
           <a-sub-menu>
             <span slot="title"> <a-icon type="setting" /> 管理中心 </span>
-            <a-menu-item key="/manage-list">
+            <a-menu-item key="/unit-list">
               单位管理
             </a-menu-item>
           </a-sub-menu>

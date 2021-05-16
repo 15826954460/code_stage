@@ -14,11 +14,6 @@ const routes = [
         component: () => import("../views/Test.vue"),
       },
       {
-        path: "company-list",
-        name: "company-list-page",
-        component: () => import("../views/user/Company.vue"),
-      },
-      {
         path: "agent-list",
         name: "agent-list-page",
         component: () => import("../views/user/Agent.vue"),
@@ -44,8 +39,8 @@ const routes = [
         component: () => import("../views/warning/Index.vue"),
       },
       {
-        path: "manage-list",
-        name: "manage-page",
+        path: "unit-list",
+        name: "unit-page",
         component: () => import("../views/manage/Company.vue"),
       },
     ],
