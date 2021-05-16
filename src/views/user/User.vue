@@ -1,24 +1,39 @@
 <template>
-  <div class="manage-container">
-    <Plarfrom
+  <div class="__flex __rfsfs manage-container">
+    <div class="tree-box">
+      <!-- <a-tree
+        :show-line="true"
+        :default-expanded-keys="['0-0-0', '0-0-1', '0-0-2']"
+        @select="onSelect"
+      >
+      </a-tree> -->
+    </div>
+    <div class="content">
+      待开发
+    </div>
+    <!-- <Plarfrom
       @click="getUserList"
       :loading="loading"
       :roleType="roleType"
       :dataList="data"
       btnText="创建用户"
-    ></Plarfrom>
+    ></Plarfrom> -->
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState, createNamespacedHelpers } from "vuex";
+const {
+  mapActions: mapActionsUser,
+  mapState: mapStateUser,
+} = createNamespacedHelpers("user");
 
 import utils from "@/utils/common";
 import Plarfrom from "@/components/user/Platform.vue";
-const USER_TYPE = 4;
+import { areaList } from "@/constant/province-data.js";
 
 export default {
-  name: "company-page",
+  name: "user-center-page",
 
   components: { Plarfrom },
 
@@ -26,12 +41,18 @@ export default {
     return {
       loading: false,
       data: [],
-      roleType: USER_TYPE,
+      areaList,
     };
   },
 
+  computed: {
+    ...mapStateUser({
+      userInfo: (state) => state.userInfo,
+    }),
+  },
+
   mounted() {
-    this.getUserList();
+    // this.getUserList();
   },
 
   methods: {
@@ -40,9 +61,7 @@ export default {
     async getUserList() {
       this.loading = true;
       // 根据当前登陆用户的角色获取用户列表
-      const { code, data, msg } = await this.getUserListAct({
-        userType: this.roleType,
-      });
+      const { code, data, msg } = await this.getUserListAct();
       if (code === 200) {
         this.data = data;
       } else {
@@ -50,9 +69,24 @@ export default {
       }
       this.loading = false;
     },
+
+    onSelect() {},
   },
 };
 </script>
 
 <style scoped lang="scss">
+.manage-container {
+  height: 100%;
+  .tree-box {
+    width: 300px;
+    border-right: 1px solid #f6f6f6;
+    height: 100%;
+  }
+
+  .content {
+    flex: 1;
+    height: 100%;
+  }
+}
 </style>

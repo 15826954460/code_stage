@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "app-home",
 
@@ -14,10 +16,20 @@ export default {
 
   computed: {},
 
+  mounted() {
+    this.fetTreeList();
+  },
+
   methods: {
+    ...mapActions(["getProjectListAct"]),
+
     handleMeunItem({ keyPath, key }) {
       console.log(keyPath, key);
       this.$router.push({ path: `${key}` });
+    },
+
+    fetTreeList() {
+      this.getProjectListAct();
     }
   },
 };

@@ -46,8 +46,9 @@
           @click="handleMeunItem"
         >
           <a-menu-item key="/"> <a-icon type="home" /> 首页 </a-menu-item>
+          <a-menu-item key="/user-list"> <a-icon type="home" /> 用户中心 </a-menu-item>
 
-          <a-sub-menu key="sub3" v-show="userType !== 4">
+          <!-- <a-sub-menu key="sub3" v-show="userType !== 4">
             <span slot="title"> <a-icon type="usergroup-add" /> 用户中心 </span>
             <a-menu-item key="/manage-list" v-if="userType === 1">
               管理员
@@ -67,7 +68,7 @@
             <a-menu-item key="/user-list" v-if="userType !== 4">
               普通用户
             </a-menu-item>
-          </a-sub-menu>
+          </a-sub-menu> -->
 
           <a-sub-menu>
             <span slot="title"> <a-icon type="setting" /> 管理中心 </span>
@@ -99,7 +100,7 @@
           </a-sub-menu> -->
         </a-menu>
       </a-layout-sider>
-      <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
+      <a-layout-content :style="{ padding: '0 24px' }">
         <router-view></router-view>
       </a-layout-content>
     </a-layout>

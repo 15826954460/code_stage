@@ -84,6 +84,23 @@ export default {
         method: "DELETE",
       });
     },
+
+    /**
+     * @author bys
+     * @date 2021-05-16 20:29:07
+     * @description
+     * @param { level, areaCode, projectId } // level菜单层级（1:省级列表，2 代理列表，3 普通列表）
+     */
+    getProjectTree(params = {}) {
+      return getFetch({
+        url: "/projects/tree",
+        interfaceKey: "getProjectTree",
+        params: {
+          level: 1,
+          ...params,
+        }
+      });
+    }
   },
 
   company: {

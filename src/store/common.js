@@ -4,12 +4,21 @@
  * @description 全局store
  */
 import api from "@/axios/api";
+import { AREA_OBJ_DATA } from "@/constant";
+
+function mapProjectTree(treeList) {
+  if (!treeList.length) return [];
+  return treeList.map(item => {
+    return { ...item, areaName: AREA_OBJ_DATA[item.areaCode] }
+  });
+}
 
 const state = {
   isNetError: false,
   isLogined: false,
   token: "",
   companyList: [],
+  projectTreeList: [],
 };
 
 const mutations = {
@@ -29,6 +38,10 @@ const mutations = {
   updateCompanyList(state, list = []) {
     state.companyList = list;
   },
+
+  uedateProjectTreeList(state, list = []) {
+    state.projectTreeList = list;
+  }
 };
 
 const actions = {
@@ -45,6 +58,14 @@ const actions = {
     }
     return { code, data, msg, count };
   },
+
+  getProjectListAct: async ({ commit /* state, rootState */ }) => {
+    const { code, data, msg, count } = await api.user.getProjectTree();
+    if (code === 200) {
+      commit("uedateProjectTreeList", mapProjectTree(data));
+    }
+    return { code, data, msg, count };
+  }
 };
 
 export { state, mutations, actions };

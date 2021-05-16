@@ -1,5 +1,5 @@
 
-export const areaList = [
+const areaList = [
   {
     "value": "北京",
     "label": "北京",
@@ -22681,3 +22681,7 @@ export const areaList = [
     ]
   }
 ]
+
+export {
+  areaList
+}
