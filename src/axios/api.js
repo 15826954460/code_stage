@@ -83,7 +83,7 @@ export default {
         params: { id },
         method: "DELETE",
       });
-    }
+    },
   },
 
   company: {
@@ -102,18 +102,18 @@ export default {
         url: "/projects",
         interfaceKey: "updateCompanyList",
         params,
-        method: "PUT"
-      })
+        method: "PUT",
+      });
     },
 
-    // 编辑单位
+    // 添加单位
     createCompanyList(params) {
       return postFetch({
         url: "/projects",
         interfaceKey: "createCompanyList",
         params,
-        method: "POST"
-      })
+        method: "POST",
+      });
     },
 
     // 删除单位
@@ -122,8 +122,47 @@ export default {
         url: "/projects",
         interfaceKey: "createCompanyList",
         params: { id },
-        method: "DELETE"
-      })
+        method: "DELETE",
+      });
+    },
+  },
+
+  unit: {
+    // 获取建筑列表
+    getBuildingList() {
+      return getFetch({
+        url: "/buildings",
+        interfaceKey: "getBuildingList",
+      });
+    },
+
+    // 编辑建筑
+    updateBuildingList(params) {
+      return postFetch({
+        url: "/buildings",
+        interfaceKey: "updateBuildingList",
+        params,
+        method: "PUT",
+      });
+    },
+
+    // 添加建筑
+    createBuildingList(params) {
+      return postFetch({
+        url: "/buildings",
+        interfaceKey: "createBuildingList",
+        params,
+        method: "POST",
+      });
+    },
+
+    delBuilding(id) {
+      return postFetch({
+        url: "/buildings",
+        interfaceKey: "delBuilding",
+        params: { id },
+        method: "DELETE",
+      });
     }
-  }
+  },
 };

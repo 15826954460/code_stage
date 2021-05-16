@@ -72,12 +72,13 @@
 
 <script>
 import api from "@/axios/api";
+import { mapActions, mapState } from "vuex";
+
 import CusModule from "@/components/common/CusModule.vue";
 import IndustryShow from "@/components/common/IndustryShow.vue";
 import ShowBank from "@/components/common/ShowBank.vue";
 import CompanyForm from "@/components/company/CompanyForm.vue";
 import PersonalForm from "@/components/company/PersonalForm.vue";
-
 
 const columns = [
   {
@@ -170,18 +171,26 @@ export default {
     };
   },
 
-  computed: {},
+  computed: {
+    ...mapState(['companyList']),
+  },
 
   created() {
-    this.fetchList();
+    this.fetchList(false);
   },
 
   mounted() {},
 
   methods: {
-    async fetchList() {
+    ...mapActions(["getCompanyListAct"]),
+
+    async fetchList(force = true) {
+      if (!force && this.companyList.length) {
+        this.dataList = this.companyList;
+        return;
+      }
       this.loading = true;
-      const { code, data } = await api.company.getCompanyList();
+      const { code, data } = await this.getCompanyListAct();
       if (code === 200) {
         this.dataList = data;
       }

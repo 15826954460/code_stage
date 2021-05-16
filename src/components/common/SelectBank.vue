@@ -1,7 +1,7 @@
 <template>
   <a-select
     class="bank-container"
-    :value="Number(value)"
+    :value="value && Number(value)"
     placeholder="请选择银行"
     @change="handleChange"
   >

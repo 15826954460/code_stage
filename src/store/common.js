@@ -9,6 +9,7 @@ const state = {
   isNetError: false,
   isLogined: false,
   token: "",
+  companyList: [],
 };
 
 const mutations = {
@@ -24,12 +25,24 @@ const mutations = {
   updateToken(state, token = "") {
     state.token = token;
   },
+
+  updateCompanyList(state, list = []) {
+    state.companyList = list;
+  },
 };
 
 const actions = {
   // 获取用户列表
-  getUserListAct: async ({ commit, state, rootState }, params) => {
+  getUserListAct: async ({ commit, state, rootState }, params = {}) => {
     const { code, data, msg, count } = await api.user.getUserList(params);
+    return { code, data, msg, count };
+  },
+
+  getCompanyListAct: async ({ commit /* state, rootState */ }) => {
+    const { code, data, msg, count } = await api.company.getCompanyList();
+    if (code === 200) {
+      commit("updateCompanyList", data);
+    }
     return { code, data, msg, count };
   },
 };
