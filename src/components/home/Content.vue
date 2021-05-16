@@ -74,6 +74,9 @@
             <a-menu-item key="/unit-list">
               单位管理
             </a-menu-item>
+            <a-menu-item key="/build-list">
+              建筑管理
+            </a-menu-item>
           </a-sub-menu>
 
           <!-- <a-sub-menu key="sub1">

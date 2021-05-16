@@ -43,6 +43,11 @@ const routes = [
         name: "unit-page",
         component: () => import("../views/manage/Company.vue"),
       },
+      {
+        path: "build-list",
+        name: "build-page",
+        component: () => import("../views/manage/Building.vue"),
+      }
     ],
   },
 ];
