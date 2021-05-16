@@ -39,7 +39,7 @@ export default {
   },
 
   methods: {
-    handleChange(value, option) {
+    handleChange(value) {
       this.$emit("change", value);
     },
   },

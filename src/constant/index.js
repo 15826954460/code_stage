@@ -10,11 +10,13 @@ const USER_INFO = "USER_INFO";
 const DEFAULT_SELECT_KEYS = "DEFAULT_SELECT_KEYS";
 const DEFAULT_OPEN_KEYS = "DEFAULT_OPEN_KEYS";
 
+// 用户角色列表
 const USER_ROLE_TYPE = [
-  { label: '管理员', value: 1, adminType: 1 },
+  { label: '管理员用户', value: 1, adminType: 1 },
   { label: '普通用户', value: 2, adminType: 2 },
 ]
 
+// 管理员角色列表
 const ADMIN_ROLE_TYPE_LIST = [
   { label: '超级管理员', value: 1, adminType: 1 },
   { label: '管理员', value: 2, adminType: 2 },
@@ -22,6 +24,7 @@ const ADMIN_ROLE_TYPE_LIST = [
   { label: '信息录入员', value: 4, adminType: 4 },
 ]
 
+// 银行列表
 const BANK_LIST = [
   { label: '工商银行', value: 1, bankType: 1 },
   { label: '农业银行', value: 2, bankType: 2 },
@@ -39,6 +42,14 @@ const BANK_LIST = [
   { label: '兴业银行', value: 14, bankType: 14 },
 ]
 
+// 行业列表
+const INDUSTRY_LIST = [
+  { label: '互联网', value: 1, industryType: 1 },
+  { label: '物联网', value: 2, industryType: 2 },
+  { label: '餐饮', value: 3, industryType: 3 },
+  { label: '销售', value: 4, industryType: 4 },
+];
+
 export {
   TOKEN,
   USER_INFO,
@@ -47,5 +58,6 @@ export {
   DEFAULT_OPEN_KEYS,
   DEFAULT_SELECT_KEYS,
   ADMIN_ROLE_TYPE_LIST,
-  BANK_LIST
+  BANK_LIST,
+  INDUSTRY_LIST,
 }

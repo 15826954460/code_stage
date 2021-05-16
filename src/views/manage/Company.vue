@@ -4,7 +4,7 @@
       type="primary"
       style="margin-bottom: 10px; margin-right: 15px"
       @click="createUser"
-      >添加用户</a-button
+      >添加单位</a-button
     >
     <a-table
       :columns="columns"
@@ -17,6 +17,12 @@
     >
       <p slot="mapPosition" slot-scope="text">
         经度：{{ text.split(",")[0] }} 纬度：{{ text.split(",")[1] }}
+      </p>
+      <p slot="industry" slot-scope="text">
+        <IndustryShow :value="text"></IndustryShow>
+      </p>
+      <p slot="bank" slot-scope="text">
+        <ShowBank :value="text"></ShowBank>
       </p>
       <p slot="action" slot-scope="text, record">
         <a-button
@@ -39,30 +45,26 @@
         </a-popconfirm>
       </p>
     </a-table>
-    <CusModule @cancel="cancel" :visible="visible" :width="800">
-      <!-- <a-tabs
-        default-active-key="1"
-        @change="handleTabChange"
-        style="margin: 0"
-      >
-        <a-tab-pane key="1" tab="公司用户">
-          <CompanyForm :row="row" :form="form"></CompanyForm>
-        </a-tab-pane>
-        <a-tab-pane key="2" tab="个人用户">
-          <PersonalForm :row="row" :form="form"></PersonalForm>
-        </a-tab-pane>
-      </a-tabs> -->
+    <CusModule v-if="visible" @cancel="cancel" :visible="visible" :width="800">
       <a-select :value="type" @change="handleTabChange" style="width: 120px">
         <a-select-option :value="1"> 公司用户 </a-select-option>
         <a-select-option :value="2"> 个人用户 </a-select-option>
       </a-select>
-      <CompanyForm v-if="type === 1" :row="row" :form="form"></CompanyForm>
-      <PersonalForm v-if="type === 2" :row="row" :form="form"></PersonalForm>
+      <CompanyForm
+        v-if="type === 1 && visible"
+        :row="row"
+        ref="companyFormRefs"
+      ></CompanyForm>
+
+      <PersonalForm
+        v-if="type === 2 && visible"
+        :row="row"
+        ref="personalFormRefs"
+      ></PersonalForm>
+
       <div class="__flex __rfec">
-        <a-button style="margin-right: 15px" @click="cancel"
-          >取消</a-button
-        >
-        <a-button type="primary" @click="submit">确定</a-button>
+        <a-button style="margin-right: 15px" @click="cancel"> 取消 </a-button>
+        <a-button type="primary" @click="submit"> 确定 </a-button>
       </div>
     </CusModule>
   </div>
@@ -71,8 +73,11 @@
 <script>
 import api from "@/axios/api";
 import CusModule from "@/components/common/CusModule.vue";
+import IndustryShow from "@/components/common/IndustryShow.vue";
+import ShowBank from "@/components/common/ShowBank.vue";
 import CompanyForm from "@/components/company/CompanyForm.vue";
 import PersonalForm from "@/components/company/PersonalForm.vue";
+
 
 const columns = [
   {
@@ -110,6 +115,7 @@ const columns = [
   {
     title: "开户行",
     dataIndex: "bank",
+    scopedSlots: { customRender: "bank" },
   },
   {
     title: "银行卡号",
@@ -122,6 +128,7 @@ const columns = [
   {
     title: "行业",
     dataIndex: "businessId",
+    scopedSlots: { customRender: "industry" },
   },
   {
     title: "官网地址",
@@ -148,6 +155,8 @@ export default {
     CusModule,
     CompanyForm,
     PersonalForm,
+    IndustryShow,
+    ShowBank
   },
 
   data() {
@@ -156,7 +165,6 @@ export default {
       columns,
       visible: false,
       row: {},
-      form: this.$form.createForm(this),
       loading: false,
       type: 1,
     };
@@ -195,28 +203,46 @@ export default {
     },
 
     cancel() {
-      console.log("----cancel", 7878787);
-      this.form.resetFields();
       this.row = {};
       this.visible = false;
+      this.type = 1;
     },
 
     submit(e) {
       e.preventDefault();
-      this.form.validateFields(async (err, values) => {
+      const __formRef =
+        this.type === 1
+          ? this.$refs.companyFormRefs
+          : this.$refs.personalFormRefs;
+      __formRef.form.validateFields(async (err, values) => {
         if (err) {
           return;
         }
         const { id } = this.row;
+        // TODO: parentId 临时数据 areaCode
+        const temporary = {
+          parentId: 1,
+          areaCode: 222,
+        };
         if (id) {
-          this.update({ id, ...values });
+          this.update({
+            id,
+            ...values,
+            type: this.type,
+            ...temporary,
+          });
         } else {
-          this.create(values);
+          this.create({
+            ...values,
+            type: this.type,
+            ...temporary,
+          });
         }
       });
     },
 
     async update(values) {
+      // TODO:  临时数据 areaCode:  324,
       const { code } = await api.company.updateCompanyList({
         areaCode: 324,
         ...values,
@@ -229,6 +255,7 @@ export default {
     },
 
     async create(values) {
+      // TODO: 临时数据 areaCode:  111,
       const { code } = await api.company.createCompanyList({
         areaCode: 111,
         ...values,

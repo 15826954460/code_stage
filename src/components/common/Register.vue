@@ -144,7 +144,7 @@
 <script>
 import { areaList } from "@/constant/province-data";
 import api from "@/axios/api";
-import SelectUserType from "@/components/common/SelectType.vue";
+import SelectUserType from "@/components/common/SelectUserType.vue";
 import SelectAdminType from "@/components/common/SelectAdminType.vue";
 
 import { createNamespacedHelpers } from "vuex";

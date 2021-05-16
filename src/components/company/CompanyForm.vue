@@ -53,7 +53,7 @@
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
     >
-      <!-- TODO: 下拉框 -->
+      <!-- TODO: 下拉框， 地区列表 --> 
     </a-form-item>
     <a-form-item
       label="经纬度"
@@ -109,7 +109,7 @@
         placeholder="请输入银行卡号"
       />
     </a-form-item>
-    <a-form-item
+    <!-- <a-form-item
       label="联系电话"
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
@@ -124,13 +124,22 @@
         ]"
         placeholder="请输入联系电话"
       />
-    </a-form-item>
+    </a-form-item> -->
     <a-form-item
       label="行业"
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
     >
-      <!-- 下拉框 -->
+      <IndustryList
+        v-decorator="[
+          'businessId',
+          {
+            initialValue: row.businessId || '',
+            rules: [{ required: true, message: '请选择行业' }],
+          },
+        ]"
+        @change="handleIndustrySelectChange"
+      ></IndustryList>
     </a-form-item>
 
     <a-form-item
@@ -141,9 +150,9 @@
     >
       <a-textarea
         v-decorator="[
-          'linkmaninfo',
+          'contactInfo',
           {
-            initialValue: row.linkmanInfo || '',
+            initialValue: row.contactInfo || '',
             rules: [{ required: true, message: '请输入公司联系人' }],
           },
         ]"
@@ -172,6 +181,7 @@
 
 <script>
 import SelectBank from "@/components/common/SelectBank.vue";
+import IndustryList from "@/components/common/IndustryList.vue";
 
 const formItemLayout = {
   labelCol: { span: 4 },
@@ -188,24 +198,32 @@ export default {
         return {};
       },
     },
-    form: {
-      Object,
-      required: true,
-    },
   },
 
   components: {
     SelectBank,
+    IndustryList,
+  },
+
+  beforeDestroy() {
+    this.form.resetFields();
   },
 
   data() {
     return {
       formItemLayout,
+      form: this.$form.createForm(this),
     };
   },
 
   methods: {
-    handleTypeSelectChange() {},
+    handleTypeSelectChange(val) {
+      this.form.setFieldsValue({ bank: val });
+    },
+
+    handleIndustrySelectChange(val) {
+      this.form.setFieldsValue({ businessId: val });
+    },
   },
 };
 </script>

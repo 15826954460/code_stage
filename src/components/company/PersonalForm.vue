@@ -69,7 +69,16 @@
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
     >
-      <!-- 下拉框 -->
+      <IndustryList
+        v-decorator="[
+          'businessId',
+          {
+            initialValue: row.businessId || '',
+            rules: [{ required: true, message: '请选择行业' }],
+          },
+        ]"
+        @change="handleIndustrySelectChange"
+      ></IndustryList>
     </a-form-item>
     <a-form-item
       label="所属省份"
@@ -89,13 +98,15 @@
 </template>
 
 <script>
+import IndustryList from "@/components/common/IndustryList.vue";
+
 const formItemLayout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 18 },
 };
 
 export default {
-  name: "PersonalFormCom",
+  name: "personal-form-com",
 
   props: {
     row: {
@@ -104,22 +115,27 @@ export default {
         return {};
       },
     },
-    form: {
-      Object,
-      required: true,
-    },
   },
 
-  components: {},
+  components: {
+    IndustryList
+  },
+
+  beforeDestroy() {
+    this.form.resetFields();
+  },
 
   data() {
     return {
       formItemLayout,
+      form: this.$form.createForm(this),
     };
   },
 
   methods: {
-    handleTypeSelectChange() {},
+    handleIndustrySelectChange(val) {
+      this.form.setFieldsValue({ businessId: val });
+    },
   },
 };
 </script>

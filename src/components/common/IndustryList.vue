@@ -1,12 +1,12 @@
 <template>
   <a-select
     class="bank-container"
-    :value="Number(value)"
-    placeholder="请选择银行"
+    :value="value"
+    placeholder="请选择行业类别"
     @change="handleChange"
   >
     <a-select-option
-      v-for="item in bankList"
+      v-for="item in industryList"
       :value="Number(item.value)"
       :key="item.value"
     >
@@ -16,7 +16,8 @@
 </template>
 
 <script>
-import { BANK_LIST } from "@/constant";
+import { INDUSTRY_LIST } from "@/constant";
+
 export default {
   name: "select-bank-com",
 
@@ -29,7 +30,7 @@ export default {
 
   data() {
     return {
-      bankList: BANK_LIST,
+      industryList: INDUSTRY_LIST,
     };
   },
 
@@ -40,3 +41,6 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+</style>
