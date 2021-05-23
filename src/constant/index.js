@@ -41,13 +41,28 @@ const BANK_LIST = [
   { label: '平安银行', value: 13, bankType: 13 },
   { label: '兴业银行', value: 14, bankType: 14 },
 ]
-
+ 
+                             
 // 行业列表
 const INDUSTRY_LIST = [
-  { label: '互联网', value: 1, industryType: 1 },
-  { label: '物联网', value: 2, industryType: 2 },
-  { label: '餐饮', value: 3, industryType: 3 },
-  { label: '销售', value: 4, industryType: 4 },
+  { label: '食品', value: 1, industryType: 1 },
+  { label: '制药', value: 2, industryType: 2 },
+  { label: '冷链', value: 3, industryType: 3 },
+  { label: '仓储', value: 4, industryType: 4 },
+  { label: '医药流通', value: 5, industryType: 5 },
+  { label: '商超', value: 6, industryType: 6 },
+  { label: '油气', value: 7, industryType: 7 },
+  { label: '化工', value: 8, industryType: 8 },
+  { label: '冶金', value: 9, industryType: 9 },
+  { label: '建材', value: 10, industryType: 10 },
+  { label: '科研教育机构', value: 11, industryType: 11 },
+  { label: '环保', value: 12, industryType: 12 },
+  { label: '机械制造', value: 13, industryType: 13 },
+  { label: '汽车', value: 14, industryType: 14 },
+  { label: '建筑', value: 15, industryType: 15 },
+  { label: '能源', value: 16, industryType: 16 },
+  { label: '电子', value: 17, industryType: 17 },
+  { label: '其他', value: 18, industryType: 18 },
 ];
 
 const AREA_OBJ_DATA = {
