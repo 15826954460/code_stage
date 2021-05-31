@@ -46,7 +46,7 @@
           @click="handleMeunItem"
         >
           <a-menu-item key="/"> <a-icon type="home" /> 首页 </a-menu-item>
-          <a-menu-item key="/user-list"> <a-icon type="home" /> 用户中心 </a-menu-item>
+          <a-menu-item key="/user-center"> <a-icon type="home" /> 用户中心 </a-menu-item>
 
           <!-- <a-sub-menu key="sub3" v-show="userType !== 4">
             <span slot="title"> <a-icon type="usergroup-add" /> 用户中心 </span>
@@ -78,6 +78,9 @@
             <a-menu-item key="/build-list">
               建筑管理
             </a-menu-item>
+            <a-menu-item key="/user-manage">
+              用户管理
+            </a-menu-item>
           </a-sub-menu>
 
           <!-- <a-sub-menu key="sub1">
@@ -100,7 +103,7 @@
           </a-sub-menu> -->
         </a-menu>
       </a-layout-sider>
-      <a-layout-content :style="{ padding: '0 24px' }">
+      <a-layout-content :style="{ paddingLeft: '10px' }">
         <router-view></router-view>
       </a-layout-content>
     </a-layout>

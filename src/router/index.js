@@ -19,7 +19,7 @@ const routes = [
         component: () => import("../views/user/Agent.vue"),
       },
       {
-        path: "user-list",
+        path: "user-center",
         name: "user-list-page",
         component: () => import("../views/user/User.vue"),
       },
@@ -38,15 +38,23 @@ const routes = [
         name: "warnning-page",
         component: () => import("../views/warning/Index.vue"),
       },
+      // 单位管理
       {
         path: "unit-list",
         name: "unit-page",
         component: () => import("../views/manage/Company.vue"),
       },
+      // 建筑管理
       {
         path: "build-list",
         name: "build-page",
         component: () => import("../views/manage/Building.vue"),
+      },
+      // 用户管理
+      {
+        path: "user-manage",
+        name: "user-manage-page",
+        component: () => import("../views/manage/UserManage.vue"),
       }
     ],
   },

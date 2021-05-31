@@ -167,7 +167,7 @@ export default {
       visible: false,
       row: {},
       loading: false,
-      type: 1,
+      type: 1, // 1: 单位 2: 个人
     };
   },
 

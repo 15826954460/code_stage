@@ -8,9 +8,21 @@ import { AREA_OBJ_DATA } from "@/constant";
 
 function mapProjectTree(treeList) {
   if (!treeList.length) return [];
-  return treeList.map(item => {
-    return { ...item, areaName: AREA_OBJ_DATA[item.areaCode] }
+  let __treeList = [];
+  treeList.forEach(({
+    areaCode,
+    id,
+    nums,
+    parentId,
+    projectName,
+  }) => {
+    if (AREA_OBJ_DATA[Number(areaCode)]) {
+      __treeList.push({
+        id, nums, parentId, projectName, areaName: AREA_OBJ_DATA[Number(areaCode)]
+      });
+    }
   });
+  return __treeList;
 }
 
 const state = {
@@ -62,7 +74,7 @@ const actions = {
   getProjectListAct: async ({ commit /* state, rootState */ }) => {
     const { code, data, msg, count } = await api.user.getProjectTree();
     if (code === 200) {
-      commit("uedateProjectTreeList", mapProjectTree(data));
+      commit("uedateProjectTreeList", mapProjectTree(data || []));
     }
     return { code, data, msg, count };
   }

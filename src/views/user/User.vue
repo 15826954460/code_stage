@@ -1,23 +1,11 @@
 <template>
   <div class="__flex __rfsfs manage-container">
-    <div class="tree-box">
-      <!-- <a-tree
-        :show-line="true"
-        :default-expanded-keys="['0-0-0', '0-0-1', '0-0-2']"
-        @select="onSelect"
-      >
-      </a-tree> -->
+    <div class="left-box">
+      <a-tree :load-data="onLoadData" :tree-data="treeList" />
     </div>
-    <div class="content">
-      待开发
+    <div class="right-box">
+      <map-com></map-com>
     </div>
-    <!-- <Plarfrom
-      @click="getUserList"
-      :loading="loading"
-      :roleType="roleType"
-      :dataList="data"
-      btnText="创建用户"
-    ></Plarfrom> -->
   </div>
 </template>
 
@@ -28,20 +16,21 @@ const {
   mapState: mapStateUser,
 } = createNamespacedHelpers("user");
 
+import MapCom from "@/components/common/Map.vue";
+
 import utils from "@/utils/common";
-import Plarfrom from "@/components/user/Platform.vue";
-import { areaList } from "@/constant/province-data.js";
 
 export default {
   name: "user-center-page",
 
-  components: { Plarfrom },
+  components: {
+    MapCom
+   },
 
   data() {
     return {
       loading: false,
       data: [],
-      areaList,
     };
   },
 
@@ -49,14 +38,17 @@ export default {
     ...mapStateUser({
       userInfo: (state) => state.userInfo,
     }),
+    ...mapState({
+      treeList: (state) => state.projectTreeList,
+    }),
   },
 
   mounted() {
-    // this.getUserList();
+    // this.getProjectListAct();
   },
 
   methods: {
-    ...mapActions(["getUserListAct"]),
+    ...mapActions(["getUserListAct", "getProjectListAct"]),
 
     async getUserList() {
       this.loading = true;
@@ -70,6 +62,24 @@ export default {
       this.loading = false;
     },
 
+    onLoadData(treeNode) {
+      console.log("---onLoadData-", treeNode);
+      return new Promise((resolve) => {
+        if (treeNode.dataRef.children) {
+          resolve();
+          return;
+        }
+        setTimeout(() => {
+          treeNode.dataRef.children = [
+            { title: "Child Node", key: `${treeNode.eventKey}-0` },
+            { title: "Child Node", key: `${treeNode.eventKey}-1` },
+          ];
+          this.areaList = [...this.areaList];
+          resolve();
+        }, 1000);
+      });
+    },
+
     onSelect() {},
   },
 };
@@ -78,14 +88,14 @@ export default {
 <style scoped lang="scss">
 .manage-container {
   height: 100%;
-  .tree-box {
-    width: 300px;
+  .left-box {
+    width: 250px;
     border-right: 1px solid #f6f6f6;
     height: 100%;
   }
 
-  .content {
-    flex: 1;
+  .right-box {
+    width: calc(100% - 250px);
     height: 100%;
   }
 }
