@@ -17,7 +17,6 @@ export default {
     areaList.forEach(({ code, label }) => {
         obj[code] = label;
     });
-    console.log(99999, obj);
   },
 };
 </script>

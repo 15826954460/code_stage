@@ -67,6 +67,8 @@
         <a-button type="primary" @click="submit"> 确定 </a-button>
       </div>
     </CusModule>
+
+    <!-- <MapModule :visible="true"></MapModule> -->
   </div>
 </template>
 
@@ -79,6 +81,7 @@ import IndustryShow from "@/components/common/IndustryShow.vue";
 import ShowBank from "@/components/common/ShowBank.vue";
 import CompanyForm from "@/components/company/CompanyForm.vue";
 import PersonalForm from "@/components/company/PersonalForm.vue";
+import MapModule from "@/components/common/MapModule.vue";
 
 const columns = [
   {
@@ -157,7 +160,8 @@ export default {
     CompanyForm,
     PersonalForm,
     IndustryShow,
-    ShowBank
+    ShowBank,
+    MapModule
   },
 
   data() {
