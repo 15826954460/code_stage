@@ -37,7 +37,6 @@
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
     >
-      <!-- TODO: -->
       <SelectCompany
         v-decorator="[
           'projectId',

@@ -33,7 +33,7 @@ export default {
         url: "/users",
         interfaceKey: "addUser",
         params,
-        method: "PUT",
+        method: "POST",
       });
     },
 

@@ -1,9 +1,11 @@
 <template>
   <a-select
     class="company-select-container"
-    :value="value && Number(value)"
+    :value="value"
     placeholder="请选择单位"
     @change="handleChange"
+    :mode="multiple ? 'multiple' : ''"
+    :allowClear="multiple"
   >
     <a-select-option
       v-for="item in showCompanyList"
@@ -23,9 +25,13 @@ export default {
 
   props: {
     value: {
-      type: [String, Number],
+      type: [String, Number, Array],
       default: "",
     },
+    multiple: {
+      type: Boolean,
+      default: false
+    }
   },
 
   computed: {
