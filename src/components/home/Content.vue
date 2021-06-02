@@ -103,7 +103,7 @@
           </a-sub-menu> -->
         </a-menu>
       </a-layout-sider>
-      <a-layout-content :style="{ paddingLeft: '10px' }">
+      <a-layout-content style="padding-left: 10px; overflow-x: scroll">
         <router-view></router-view>
       </a-layout-content>
     </a-layout>

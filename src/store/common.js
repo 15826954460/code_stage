@@ -17,11 +17,20 @@ function mapProjectTree(treeList) {
     projectName,
   }) => {
     if (AREA_OBJ_DATA[Number(areaCode)]) {
-      __treeList.push({
-        id, nums, parentId, projectName, areaName: AREA_OBJ_DATA[Number(areaCode)]
-      });
+      const __params = {
+        title: `${AREA_OBJ_DATA[Number(areaCode)]} (${nums})`,
+        key: areaCode,
+      }
+      if (nums > 0) {
+        __params.children = []
+      }
+      // __treeList.push({
+      //   id, nums, parentId, projectName, areaName: AREA_OBJ_DATA[Number(areaCode)], areaCode
+      // });
+      __treeList.push(__params)
     }
   });
+  console.log('------__treeList', __treeList);
   return __treeList;
 }
 

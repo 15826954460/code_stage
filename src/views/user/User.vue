@@ -17,6 +17,7 @@ const {
 } = createNamespacedHelpers("user");
 
 import MapCom from "@/components/common/Map.vue";
+import { AREA_OBJ_DATA } from "@/constant";
 
 import utils from "@/utils/common";
 
@@ -24,8 +25,8 @@ export default {
   name: "user-center-page",
 
   components: {
-    MapCom
-   },
+    MapCom,
+  },
 
   data() {
     return {
@@ -44,40 +45,42 @@ export default {
   },
 
   mounted() {
-    // this.getProjectListAct();
+    if (!this.treeList.length > 0) {
+      this.getProjectListAct();
+    }
   },
 
   methods: {
     ...mapActions(["getUserListAct", "getProjectListAct"]),
 
-    async getUserList() {
-      this.loading = true;
-      // 根据当前登陆用户的角色获取用户列表
-      const { code, data, msg } = await this.getUserListAct();
-      if (code === 200) {
-        this.data = data;
-      } else {
-        utils.log(`${msg}-----${code}`);
-      }
-      this.loading = false;
-    },
+    // async getUserList() {
+    //   this.loading = true;
+    //   // 根据当前登陆用户的角色获取用户列表
+    //   const { code, data, msg } = await this.getUserListAct();
+    //   if (code === 200) {
+    //     this.data = data;
+    //   } else {
+    //     utils.log(`${msg}-----${code}`);
+    //   }
+    //   this.loading = false;
+    // },
 
-    onLoadData(treeNode) {
+    async onLoadData(treeNode) {
       console.log("---onLoadData-", treeNode);
-      return new Promise((resolve) => {
-        if (treeNode.dataRef.children) {
-          resolve();
-          return;
+      if (treeNode.dataRef.children) return;
+
+      treeNode.dataRef.children = [
+        { title: "Child Node", key: `${treeNode.eventKey}-0` },
+        { title: "Child Node", key: `${treeNode.eventKey}-1` },
+      ];
+      const { code, data, msg, count } = await api.user.getProjectTree({});
+      if (code === 200) {
+        const __item = {
+          title: `${AREA_OBJ_DATA[Number(areaCode)]} (${nums})`,
+          key: areaCode,
         }
-        setTimeout(() => {
-          treeNode.dataRef.children = [
-            { title: "Child Node", key: `${treeNode.eventKey}-0` },
-            { title: "Child Node", key: `${treeNode.eventKey}-1` },
-          ];
-          this.areaList = [...this.areaList];
-          resolve();
-        }, 1000);
-      });
+        treeNode.dataRef.children.push(__item)
+      }
     },
 
     onSelect() {},

@@ -61,7 +61,6 @@
 import { mapActions, mapState, createNamespacedHelpers } from "vuex";
 import CusModule from "@/components/common/CusModule.vue";
 import UserForm from "@/components/user/UserForm.vue";
-import Register from "@/components/common/Register.vue";
 import api from "@/axios/api";
 
 const {
@@ -139,7 +138,6 @@ export default {
   components: {
     CusModule,
     UserForm,
-    Register,
   },
 
   created() {},

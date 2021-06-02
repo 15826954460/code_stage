@@ -41,8 +41,8 @@ const BANK_LIST = [
   { label: '平安银行', value: 13, bankType: 13 },
   { label: '兴业银行', value: 14, bankType: 14 },
 ]
- 
-                             
+
+
 // 行业列表
 const INDUSTRY_LIST = [
   { label: '食品', value: 1, industryType: 1 },
@@ -65,6 +65,7 @@ const INDUSTRY_LIST = [
   { label: '其他', value: 18, industryType: 18 },
 ];
 
+// 树形列表
 const AREA_OBJ_DATA = {
   11: "北京",
   12: "天津",
@@ -100,8 +101,50 @@ const AREA_OBJ_DATA = {
   71: "台湾",
   81: "香港",
   82: "澳门",
-  91: "国外",
+  // 91: "国外",
 };
+
+/* 各省份的省会坐标[经度,纬度] */
+const GEO_COORD = [
+  // 23省
+  { label: '甘肃', geoCoord: [103.73, 36.03], areaCode: 62 },
+  { label: '青海', geoCoord: [101.74, 36.56], areaCode: 63 },
+  { label: '四川', geoCoord: [104.06, 30.67], areaCode: 51 },
+  { label: '河北', geoCoord: [114.48, 38.03], areaCode: 13 },
+  { label: '云南', geoCoord: [102.73, 25.04], areaCode: 53 },
+  { label: '贵州', geoCoord: [106.71, 26.57], areaCode: 52 },
+  { label: '湖北', geoCoord: [114.31, 30.52], areaCode: 42 },
+  { label: '河南', geoCoord: [113.65, 34.76], areaCode: 41 },
+  { label: '山东', geoCoord: [117, 36.65], areaCode: 37 },
+  { label: '江苏', geoCoord: [118.78, 32.04], areaCode: 32 },
+  { label: '安徽', geoCoord: [117.27, 31.86], areaCode: 34 },
+  { label: '浙江', geoCoord: [120.19, 30.26], areaCode: 33 },
+  { label: '江西', geoCoord: [115.89, 28.68], areaCode: 36 },
+  { label: '福建', geoCoord: [119.3, 26.08], areaCode: 35 },
+  { label: '广东', geoCoord: [113.23, 23.16], areaCode: 44 },
+  { label: '湖南', geoCoord: [113, 28.21], areaCode: 43 },
+  { label: '海南', geoCoord: [110.35, 20.02], areaCode: 46 },
+  { label: '辽宁', geoCoord: [123.38, 41.8], areaCode: 21 },
+  { label: '吉林', geoCoord: [125.35, 43.88], areaCode: 22 },
+  { label: '黑龙江', geoCoord: [126.63, 45.75], areaCode: 23 },
+  { label: '山西', geoCoord: [112.53, 37.87], areaCode: 14 },
+  { label: '陕西', geoCoord: [108.95, 34.27], areaCode: 61 },
+  { label: '台湾', geoCoord: [121.30, 25.03], areaCode: 71 },
+  // 4直辖市
+  { label: '北京', geoCoord: [116.46, 39.92], areaCode: 11 },
+  { label: '上海', geoCoord: [121.48, 31.22], areaCode: 31 },
+  { label: '重庆', geoCoord: [106.54, 29.59], areaCode: 50 },
+  { label: '天津', geoCoord: [117.2, 39.13], areaCode: 12 },
+  // 5自治区
+  { label: '内蒙古', geoCoord: [111.65, 40.82], areaCode: 15 },
+  { label: '广西', geoCoord: [108.33, 22.84], areaCode: 45 },
+  { label: '西藏', geoCoord: [91.11, 29.97], areaCode: 54 },
+  { label: '宁夏', geoCoord: [106.27, 38.47], areaCode: 64 },
+  { label: '新疆', geoCoord: [87.68, 43.77], areaCode: 65 },
+  // 2特别行政区
+  { label: '香港', geoCoord: [114.17, 22.28], areaCode: 81 },
+  { label: '澳门', geoCoord: [113.54, 22.19], areaCode: 82 }
+]
 
 export {
   TOKEN,
@@ -113,5 +156,6 @@ export {
   ADMIN_ROLE_TYPE_LIST,
   BANK_LIST,
   INDUSTRY_LIST,
-  AREA_OBJ_DATA
+  AREA_OBJ_DATA,
+  GEO_COORD,
 }

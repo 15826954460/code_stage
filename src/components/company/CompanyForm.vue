@@ -53,14 +53,15 @@
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
     >
-      <!-- TODO: 下拉框， 地区列表 --> 
-    </a-form-item>
-    <a-form-item
-      label="经纬度"
-      :label-col="formItemLayout.labelCol"
-      :wrapper-col="formItemLayout.wrapperCol"
-    >
-      <!-- TODO: 地图 -->
+      <SelectGeoCood
+        v-decorator="[
+          'areaCode',
+          {
+            initialValue: row.areaCode,
+          },
+        ]"
+        @change="handleGeoCoordSelectChange"
+      ></SelectGeoCood>
     </a-form-item>
     <a-form-item
       label="纳税号"
@@ -182,6 +183,7 @@
 <script>
 import SelectBank from "@/components/common/SelectBank.vue";
 import IndustryList from "@/components/common/IndustryList.vue";
+import SelectGeoCood from "@/components/common/SelectGeoCood.vue";
 
 const formItemLayout = {
   labelCol: { span: 4 },
@@ -203,6 +205,7 @@ export default {
   components: {
     SelectBank,
     IndustryList,
+    SelectGeoCood,
   },
 
   beforeDestroy() {
@@ -224,9 +227,11 @@ export default {
     handleIndustrySelectChange(val) {
       this.form.setFieldsValue({ businessId: val });
     },
+
+    handleGeoCoordSelectChange(option) {
+      const { key: areaCode } = option;
+      this.form.setFieldsValue({ areaCode });
+    },
   },
 };
 </script>
-
-<style scoped lang="scss">
-</style>

@@ -85,20 +85,22 @@
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
     >
-      <!-- TODO: 下拉框 -->
-    </a-form-item>
-    <a-form-item
-      label="经纬度"
-      :label-col="formItemLayout.labelCol"
-      :wrapper-col="formItemLayout.wrapperCol"
-    >
-      <!-- TODO: 地图 -->
+      <SelectGeoCood
+        v-decorator="[
+          'areaCode',
+          {
+            initialValue: row.areaCode,
+          },
+        ]"
+        @change="handleGeoCoordSelectChange"
+      ></SelectGeoCood>
     </a-form-item>
   </a-form>
 </template>
 
 <script>
 import IndustryList from "@/components/common/IndustryList.vue";
+import SelectGeoCood from "@/components/common/SelectGeoCood.vue";
 
 const formItemLayout = {
   labelCol: { span: 4 },
@@ -118,7 +120,8 @@ export default {
   },
 
   components: {
-    IndustryList
+    IndustryList,
+    SelectGeoCood
   },
 
   beforeDestroy() {
@@ -135,6 +138,13 @@ export default {
   methods: {
     handleIndustrySelectChange(val) {
       this.form.setFieldsValue({ businessId: val });
+    },
+
+    handleGeoCoordSelectChange(option) {
+      console.log('---------personal form', option);
+      const { key: areaCode } = option;
+      console.log('---------personal form', areaCode);
+      // this.form.setFieldsValue({ areaCode });
     },
   },
 };

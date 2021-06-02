@@ -28,7 +28,7 @@
         <a-button
           type="primary"
           size="small"
-          style="margin-right: 10px"
+          style="margin-right: 10px; margin-bottom: 3px"
           @click="edit(record)"
         >
           编辑
@@ -67,21 +67,19 @@
         <a-button type="primary" @click="submit"> 确定 </a-button>
       </div>
     </CusModule>
-
-    <!-- <MapModule :visible="true"></MapModule> -->
   </div>
 </template>
 
 <script>
 import api from "@/axios/api";
 import { mapActions, mapState } from "vuex";
+import { AREA_OBJ_DATA } from "@/constant";
 
 import CusModule from "@/components/common/CusModule.vue";
 import IndustryShow from "@/components/common/IndustryShow.vue";
 import ShowBank from "@/components/common/ShowBank.vue";
 import CompanyForm from "@/components/company/CompanyForm.vue";
 import PersonalForm from "@/components/company/PersonalForm.vue";
-import MapModule from "@/components/common/MapModule.vue";
 
 const columns = [
   {
@@ -94,18 +92,25 @@ const columns = [
   {
     title: "单位名称",
     dataIndex: "projectName",
+    width: 160,
   },
   {
     title: "单位地址",
     dataIndex: "address",
+    width: 160,
   },
   {
     title: "营业地址",
     dataIndex: "workAddress",
+    width: 160,
   },
   {
-    title: "所属省份",
+    title: "省份",
     dataIndex: "areaCode",
+    customRender: (text, record, index) => {
+      return AREA_OBJ_DATA[Number(text)];
+    },
+    width: 160,
   },
   {
     title: "经纬度",
@@ -115,24 +120,29 @@ const columns = [
   {
     title: "纳税号",
     dataIndex: "taxFileNumber",
+    width: 120
   },
   {
     title: "开户行",
     dataIndex: "bank",
     scopedSlots: { customRender: "bank" },
+    width: 120
   },
   {
     title: "银行卡号",
     dataIndex: "cardNumber",
+    width: 160
   },
   {
     title: "联系电话",
     dataIndex: "contactInfo",
+    width: 160
   },
   {
     title: "行业",
     dataIndex: "businessId",
     scopedSlots: { customRender: "industry" },
+    width: 80
   },
   {
     title: "官网地址",
@@ -141,10 +151,15 @@ const columns = [
   {
     title: "身份证号",
     dataIndex: "idCard",
+    width: 250,
   },
   {
     title: "用户类型",
     dataIndex: "type",
+    width: 160,
+    customRender: (text, record, index) => {
+      return Number(text) === 1 ? '代理' : '个人';
+    },
   },
   {
     title: "操作",
@@ -161,7 +176,6 @@ export default {
     PersonalForm,
     IndustryShow,
     ShowBank,
-    MapModule
   },
 
   data() {
@@ -176,7 +190,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['companyList']),
+    ...mapState(["companyList"]),
   },
 
   created() {
@@ -228,38 +242,36 @@ export default {
           ? this.$refs.companyFormRefs
           : this.$refs.personalFormRefs;
       __formRef.form.validateFields(async (err, values) => {
-        if (err) {
-          return;
-        }
+        if (err) return;
         const { id } = this.row;
-        // TODO: parentId 临时数据 areaCode
-        const temporary = {
-          parentId: 1,
-          areaCode: 222,
-        };
+        const { areaCode: options, ...params } = values;
+        const { key, label, mapPosition } = options;
+        if (!mapPosition && this.type === 1) {
+          console.log(1111, "no mapPosition");
+        }
         if (id) {
           this.update({
             id,
-            ...values,
+            ...params,
             type: this.type,
-            ...temporary,
+            parentId: 1,
+            mapPosition,
+            areaCode: key
           });
         } else {
           this.create({
-            ...values,
+            ...params,
             type: this.type,
-            ...temporary,
+            parentId: 1,
+            mapPosition,
+            areaCode: key
           });
         }
       });
     },
 
     async update(values) {
-      // TODO:  临时数据 areaCode:  324,
-      const { code } = await api.company.updateCompanyList({
-        areaCode: 324,
-        ...values,
-      });
+      const { code } = await api.company.updateCompanyList(values);
       if (code === 200) {
         this.row = {};
         this.visible = false;
@@ -268,11 +280,7 @@ export default {
     },
 
     async create(values) {
-      // TODO: 临时数据 areaCode:  111,
-      const { code } = await api.company.createCompanyList({
-        areaCode: 111,
-        ...values,
-      });
+      const { code } = await api.company.createCompanyList(values);
       if (code === 200) {
         this.row = {};
         this.visible = false;
