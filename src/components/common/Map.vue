@@ -3,7 +3,7 @@
     <baidu-map
       class="map"
       ak="tsIqsUun5eMWPbOPc0cGVvclj6js9vGL"
-      :center="latlng"
+      :center="'湖北'"
       :min-zoom="minZoom"
       :max-zoom="maxZoom"
       :zoom="zoom"
@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
 import { BmlMarkerClusterer } from "vue-baidu-map";
 import BaiduMap from "vue-baidu-map/components/map/Map.vue";
 import BmView from "vue-baidu-map/components/map/MapView.vue";
@@ -69,7 +70,7 @@ export default {
   props: {
     isAddUser: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
 
@@ -91,7 +92,7 @@ export default {
         lng: 116.404,
         lat: 39.915,
       },
-      zoom: 10,
+      zoom: 6,
       minZoom: 1,
       maxZoom: 100,
       markers,
@@ -101,8 +102,12 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      mapPositionList: (state) => state.mapPositionList,
+    }),
+
     mrkposList() {
-      return this.isAddUser ? [this.latlng] : this.markers;
+      return this.isAddUser ? [this.latlng] : this.mapPositionList;
     },
   },
 
@@ -112,7 +117,7 @@ export default {
 
   methods: {
     selectLat({ type, target, point, pixel, overlay }) {
-      this.$emit('selectPos', point)
+      this.$emit("selectPos", point);
     },
 
     getLocation() {

@@ -4,10 +4,11 @@
  * @description 全局store
  */
 import api from "@/axios/api";
-import { AREA_OBJ_DATA } from "@/constant";
+import { AREA_OBJ_DATA, GEO_COORD } from "@/constant";
 
 function mapProjectTree(treeList) {
   if (!treeList.length) return [];
+  let __mapPositionList = [];
   let __treeList = [];
   treeList.forEach(({
     areaCode,
@@ -15,23 +16,29 @@ function mapProjectTree(treeList) {
     nums,
     parentId,
     projectName,
-  }) => {
+  }, idx) => {
+    const __params = {};
     if (AREA_OBJ_DATA[Number(areaCode)]) {
-      const __params = {
-        title: `${AREA_OBJ_DATA[Number(areaCode)]} (${nums})`,
-        key: areaCode,
+      for (let i = 0, len = GEO_COORD.length; i < len; i++) {
+        const item = GEO_COORD[i];
+        if (Number(areaCode) === item.areaCode) {
+          __params.title = `${AREA_OBJ_DATA[Number(areaCode)]} (${nums})`;
+          __params.key = areaCode;
+          __params.mapPosition = item.geoCoord;
+          if (nums > 0) {
+            __params.children = []
+          }
+          __mapPositionList.push({
+            lng: item.geoCoord[0],
+            lat: item.geoCoord[1],
+          })
+          break;
+        }
       }
-      if (nums > 0) {
-        __params.children = []
-      }
-      // __treeList.push({
-      //   id, nums, parentId, projectName, areaName: AREA_OBJ_DATA[Number(areaCode)], areaCode
-      // });
-      __treeList.push(__params)
+      __treeList.push(__params);
     }
   });
-  console.log('------__treeList', __treeList);
-  return __treeList;
+  return { treeList: __treeList, mapPosition: __mapPositionList };
 }
 
 const state = {
@@ -40,6 +47,10 @@ const state = {
   token: "",
   companyList: [],
   projectTreeList: [],
+  mapPositionList: [{
+    lng: 116.404,
+    lat: 39.915,
+  }]
 };
 
 const mutations = {
@@ -62,6 +73,10 @@ const mutations = {
 
   uedateProjectTreeList(state, list = []) {
     state.projectTreeList = list;
+  },
+
+  uedateMapPositionList(state, list = []) {
+    state.mapPositionList = list;
   }
 };
 
@@ -83,7 +98,9 @@ const actions = {
   getProjectListAct: async ({ commit /* state, rootState */ }) => {
     const { code, data, msg, count } = await api.user.getProjectTree();
     if (code === 200) {
-      commit("uedateProjectTreeList", mapProjectTree(data || []));
+      const { mapPosition, treeList } = mapProjectTree(data || []);
+      commit("uedateProjectTreeList", treeList);
+      commit("uedateMapPositionList", mapPosition);
     }
     return { code, data, msg, count };
   }

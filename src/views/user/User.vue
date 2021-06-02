@@ -1,7 +1,10 @@
 <template>
   <div class="__flex __rfsfs manage-container">
     <div class="left-box">
-      <a-tree :load-data="onLoadData" :tree-data="treeList" />
+      <a-tree
+        :load-data="onLoadData"
+        :tree-data="treeList"
+      />
     </div>
     <div class="right-box">
       <map-com></map-com>
@@ -10,7 +13,7 @@
 </template>
 
 <script>
-import { mapActions, mapState, createNamespacedHelpers } from "vuex";
+import { mapActions, mapState, mapMutations, createNamespacedHelpers } from "vuex";
 const {
   mapActions: mapActionsUser,
   mapState: mapStateUser,
@@ -18,6 +21,7 @@ const {
 
 import MapCom from "@/components/common/Map.vue";
 import { AREA_OBJ_DATA } from "@/constant";
+import api from "@/axios/api";
 
 import utils from "@/utils/common";
 
@@ -53,37 +57,27 @@ export default {
   methods: {
     ...mapActions(["getUserListAct", "getProjectListAct"]),
 
-    // async getUserList() {
-    //   this.loading = true;
-    //   // 根据当前登陆用户的角色获取用户列表
-    //   const { code, data, msg } = await this.getUserListAct();
-    //   if (code === 200) {
-    //     this.data = data;
-    //   } else {
-    //     utils.log(`${msg}-----${code}`);
-    //   }
-    //   this.loading = false;
-    // },
+    ...mapMutations(["uedateMapPositionList"]),
 
     async onLoadData(treeNode) {
       console.log("---onLoadData-", treeNode);
       if (treeNode.dataRef.children) return;
 
+      // const { mapPosition } = treeNode.dataRef;
+
       treeNode.dataRef.children = [
         { title: "Child Node", key: `${treeNode.eventKey}-0` },
         { title: "Child Node", key: `${treeNode.eventKey}-1` },
       ];
-      const { code, data, msg, count } = await api.user.getProjectTree({});
-      if (code === 200) {
-        const __item = {
-          title: `${AREA_OBJ_DATA[Number(areaCode)]} (${nums})`,
-          key: areaCode,
-        }
-        treeNode.dataRef.children.push(__item)
-      }
+      // const { code, data, msg, count } = await api.user.getProjectTree({});
+      // if (code === 200) {
+      //   const __item = {
+      //     title: `${AREA_OBJ_DATA[Number(areaCode)]} (${nums})`,
+      //     key: areaCode,
+      //   }
+      //   treeNode.dataRef.children.push(__item)
+      // }
     },
-
-    onSelect() {},
   },
 };
 </script>
