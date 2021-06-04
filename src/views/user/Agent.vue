@@ -14,7 +14,7 @@
 import { mapActions } from "vuex";
 
 import utils from "@/utils/common";
-import Plarfrom from "@/components/user/Platform.vue";
+import Plarfrom from "@/components/user/Platform11.vue";
 const USER_TYPE = 5;
 
 export default {

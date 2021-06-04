@@ -20,7 +20,6 @@ function mapProjectTree(treeList) {
     const __params = {};
     if (AREA_OBJ_DATA[Number(areaCode)]) {
       const __item = AREA_OBJ_DATA[Number(areaCode)];
-      console.log('----------', __item);
       __params.title = `${__item.label}(${nums})`;
       __params.key = __item.label;
       __params.mapPosition = __item.geoCoord;
@@ -95,7 +94,6 @@ const actions = {
     const { code, data, msg, count } = await api.user.getProjectTree();
     if (code === 200) {
       const { mapPosition, treeList } = mapProjectTree(data || []);
-      console.log(1111, treeList);
       commit("uedateProjectTreeList", treeList);
       commit("uedateMapPositionList", mapPosition);
     }

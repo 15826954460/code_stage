@@ -228,9 +228,8 @@ export default {
       this.form.setFieldsValue({ businessId: val });
     },
 
-    handleGeoCoordSelectChange(option) {
-      const { key: areaCode } = option;
-      this.form.setFieldsValue({ areaCode });
+    handleGeoCoordSelectChange({ key, label, mapPosition }) {
+      this.form.setFieldsValue({ areaCode: key });
     },
   },
 };
