@@ -19,22 +19,18 @@ function mapProjectTree(treeList) {
   }, idx) => {
     const __params = {};
     if (AREA_OBJ_DATA[Number(areaCode)]) {
-      for (let i = 0, len = GEO_COORD.length; i < len; i++) {
-        const item = GEO_COORD[i];
-        if (Number(areaCode) === item.areaCode) {
-          __params.title = `${AREA_OBJ_DATA[Number(areaCode)]} (${nums})`;
-          __params.key = areaCode;
-          __params.mapPosition = item.geoCoord;
-          if (nums > 0) {
-            __params.children = []
-          }
-          __mapPositionList.push({
-            lng: item.geoCoord[0],
-            lat: item.geoCoord[1],
-          })
-          break;
-        }
+      const __item = AREA_OBJ_DATA[Number(areaCode)];
+      console.log('----------', __item);
+      __params.title = `${__item.label}(${nums})`;
+      __params.key = __item.label;
+      __params.mapPosition = __item.geoCoord;
+      if (nums > 0) {
+        __params.children = []
       }
+      __mapPositionList.push({
+        lng: __item.geoCoord[0],
+        lat: __item.geoCoord[1],
+      });
       __treeList.push(__params);
     }
   });
@@ -99,6 +95,7 @@ const actions = {
     const { code, data, msg, count } = await api.user.getProjectTree();
     if (code === 200) {
       const { mapPosition, treeList } = mapProjectTree(data || []);
+      console.log(1111, treeList);
       commit("uedateProjectTreeList", treeList);
       commit("uedateMapPositionList", mapPosition);
     }
