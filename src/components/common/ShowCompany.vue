@@ -18,11 +18,18 @@ export default {
   },
 
   computed: {
-    ...mapState(["companyList"]),
+    ...mapState(["allCompanyList"]),
 
     projectName() {
       let __projectName = "";
-      this.companyList.forEach(({ id, projectName }) => {
+      const __allCompanyList = [
+        ...this.allCompanyList,
+        {
+          id: 1,
+          projectName: "释格物流",
+        },
+      ];
+      __allCompanyList.forEach(({ id, projectName }) => {
         if (id === Number(this.value)) {
           __projectName = projectName;
         }
@@ -39,7 +46,8 @@ export default {
     ...mapActions(["getCompanyListAct"]),
 
     async getCompanyList() {
-      if (this.companyList.length) return;
+      if (this.allCompanyList.length) return;
+      this.getCompanyListAct({ isAll: true });
     },
   },
 };

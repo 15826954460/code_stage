@@ -26,6 +26,9 @@
       <p slot="bank" slot-scope="text">
         <ShowBank :value="text"></ShowBank>
       </p>
+      <p slot="companyShow" slot-scope="text">
+        <ShowCompany :value="text"></ShowCompany>
+      </p>
       <p slot="action" slot-scope="text, record">
         <a-button
           type="primary"
@@ -65,6 +68,8 @@ import { AREA_OBJ_DATA } from "@/constant";
 import CusModule from "@/components/common/CusModule.vue";
 import IndustryShow from "@/components/common/IndustryShow.vue";
 import ShowBank from "@/components/common/ShowBank.vue";
+import ShowCompany from "@/components/common/ShowCompany.vue";
+
 import CompanyForm from "@/components/company/CompanyForm.vue";
 
 const columns = [
@@ -165,12 +170,12 @@ export default {
     CompanyForm,
     IndustryShow,
     ShowBank,
+    ShowCompany,
   },
 
   data() {
     return {
       dataList: [],
-      columns,
       visible: false,
       row: {},
       loading: false,
@@ -184,6 +189,19 @@ export default {
       return this.companyList.filter((item) => {
         return Number(item.type) === this.type;
       });
+    },
+
+    columns() {
+      if (this.type !== 1) {
+        return columns;
+      }
+      columns.splice(4, 0, {
+        title: "上级公司",
+        dataIndex: "parentId",
+        width: 160,
+        scopedSlots: { customRender: "companyShow" },
+      });
+      return columns;
     },
   },
 
@@ -237,7 +255,7 @@ export default {
             id,
             ...params,
             type: this.type,
-            parentId: parentId || 1,
+            parentId,
             mapPosition: mapPosition || this.row.mapPosition,
             areaCode: key,
           });
@@ -245,7 +263,7 @@ export default {
           this.create({
             ...params,
             type: this.type,
-            parentId: parentId || 1,
+            parentId,
             mapPosition,
             areaCode: key,
           });

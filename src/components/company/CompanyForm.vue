@@ -59,8 +59,8 @@
         v-decorator="[
           'parentId',
           {
-            initialValue: row.parentId,
-            rules: [{ message: '请选择上级公司' }],
+            initialValue: row.parentId || 1,
+            rules: [{ required: true, message: '请选择上级公司' }],
           },
         ]"
         @change="handleCompanySelectChange"
@@ -208,8 +208,8 @@ export default {
 
     type: {
       type: Number,
-      default: 1
-    }
+      default: 1,
+    },
   },
 
   components: {
