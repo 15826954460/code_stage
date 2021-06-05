@@ -3,7 +3,7 @@
     <baidu-map
       class="map"
       ak="tsIqsUun5eMWPbOPc0cGVvclj6js9vGL"
-      center="湖北"
+      :center="mapCenter"
       :min-zoom="minZoom"
       :max-zoom="maxZoom"
       :zoom="zoom"
@@ -23,16 +23,16 @@
         :autoLocation="true"
       ></bm-geolocation> -->
 
-      <bml-marker-clusterer v-if="!isAddUser" :averageCenter="true">
+      <bml-marker-clusterer v-if="!isAddUser" :averageCenter="false">
         <bm-marker
           v-for="(marker, index) of mrkposList"
           :key="index"
           :position="{ lng: marker.lng, lat: marker.lat }"
+          :dragging="true"
         ></bm-marker>
       </bml-marker-clusterer>
 
-      <!-- animation="BMAP_ANIMATION_BOUNCE" -->
-      <bm-marker v-else :position="latlng" :dragging="true">
+      <bm-marker :position="latlng" :dragging="true">
         <!-- <bm-label
           content="我爱北京天安门"
           :labelStyle="{ color: 'red', fontSize: '24px' }"
@@ -50,9 +50,9 @@ import BaiduMap from "vue-baidu-map/components/map/Map.vue";
 import BmView from "vue-baidu-map/components/map/MapView.vue";
 import BmScale from "vue-baidu-map/components/controls/Scale";
 import BmNavigation from "vue-baidu-map/components/controls/Navigation";
+import BmMarker from "vue-baidu-map/components/overlays/Marker";
 // import BmGeolocation from "vue-baidu-map/components/controls/Geolocation";
 // import BmCityList from "vue-baidu-map/components/controls/CityList";
-import BmMarker from "vue-baidu-map/components/overlays/Marker";
 // import BmLabel from "vue-baidu-map/components/overlays/Label";
 
 // let markers = [];
@@ -72,6 +72,19 @@ export default {
       type: Boolean,
       default: false,
     },
+    latlng: {
+      type: Object,
+      default: function () {
+        return {
+          lat: 39.915,
+          lng: 116.404,
+        };
+      },
+    },
+    zoom: {
+      type: Number,
+      default: 6,
+    },
   },
 
   components: {
@@ -80,39 +93,33 @@ export default {
     BmScale,
     BmNavigation,
     BmMarker,
+    BmView,
     // BmLabel,
     // BmGeolocation,
     // BmCityList,
-    BmView,
   },
 
   data() {
     return {
-      latlng: {
-        lng: 116.404,
-        lat: 39.915,
-      },
-      zoom: 6,
       minZoom: 1,
       maxZoom: 100,
-      location: "北京",
-      keyword: "百度",
     };
   },
 
   computed: {
     ...mapState({
       mapPositionList: (state) => state.mapPositionList,
+      mapCenter: (state) => state.mapCenter,
     }),
 
     mrkposList() {
-      return this.isAddUser ? [this.latlng] : this.mapPositionList;
+      // return this.isAddUser ? [ this.latlng ] : this.mapPositionList;
+      return this.mapPositionList;
     },
   },
 
-  created() {},
-
-  mounted() {},
+  mounted() {
+  },
 
   methods: {
     selectLat({ type, target, point, pixel, overlay }) {
@@ -120,11 +127,10 @@ export default {
     },
 
     getLocation() {
-      navigator.geolocation.getCurrentPosition(function (position) {
-        // console.log("---------------getCurrentPosition", position);
-        const { latitude, longitude } = position.coords;
-        this.latlng = { ...this.latlng, lat: latitude, lng: longitude };
-      });
+      // navigator.geolocation.getCurrentPosition(function (position) {
+      //   const { latitude, longitude } = position.coords;
+      //   this.latlng = { ...this.latlng, lat: latitude, lng: longitude };
+      // });
     },
   },
 };

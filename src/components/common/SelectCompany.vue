@@ -6,6 +6,7 @@
     @change="handleChange"
     :mode="multiple ? 'multiple' : ''"
     :allowClear="multiple"
+    :disabled="disabled"
   >
     <a-select-option
       v-for="item in showCompanyList"
@@ -34,6 +35,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
   },
 
   computed: {

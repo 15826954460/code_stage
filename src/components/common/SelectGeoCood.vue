@@ -4,13 +4,11 @@
     placeholder="请选择省份"
     :value="value"
     @change="handleChange"
-    :labelInValue="true"
   >
     <a-select-option
       v-for="(item, index) in geocoordList"
       :value="item.areaCode"
       :key="index"
-      :mapPosition="item.geoCoord.join(',')"
     >
       {{ item.label }}
     </a-select-option>
@@ -24,10 +22,8 @@ export default {
 
   props: {
     value: {
-      type: Object,
-      default: () => {
-        return { key: '' }
-      },
+      type: [Number, String],
+      default: '',
     },
   },
 
@@ -38,13 +34,8 @@ export default {
   },
 
   methods: {
-    handleChange(value, option) {
-      const {
-        data: {
-          attrs: { mapPosition },
-        },
-      } = option;
-      this.$emit("change", { ...value, mapPosition });
+    handleChange(val) {
+      this.$emit("change", val);
     },
   },
 };

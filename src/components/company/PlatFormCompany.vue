@@ -51,12 +51,18 @@
       </p>
     </a-table>
     <CusModule v-if="visible" @cancel="cancel" :visible="visible" :width="800">
-      <CompanyForm ref="companyFormRefs" :row="row" :type="type"></CompanyForm>
+      <CompanyForm
+        ref="companyFormRefs"
+        :row="row"
+        :type="type"
+        @updateShowMapSelect="updateShowMapSelect"
+      ></CompanyForm>
       <div class="__flex __rfec">
         <a-button style="margin-right: 15px" @click="cancel"> 取消 </a-button>
         <a-button type="primary" @click="submit"> 确定 </a-button>
       </div>
     </CusModule>
+    <MapPosition v-show="showMapSelect"></MapPosition>
   </div>
 </template>
 
@@ -69,6 +75,7 @@ import CusModule from "@/components/common/CusModule.vue";
 import IndustryShow from "@/components/common/IndustryShow.vue";
 import ShowBank from "@/components/common/ShowBank.vue";
 import ShowCompany from "@/components/common/ShowCompany.vue";
+import MapPosition from "@/components/common/MapPosition.vue";
 
 import CompanyForm from "@/components/company/CompanyForm.vue";
 
@@ -171,6 +178,7 @@ export default {
     IndustryShow,
     ShowBank,
     ShowCompany,
+    MapPosition,
   },
 
   data() {
@@ -179,6 +187,7 @@ export default {
       visible: false,
       row: {},
       loading: false,
+      showMapSelect: false,
     };
   },
 
@@ -244,28 +253,22 @@ export default {
       __formRef.form.validateFields(async (err, values) => {
         if (err) return;
         const { id } = this.row;
-        const { areaCode: options, parentId, ...params } = values;
-        const { key, label, mapPosition } = options;
-        if (!mapPosition && !id) {
-          console.log(1111, "no mapPosition");
-          return;
-        }
+        console.log("-----------------", values);
+        const { parentId, ...params } = values;
         if (id) {
           this.update({
             id,
             ...params,
             type: this.type,
             parentId,
-            mapPosition: mapPosition || this.row.mapPosition,
-            areaCode: key,
+            // mapPosition: mapPosition || this.row.mapPosition,
           });
         } else {
           this.create({
             ...params,
             type: this.type,
             parentId,
-            mapPosition,
-            areaCode: key,
+            // mapPosition,
           });
         }
       });
@@ -295,6 +298,10 @@ export default {
       if (code === 200) {
         this.fetchList();
       }
+    },
+
+    updateShowMapSelect(bool) {
+      this.showMapSelect = bool;
     },
   },
 };

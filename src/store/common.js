@@ -38,6 +38,7 @@ const state = {
   allCompanyList: [], // 所有单位列表
   companyList: [],
   projectTreeList: [],
+  mapCenter: '北京',
   mapPositionList: [
     {
       lng: 116.404,
@@ -74,6 +75,10 @@ const mutations = {
 
   uedateMapPositionList(state, list = []) {
     state.mapPositionList = list;
+  },
+
+  uedateMapCenter(state, center) {
+    state.mapCenter = center;
   },
 };
 

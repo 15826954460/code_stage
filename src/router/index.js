@@ -13,26 +13,25 @@ const routes = [
         name: "test-home",
         component: () => import("../views/Test.vue"),
       },
-      {
-        path: "agent-list",
-        name: "agent-list-page",
-        component: () => import("../views/user/Agent.vue"),
-      },
+      // 用户分布中心
       {
         path: "user-center",
         name: "user-list-page",
         component: () => import("../views/user/User.vue"),
       },
+      // 操作日志
       {
         path: "option-log",
         name: "option-log-page",
-        component: () => import("../views/user/OptionLog.vue"),
+        component: () => import("../views/log/OptionLog.vue"),
       },
+      // 设备管理
       {
         path: "equipment-page",
         name: "equipment-page",
         component: () => import("../views/equipment/Index.vue"),
       },
+      // 告警中心
       {
         path: "warnning",
         name: "warnning-page",

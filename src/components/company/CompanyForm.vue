@@ -64,10 +64,11 @@
           },
         ]"
         @change="handleCompanySelectChange"
+        :disabled="true"
       ></SelectCompany>
     </a-form-item>
     <a-form-item
-      label="所属省份"
+      label="所在省份"
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
     >
@@ -75,12 +76,36 @@
         v-decorator="[
           'areaCode',
           {
-            initialValue: { key: row.areaCode || '' },
+            initialValue: row.areaCode,
             rules: [{ required: true, message: '请选择省份' }],
           },
         ]"
         @change="handleGeoCoordSelectChange"
       ></SelectGeoCood>
+    </a-form-item>
+
+    <a-form-item
+      label="地理位置"
+      :label-col="formItemLayout.labelCol"
+      :wrapper-col="formItemLayout.wrapperCol"
+    >
+      <a-row :gutter="12">
+        <a-col class="gutter-row" :span="12">
+          <a-input
+            v-decorator="[
+              'mapPosition',
+              {
+                initialValue: row.mapPosition,
+                rules: [{ required: true, message: '请选择地理位置' }],
+              },
+            ]"
+            placeholder="请选择地理位置"
+          />
+        </a-col>
+        <a-col class="gutter-row" :span="12">
+          <a-button @click="selectMapPosition">选择地理位置</a-button>
+        </a-col>
+      </a-row>
     </a-form-item>
     <a-form-item
       label="纳税号"
@@ -185,6 +210,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 import SelectBank from "@/components/common/SelectBank.vue";
 import IndustryList from "@/components/common/IndustryList.vue";
 import SelectGeoCood from "@/components/common/SelectGeoCood.vue";
@@ -231,6 +257,8 @@ export default {
   },
 
   methods: {
+    ...mapMutations(["uedateMapCenter"]),
+
     handleTypeSelectChange(val) {
       this.form.setFieldsValue({ bank: val });
     },
@@ -239,13 +267,18 @@ export default {
       this.form.setFieldsValue({ businessId: val });
     },
 
-    handleGeoCoordSelectChange({ key, label, mapPosition }) {
-      this.form.setFieldsValue({ areaCode: { key } });
+    handleGeoCoordSelectChange(val) {
+      this.form.setFieldsValue({ areaCode: val });
     },
 
     handleCompanySelectChange(val) {
       this.form.setFieldsValue({ parentId: val });
+      this.uedateMapCenter(val);
     },
+
+    selectMapPosition() {
+      this.$emit('updateShowMapSelect', true)
+    }
   },
 };
 </script>

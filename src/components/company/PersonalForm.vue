@@ -89,7 +89,7 @@
         v-decorator="[
           'areaCode',
           {
-            initialValue: { key: row.areaCode || '' },
+            initialValue: row.areaCode,
             rules: [{ required: true, message: '请选择省份' }],
           },
         ]"
@@ -175,8 +175,8 @@ export default {
       this.form.setFieldsValue({ businessId: val });
     },
 
-    handleGeoCoordSelectChange({ key, label, mapPosition }) {
-      this.form.setFieldsValue({ areaCode: { key } });
+    handleGeoCoordSelectChange(val) {
+      this.form.setFieldsValue({ areaCode: val });
     },
   },
 };
