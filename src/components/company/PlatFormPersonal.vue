@@ -156,7 +156,7 @@ export default {
       visible: false,
       row: {},
       loading: false,
-      type: 2, // 1 公司 2 个人
+      type: 3, // 1 普通公司 2 代理公司 3 个人代理
     };
   },
 
@@ -165,7 +165,7 @@ export default {
 
     filterList() {
       return this.companyList.filter(item => {
-        return Number(item.type) === 2;
+        return Number(item.type) === this.type;
       })
     }
   },
@@ -180,10 +180,6 @@ export default {
     ...mapActions(["getCompanyListAct"]),
 
     async fetchList(force = true) {
-      if (!force && this.filterList.length) {
-        this.dataList = this.filterList;
-        return;
-      }
       this.loading = true;
       const { code, data } = await this.getCompanyListAct({ type: this.type });
       if (code === 200) {

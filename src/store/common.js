@@ -35,6 +35,7 @@ const state = {
   isNetError: false,
   isLogined: false,
   token: "",
+  allCompanyList: [], // 所有单位列表
   companyList: [],
   projectTreeList: [],
   mapPositionList: [
@@ -63,6 +64,10 @@ const mutations = {
     state.companyList = [...state.companyList, ...list];
   },
 
+  updateAllCompanyList(state, list = []) {
+    state.allCompanyList = list;
+  },
+
   uedateProjectTreeList(state, list = []) {
     state.projectTreeList = list;
   },
@@ -80,9 +85,15 @@ const actions = {
   },
 
   getCompanyListAct: async ({ commit /* state, rootState */ }, params = {}) => {
-    const { code, data, msg, count } = await api.company.getCompanyList(params);
+    const { isAll, ...options } = params;
+    isAll && (params.pageSize = 9999);
+    const { code, data, msg, count } = await api.company.getCompanyList(
+      options
+    );
     if (code === 200) {
-      commit("updateCompanyList", data);
+      isAll
+        ? commit("updateAllCompanyList", data)
+        : commit("updateCompanyList", data);
     }
     return { code, data, msg, count };
   },

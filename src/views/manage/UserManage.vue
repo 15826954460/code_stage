@@ -35,6 +35,7 @@
           编辑
         </a-button>
         <a-popconfirm
+          v-if="record.status === 1"
           :title="`确认删除当前用户${record.trueName}`"
           ok-text="确认"
           cancel-text="取消"

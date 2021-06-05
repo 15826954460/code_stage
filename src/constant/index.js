@@ -24,6 +24,13 @@ const ADMIN_ROLE_TYPE_LIST = [
   { label: '信息录入员', value: 4, adminType: 4 },
 ]
 
+// 公司列表划分
+const COMPANY_TYPE = {
+  1: '普通公司',
+  2: '公司代理',
+  3: '个人代理'
+}
+
 // 银行列表
 const BANK_LIST = [
   { label: '工商银行', value: 1, bankType: 1 },
@@ -157,4 +164,5 @@ export {
   INDUSTRY_LIST,
   AREA_OBJ_DATA,
   GEO_COORD,
+  COMPANY_TYPE,
 }

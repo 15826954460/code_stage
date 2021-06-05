@@ -17,19 +17,24 @@ export default {
   computed: {},
 
   mounted() {
-    this.fetTreeList();
+    this.fetchTreeList();
+    this.fetchCompanyAllList();
   },
 
   methods: {
-    ...mapActions(["getProjectListAct"]),
+    ...mapActions(["getProjectListAct", "getCompanyListAct"]),
 
     handleMeunItem({ keyPath, key }) {
       console.log(keyPath, key);
       this.$router.push({ path: `${key}` });
     },
 
-    fetTreeList() {
+    fetchTreeList() {
       this.getProjectListAct();
+    },
+
+    fetchCompanyAllList() {
+      this.getCompanyListAct({ isAll: true })
     }
   },
 };

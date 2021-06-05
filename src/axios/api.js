@@ -109,7 +109,11 @@ export default {
       return getFetch({
         url: "/projects",
         interfaceKey: "getCompanyList",
-        params,
+        params: {
+          page: 1,
+          pageSize: 10,
+          ...params,
+        },
       });
     },
 

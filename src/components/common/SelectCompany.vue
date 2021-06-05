@@ -12,13 +12,14 @@
       :value="Number(item.id)"
       :key="item.id"
     >
-      {{ item.projectName }}
+      {{ item.projectName }}--{{ item.label }}
     </a-select-option>
   </a-select>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
+import { COMPANY_TYPE } from "@/constant";
 
 export default {
   name: "select-company-com",
@@ -30,16 +31,16 @@ export default {
     },
     multiple: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   computed: {
-    ...mapState(["companyList"]),
+    ...mapState(["allCompanyList"]),
 
     showCompanyList() {
-      return this.companyList.map(({ id, projectName }) => {
-        return { projectName, id };
+      return this.allCompanyList.map(({ id, projectName, type }) => {
+        return { projectName, id, label: COMPANY_TYPE[type] };
       });
     },
   },
@@ -52,8 +53,8 @@ export default {
     ...mapActions(["getCompanyListAct"]),
 
     async getCompanyList() {
-      if (this.companyList.length) return;
-      this.getCompanyListAct();
+      if (this.allCompanyList.length) return;
+      this.getCompanyListAct({ isAll: true });
     },
 
     handleChange(value) {
@@ -62,6 +63,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="scss">
-</style>

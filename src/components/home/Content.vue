@@ -46,7 +46,7 @@
           @click="handleMeunItem"
         >
           <a-menu-item key="/"> <a-icon type="home" /> 首页 </a-menu-item>
-          <a-menu-item key="/user-center"> <a-icon type="home" /> 用户中心 </a-menu-item>
+          <a-menu-item key="/user-center"> <a-icon type="home" /> 用户分布 </a-menu-item>
 
           <!-- <a-sub-menu key="sub3" v-show="userType !== 4">
             <span slot="title"> <a-icon type="usergroup-add" /> 用户中心 </span>
