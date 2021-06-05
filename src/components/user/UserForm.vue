@@ -154,7 +154,6 @@ export default {
     },
 
     handleCompanySelectChange(val) {
-      console.log('-----handleCompanySelectChange', val);
       this.form.setFieldsValue({ projectIds: val });
     },
 

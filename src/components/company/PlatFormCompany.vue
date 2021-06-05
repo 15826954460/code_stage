@@ -48,7 +48,7 @@
       </p>
     </a-table>
     <CusModule v-if="visible" @cancel="cancel" :visible="visible" :width="800">
-      <CompanyForm :row="row" ref="companyFormRefs"></CompanyForm>
+      <CompanyForm ref="companyFormRefs" :row="row" :type="type"></CompanyForm>
       <div class="__flex __rfec">
         <a-button style="margin-right: 15px" @click="cancel"> 取消 </a-button>
         <a-button type="primary" @click="submit"> 确定 </a-button>
@@ -156,8 +156,8 @@ export default {
   props: {
     type: {
       type: Number,
-      default: 1,  //  1 普通公司 2 代理公司 3 个人代理
-    }
+      default: 1, //  1 普通公司 2 代理公司 3 个人代理
+    },
   },
 
   components: {
@@ -181,10 +181,10 @@ export default {
     ...mapState(["companyList"]),
 
     filterList() {
-      return this.companyList.filter(item => {
+      return this.companyList.filter((item) => {
         return Number(item.type) === this.type;
-      })
-    }
+      });
+    },
   },
 
   created() {
@@ -226,7 +226,7 @@ export default {
       __formRef.form.validateFields(async (err, values) => {
         if (err) return;
         const { id } = this.row;
-        const { areaCode: options, ...params } = values;
+        const { areaCode: options, parentId, ...params } = values;
         const { key, label, mapPosition } = options;
         if (!mapPosition && !id) {
           console.log(1111, "no mapPosition");
@@ -237,7 +237,7 @@ export default {
             id,
             ...params,
             type: this.type,
-            parentId: 1,
+            parentId: parentId || 1,
             mapPosition: mapPosition || this.row.mapPosition,
             areaCode: key,
           });
@@ -245,7 +245,7 @@ export default {
           this.create({
             ...params,
             type: this.type,
-            parentId: 1,
+            parentId: parentId || 1,
             mapPosition,
             areaCode: key,
           });

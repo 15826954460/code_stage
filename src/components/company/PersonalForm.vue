@@ -156,7 +156,7 @@ export default {
   components: {
     IndustryList,
     SelectGeoCood,
-    SelectBank
+    SelectBank,
   },
 
   beforeDestroy() {
@@ -176,7 +176,7 @@ export default {
     },
 
     handleGeoCoordSelectChange({ key, label, mapPosition }) {
-     this.form.setFieldsValue({ areaCode: { key } });
+      this.form.setFieldsValue({ areaCode: { key } });
     },
   },
 };

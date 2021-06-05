@@ -49,6 +49,24 @@
       />
     </a-form-item>
     <a-form-item
+      v-if="type === 1"
+      label="上级公司"
+      :label-col="formItemLayout.labelCol"
+      :wrapper-col="formItemLayout.wrapperCol"
+      extra="非必选, 默认为释格有限公司"
+    >
+      <SelectCompany
+        v-decorator="[
+          'parentId',
+          {
+            initialValue: row.parentId,
+            rules: [{ message: '请选择上级公司' }],
+          },
+        ]"
+        @change="handleCompanySelectChange"
+      ></SelectCompany>
+    </a-form-item>
+    <a-form-item
       label="所属省份"
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
@@ -170,6 +188,7 @@
 import SelectBank from "@/components/common/SelectBank.vue";
 import IndustryList from "@/components/common/IndustryList.vue";
 import SelectGeoCood from "@/components/common/SelectGeoCood.vue";
+import SelectCompany from "@/components/common/SelectCompany.vue";
 
 const formItemLayout = {
   labelCol: { span: 4 },
@@ -186,12 +205,18 @@ export default {
         return {};
       },
     },
+
+    type: {
+      type: Number,
+      default: 1
+    }
   },
 
   components: {
     SelectBank,
     IndustryList,
     SelectGeoCood,
+    SelectCompany,
   },
 
   beforeDestroy() {
@@ -216,6 +241,10 @@ export default {
 
     handleGeoCoordSelectChange({ key, label, mapPosition }) {
       this.form.setFieldsValue({ areaCode: { key } });
+    },
+
+    handleCompanySelectChange(val) {
+      this.form.setFieldsValue({ parentId: val });
     },
   },
 };
