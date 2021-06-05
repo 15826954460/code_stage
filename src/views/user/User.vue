@@ -65,10 +65,10 @@ export default {
 
       // const { mapPosition } = treeNode.dataRef;
 
-      treeNode.dataRef.children = [
-        { title: "Child Node", key: `${treeNode.eventKey}-0` },
-        { title: "Child Node", key: `${treeNode.eventKey}-1` },
-      ];
+      // treeNode.dataRef.children = [
+      //   { title: "Child Node", key: `${treeNode.eventKey}-0` },
+      //   { title: "Child Node", key: `${treeNode.eventKey}-1` },
+      // ];
       // const { code, data, msg, count } = await api.user.getProjectTree({});
       // if (code === 200) {
       //   const __item = {

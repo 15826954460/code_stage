@@ -16,7 +16,9 @@
       rowKey="id"
     >
       <p slot="mapPosition" slot-scope="text">
-        经度：{{ text.split(",")[0] }} 纬度：{{ text.split(",")[1] }}
+        经度：{{ text.split(",")[0] }}
+        <br />
+        纬度：{{ text.split(",")[1] }}
       </p>
       <p slot="industry" slot-scope="text">
         <IndustryShow :value="text"></IndustryShow>
@@ -47,13 +49,6 @@
     </a-table>
     <CusModule v-if="visible" @cancel="cancel" :visible="visible" :width="800">
       <CompanyForm :row="row" ref="companyFormRefs"></CompanyForm>
-
-      <!-- <PersonalForm
-        v-if="type === 2 && visible"
-        :row="row"
-        ref="personalFormRefs"
-      ></PersonalForm> -->
-
       <div class="__flex __rfec">
         <a-button style="margin-right: 15px" @click="cancel"> 取消 </a-button>
         <a-button type="primary" @click="submit"> 确定 </a-button>
@@ -71,7 +66,6 @@ import CusModule from "@/components/common/CusModule.vue";
 import IndustryShow from "@/components/common/IndustryShow.vue";
 import ShowBank from "@/components/common/ShowBank.vue";
 import CompanyForm from "@/components/company/CompanyForm.vue";
-import PersonalForm from "@/components/company/PersonalForm.vue";
 
 const columns = [
   {
@@ -108,6 +102,7 @@ const columns = [
     title: "经纬度",
     dataIndex: "mapPosition",
     scopedSlots: { customRender: "mapPosition" },
+    width: 160,
   },
   {
     title: "纳税号",
@@ -139,10 +134,6 @@ const columns = [
   {
     title: "官网地址",
     dataIndex: "website",
-  },
-  {
-    title: "身份证号",
-    dataIndex: "idCard",
     width: 250,
   },
   {
@@ -165,7 +156,6 @@ export default {
   components: {
     CusModule,
     CompanyForm,
-    // PersonalForm,
     IndustryShow,
     ShowBank,
   },
@@ -183,6 +173,12 @@ export default {
 
   computed: {
     ...mapState(["companyList"]),
+
+    filterList() {
+      return this.companyList.filter(item => {
+        return Number(item.type) === 1;
+      })
+    }
   },
 
   created() {
@@ -195,12 +191,12 @@ export default {
     ...mapActions(["getCompanyListAct"]),
 
     async fetchList(force = true) {
-      if (!force && this.companyList.length) {
-        this.dataList = this.companyList;
+      if (!force && this.filterList.length) {
+        this.dataList = this.filterList;
         return;
       }
       this.loading = true;
-      const { code, data } = await this.getCompanyListAct();
+      const { code, data } = await this.getCompanyListAct({ type: this.type });
       if (code === 200) {
         this.dataList = data;
       }
@@ -230,8 +226,9 @@ export default {
         const { id } = this.row;
         const { areaCode: options, ...params } = values;
         const { key, label, mapPosition } = options;
-        if (!mapPosition) {
+        if (!mapPosition && !id) {
           console.log(1111, "no mapPosition");
+          return;
         }
         if (id) {
           this.update({
@@ -239,7 +236,7 @@ export default {
             ...params,
             type: this.type,
             parentId: 1,
-            mapPosition,
+            mapPosition: mapPosition || this.row.mapPosition,
             areaCode: key,
           });
         } else {
@@ -282,6 +279,3 @@ export default {
   },
 };
 </script>
-
-<style lang='scss' scoped>
-</style>

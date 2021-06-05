@@ -2,7 +2,7 @@
   <a-select
     class="province-bank-container"
     placeholder="请选择省份"
-    :value="lableValue"
+    :value="value"
     @change="handleChange"
     :labelInValue="true"
   >
@@ -24,8 +24,10 @@ export default {
 
   props: {
     value: {
-      // type: [String, Number],
-      default: "",
+      type: Object,
+      default: () => {
+        return { key: '' }
+      },
     },
   },
 
@@ -33,12 +35,6 @@ export default {
     return {
       geocoordList: GEO_COORD,
     };
-  },
-
-  computed: {
-    lableValue() {
-      return { key: this.value };
-    }
   },
 
   methods: {

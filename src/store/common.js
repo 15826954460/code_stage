@@ -10,21 +10,16 @@ function mapProjectTree(treeList) {
   if (!treeList.length) return [];
   let __mapPositionList = [];
   let __treeList = [];
-  treeList.forEach(({
-    areaCode,
-    id,
-    nums,
-    parentId,
-    projectName,
-  }, idx) => {
+  treeList.forEach(({ areaCode, id, nums, parentId, projectName }, idx) => {
     const __params = {};
     if (AREA_OBJ_DATA[Number(areaCode)]) {
       const __item = AREA_OBJ_DATA[Number(areaCode)];
       __params.title = `${__item.label}(${nums})`;
       __params.key = __item.label;
       __params.mapPosition = __item.geoCoord;
+      __params.areaCode = Number(areaCode);
       if (nums > 0) {
-        __params.children = []
+        __params.children = [];
       }
       __mapPositionList.push({
         lng: __item.geoCoord[0],
@@ -42,10 +37,12 @@ const state = {
   token: "",
   companyList: [],
   projectTreeList: [],
-  mapPositionList: [{
-    lng: 116.404,
-    lat: 39.915,
-  }]
+  mapPositionList: [
+    {
+      lng: 116.404,
+      lat: 39.915,
+    },
+  ],
 };
 
 const mutations = {
@@ -63,7 +60,7 @@ const mutations = {
   },
 
   updateCompanyList(state, list = []) {
-    state.companyList = list;
+    state.companyList = [...state.companyList, ...list];
   },
 
   uedateProjectTreeList(state, list = []) {
@@ -72,7 +69,7 @@ const mutations = {
 
   uedateMapPositionList(state, list = []) {
     state.mapPositionList = list;
-  }
+  },
 };
 
 const actions = {
@@ -82,14 +79,15 @@ const actions = {
     return { code, data, msg, count };
   },
 
-  getCompanyListAct: async ({ commit /* state, rootState */ }) => {
-    const { code, data, msg, count } = await api.company.getCompanyList();
+  getCompanyListAct: async ({ commit /* state, rootState */ }, params = {}) => {
+    const { code, data, msg, count } = await api.company.getCompanyList(params);
     if (code === 200) {
       commit("updateCompanyList", data);
     }
     return { code, data, msg, count };
   },
 
+  // 初始化调用,字节点自己获取数据
   getProjectListAct: async ({ commit /* state, rootState */ }) => {
     const { code, data, msg, count } = await api.user.getProjectTree();
     if (code === 200) {
@@ -98,7 +96,7 @@ const actions = {
       commit("uedateMapPositionList", mapPosition);
     }
     return { code, data, msg, count };
-  }
+  },
 };
 
 export { state, mutations, actions };

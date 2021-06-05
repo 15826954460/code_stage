@@ -3,7 +3,7 @@
     <baidu-map
       class="map"
       ak="tsIqsUun5eMWPbOPc0cGVvclj6js9vGL"
-      :center="'湖北'"
+      center="湖北"
       :min-zoom="minZoom"
       :max-zoom="maxZoom"
       :zoom="zoom"
@@ -50,19 +50,19 @@ import BaiduMap from "vue-baidu-map/components/map/Map.vue";
 import BmView from "vue-baidu-map/components/map/MapView.vue";
 import BmScale from "vue-baidu-map/components/controls/Scale";
 import BmNavigation from "vue-baidu-map/components/controls/Navigation";
-import BmGeolocation from "vue-baidu-map/components/controls/Geolocation";
-import BmCityList from "vue-baidu-map/components/controls/CityList";
+// import BmGeolocation from "vue-baidu-map/components/controls/Geolocation";
+// import BmCityList from "vue-baidu-map/components/controls/CityList";
 import BmMarker from "vue-baidu-map/components/overlays/Marker";
-import BmLabel from "vue-baidu-map/components/overlays/Label";
+// import BmLabel from "vue-baidu-map/components/overlays/Label";
 
-let markers = [];
-for (let i = 0; i < 10; i++) {
-  const position = {
-    lng: Math.random() * 40 + 85,
-    lat: Math.random() * 30 + 21,
-  };
-  markers.push(position);
-}
+// let markers = [];
+// for (let i = 0; i < 10; i++) {
+//   const position = {
+//     lng: Math.random() * 40 + 85,
+//     lat: Math.random() * 30 + 21,
+//   };
+//   markers.push(position);
+// }
 
 export default {
   name: "map-com",
@@ -80,9 +80,9 @@ export default {
     BmScale,
     BmNavigation,
     BmMarker,
-    BmLabel,
-    BmGeolocation,
-    BmCityList,
+    // BmLabel,
+    // BmGeolocation,
+    // BmCityList,
     BmView,
   },
 
@@ -95,7 +95,6 @@ export default {
       zoom: 6,
       minZoom: 1,
       maxZoom: 100,
-      markers,
       location: "北京",
       keyword: "百度",
     };

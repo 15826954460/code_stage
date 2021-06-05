@@ -13,7 +13,7 @@
             rules: [{ required: true, message: '请输入姓名' }],
           },
         ]"
-        placeholder="请输入公司名称"
+        placeholder="请输入姓名"
       />
     </a-form-item>
     <a-form-item
@@ -89,11 +89,44 @@
         v-decorator="[
           'areaCode',
           {
-            initialValue: row.areaCode,
+            initialValue: { key: row.areaCode || '' },
+            rules: [{ required: true, message: '请选择省份' }],
           },
         ]"
         @change="handleGeoCoordSelectChange"
       ></SelectGeoCood>
+    </a-form-item>
+    <a-form-item
+      label="开户行"
+      :label-col="formItemLayout.labelCol"
+      :wrapper-col="formItemLayout.wrapperCol"
+    >
+      <SelectBank
+        v-decorator="[
+          'bank',
+          {
+            initialValue: row.bank || '',
+            rules: [{ required: true, message: '请选择开户行' }],
+          },
+        ]"
+        @change="handleTypeSelectChange"
+      ></SelectBank>
+    </a-form-item>
+    <a-form-item
+      label="银行卡号"
+      :label-col="formItemLayout.labelCol"
+      :wrapper-col="formItemLayout.wrapperCol"
+    >
+      <a-input
+        v-decorator="[
+          'cardNumber',
+          {
+            initialValue: row.cardNumber || '',
+            rules: [{ required: true, message: '请输入银行卡号' }],
+          },
+        ]"
+        placeholder="请输入银行卡号"
+      />
     </a-form-item>
   </a-form>
 </template>
@@ -101,6 +134,7 @@
 <script>
 import IndustryList from "@/components/common/IndustryList.vue";
 import SelectGeoCood from "@/components/common/SelectGeoCood.vue";
+import SelectBank from "@/components/common/SelectBank.vue";
 
 const formItemLayout = {
   labelCol: { span: 4 },
@@ -121,7 +155,8 @@ export default {
 
   components: {
     IndustryList,
-    SelectGeoCood
+    SelectGeoCood,
+    SelectBank
   },
 
   beforeDestroy() {
@@ -140,11 +175,8 @@ export default {
       this.form.setFieldsValue({ businessId: val });
     },
 
-    handleGeoCoordSelectChange(option) {
-      console.log('---------personal form', option);
-      const { key: areaCode } = option;
-      console.log('---------personal form', areaCode);
-      // this.form.setFieldsValue({ areaCode });
+    handleGeoCoordSelectChange({ key, label, mapPosition }) {
+     this.form.setFieldsValue({ areaCode: { key } });
     },
   },
 };

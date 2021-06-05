@@ -57,7 +57,8 @@
         v-decorator="[
           'areaCode',
           {
-            initialValue: row.areaCode,
+            initialValue: { key: row.areaCode || '' },
+            rules: [{ required: true, message: '请选择省份' }],
           },
         ]"
         @change="handleGeoCoordSelectChange"
@@ -89,6 +90,7 @@
           'bank',
           {
             initialValue: row.bank || '',
+            rules: [{ required: true, message: '请选择开户行' }],
           },
         ]"
         @change="handleTypeSelectChange"
@@ -110,22 +112,6 @@
         placeholder="请输入银行卡号"
       />
     </a-form-item>
-    <!-- <a-form-item
-      label="联系电话"
-      :label-col="formItemLayout.labelCol"
-      :wrapper-col="formItemLayout.wrapperCol"
-    >
-      <a-input
-        v-decorator="[
-          'contactInfo',
-          {
-            initialValue: row.contactInfo || '',
-            rules: [{ required: true, message: '请输入联系电话' }],
-          },
-        ]"
-        placeholder="请输入联系电话"
-      />
-    </a-form-item> -->
     <a-form-item
       label="行业"
       :label-col="formItemLayout.labelCol"
@@ -229,7 +215,7 @@ export default {
     },
 
     handleGeoCoordSelectChange({ key, label, mapPosition }) {
-      this.form.setFieldsValue({ areaCode: key });
+      this.form.setFieldsValue({ areaCode: { key } });
     },
   },
 };
