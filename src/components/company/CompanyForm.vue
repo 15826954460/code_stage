@@ -211,7 +211,6 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
 import SelectBank from "@/components/common/SelectBank.vue";
 import IndustryList from "@/components/common/IndustryList.vue";
 import SelectGeoCood from "@/components/common/SelectGeoCood.vue";
@@ -258,8 +257,6 @@ export default {
   },
 
   methods: {
-    ...mapMutations(["uedateMapCenter"]),
-
     handleTypeSelectChange(val) {
       this.form.setFieldsValue({ bank: val });
     },
@@ -274,7 +271,6 @@ export default {
 
     handleCompanySelectChange(val) {
       this.form.setFieldsValue({ parentId: val });
-      this.uedateMapCenter(val);
     },
 
     selectMapPosition() {

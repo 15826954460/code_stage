@@ -48,12 +48,21 @@
       </p>
     </a-table>
     <CusModule v-if="visible" @cancel="cancel" :visible="visible" :width="800">
-      <PersonalForm :row="row" ref="personalFormRefs"></PersonalForm>
+      <PersonalForm
+        ref="personalFormRefs"
+        :row="row"
+        @updateShowMapSelect="updateShowMapSelect"
+      ></PersonalForm>
       <div class="__flex __rfec">
         <a-button style="margin-right: 15px" @click="cancel"> 取消 </a-button>
         <a-button type="primary" @click="submit"> 确定 </a-button>
       </div>
     </CusModule>
+    <MapPosition
+      v-if="showMapSelect"
+      @updateShowMapSelect="updateShowMapSelect"
+      @setFormValue="setFormValue"
+    ></MapPosition>
   </div>
 </template>
 
@@ -65,6 +74,8 @@ import { AREA_OBJ_DATA } from "@/constant";
 import CusModule from "@/components/common/CusModule.vue";
 import IndustryShow from "@/components/common/IndustryShow.vue";
 import ShowBank from "@/components/common/ShowBank.vue";
+import MapPosition from "@/components/common/MapPosition.vue";
+
 import PersonalForm from "@/components/company/PersonalForm.vue";
 
 const columns = [
@@ -98,6 +109,7 @@ const columns = [
   {
     title: "行业",
     dataIndex: "businessId",
+    scopedSlots: { customRender: "industry" },
     width: 160,
   },
   {
@@ -147,6 +159,7 @@ export default {
     PersonalForm,
     IndustryShow,
     ShowBank,
+    MapPosition,
   },
 
   data() {
@@ -157,6 +170,7 @@ export default {
       row: {},
       loading: false,
       type: 3, // 1 普通公司 2 代理公司 3 个人代理
+      showMapSelect: false,
     };
   },
 
@@ -164,10 +178,10 @@ export default {
     ...mapState(["companyList"]),
 
     filterList() {
-      return this.companyList.filter(item => {
+      return this.companyList.filter((item) => {
         return Number(item.type) === this.type;
-      })
-    }
+      });
+    },
   },
 
   created() {
@@ -209,28 +223,19 @@ export default {
       __formRef.form.validateFields(async (err, values) => {
         if (err) return;
         const { id } = this.row;
-        const { areaCode: options, ...params } = values;
-        const { key, label, mapPosition } = options;
-        if (!mapPosition && !id) {
-          console.log(1111, "no mapPosition");
-          return;
-        }
+        const { parentId, ...params } = values;
         if (id) {
           this.update({
             id,
             ...params,
             type: this.type,
-            parentId: 1,
-            mapPosition: mapPosition || this.row.mapPosition,
-            areaCode: key,
+            parentId: 1, // 上级公司默认释格
           });
         } else {
           this.create({
             ...params,
             type: this.type,
             parentId: 1,
-            mapPosition,
-            areaCode: key,
           });
         }
       });
@@ -260,6 +265,15 @@ export default {
       if (code === 200) {
         this.fetchList();
       }
+    },
+
+    updateShowMapSelect(bool) {
+      this.showMapSelect = bool;
+    },
+
+    setFormValue(val) {
+      const __formRef = this.$refs.personalFormRefs;
+      __formRef.form.setFieldsValue({ mapPosition: val });
     },
   },
 };

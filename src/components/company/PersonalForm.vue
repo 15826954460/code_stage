@@ -97,6 +97,31 @@
       ></SelectGeoCood>
     </a-form-item>
     <a-form-item
+      label="地理位置"
+      :label-col="formItemLayout.labelCol"
+      :wrapper-col="formItemLayout.wrapperCol"
+    >
+      <a-row :gutter="12">
+        <a-col class="gutter-row" :span="12">
+          <a-input
+            v-decorator="[
+              'mapPosition',
+              {
+                initialValue: row.mapPosition,
+                rules: [{ required: true, message: '请选择地理位置' }],
+              },
+            ]"
+            placeholder="请选择地理位置"
+            disabled
+          />
+        </a-col>
+        <a-col class="gutter-row" :span="12">
+          <a-button @click="selectMapPosition">选择地理位置</a-button>
+        </a-col>
+      </a-row>
+    </a-form-item>
+
+    <a-form-item
       label="开户行"
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
@@ -171,12 +196,20 @@ export default {
   },
 
   methods: {
+    handleTypeSelectChange(val) {
+      this.form.setFieldsValue({ bank: val });
+    },
+
     handleIndustrySelectChange(val) {
       this.form.setFieldsValue({ businessId: val });
     },
 
     handleGeoCoordSelectChange(val) {
       this.form.setFieldsValue({ areaCode: val });
+    },
+
+    selectMapPosition() {
+      this.$emit("updateShowMapSelect", true);
     },
   },
 };
