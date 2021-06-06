@@ -39,6 +39,10 @@ const state = {
   companyList: [],
   projectTreeList: [],
   mapCenter: '北京',
+  latlng: {
+    lat: 39.915,
+    lng: 116.404,
+  },
   mapPositionList: [
     {
       lng: 116.404,
@@ -80,6 +84,11 @@ const mutations = {
   uedateMapCenter(state, center) {
     state.mapCenter = center;
   },
+
+  updateLatlng(state, latlng) {
+    console.log('updateLatlng------------', latlng);
+    state.latlng = latlng;
+  }
 };
 
 const actions = {

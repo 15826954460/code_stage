@@ -64,7 +64,7 @@
           },
         ]"
         @change="handleCompanySelectChange"
-        :disabled="true"
+        :disabled="row.id ? true : false"
       ></SelectCompany>
     </a-form-item>
     <a-form-item
@@ -100,6 +100,7 @@
               },
             ]"
             placeholder="请选择地理位置"
+            disabled
           />
         </a-col>
         <a-col class="gutter-row" :span="12">

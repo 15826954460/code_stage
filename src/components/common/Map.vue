@@ -32,7 +32,7 @@
         ></bm-marker>
       </bml-marker-clusterer>
 
-      <bm-marker :position="latlng" :dragging="true">
+      <bm-marker v-else :position="latlng" :dragging="true">
         <!-- <bm-label
           content="我爱北京天安门"
           :labelStyle="{ color: 'red', fontSize: '24px' }"
@@ -72,15 +72,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    latlng: {
-      type: Object,
-      default: function () {
-        return {
-          lat: 39.915,
-          lng: 116.404,
-        };
-      },
-    },
     zoom: {
       type: Number,
       default: 6,
@@ -110,10 +101,10 @@ export default {
     ...mapState({
       mapPositionList: (state) => state.mapPositionList,
       mapCenter: (state) => state.mapCenter,
+      latlng: (state) => state.latlng
     }),
 
     mrkposList() {
-      // return this.isAddUser ? [ this.latlng ] : this.mapPositionList;
       return this.mapPositionList;
     },
   },

@@ -62,7 +62,11 @@
         <a-button type="primary" @click="submit"> 确定 </a-button>
       </div>
     </CusModule>
-    <MapPosition v-show="showMapSelect"></MapPosition>
+    <MapPosition
+      v-if="showMapSelect"
+      @updateShowMapSelect="updateShowMapSelect"
+      @setFormValue="setFormValue"
+    ></MapPosition>
   </div>
 </template>
 
@@ -253,7 +257,6 @@ export default {
       __formRef.form.validateFields(async (err, values) => {
         if (err) return;
         const { id } = this.row;
-        console.log("-----------------", values);
         const { parentId, ...params } = values;
         if (id) {
           this.update({
@@ -261,14 +264,12 @@ export default {
             ...params,
             type: this.type,
             parentId,
-            // mapPosition: mapPosition || this.row.mapPosition,
           });
         } else {
           this.create({
             ...params,
             type: this.type,
             parentId,
-            // mapPosition,
           });
         }
       });
@@ -303,6 +304,11 @@ export default {
     updateShowMapSelect(bool) {
       this.showMapSelect = bool;
     },
+
+    setFormValue(val) {
+      const __formRef = this.$refs.companyFormRefs;
+      __formRef.form.setFieldsValue({ mapPosition: val });
+    }
   },
 };
 </script>

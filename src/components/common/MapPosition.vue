@@ -1,6 +1,6 @@
 <template>
   <div class="map-position-box">
-    <map-com :isAddUser="true" :zoom="10"></map-com>
+    <map-com :isAddUser="true" :zoom="8" @selectPos="selectPos"></map-com>
   </div>
 </template>
 
@@ -8,22 +8,26 @@
 import MapCom from "@/components/common/Map.vue";
 
 export default {
-  name: '',
+  name: "map-position-com",
 
   data() {
-    return {}
+    return {};
   },
 
   components: {
-    MapCom
+    MapCom,
   },
-
-  created() {},
 
   mounted() {},
 
-  methods: {}
-}
+  methods: {
+    selectPos(point) {
+      const { lng, lat } = point;
+      this.$emit("setFormValue", `${lng},${lat}`);
+      this.$emit("updateShowMapSelect", false);
+    },
+  },
+};
 </script>
 
 <style lang='scss' scoped>

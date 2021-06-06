@@ -9,6 +9,8 @@
       v-for="(item, index) in geocoordList"
       :value="item.areaCode"
       :key="index"
+      :geoName="item.label"
+      :geoCoord="item.geoCoord"
     >
       {{ item.label }}
     </a-select-option>
@@ -17,13 +19,15 @@
 
 <script>
 import { GEO_COORD } from "@/constant";
+import { mapMutations } from "vuex";
+
 export default {
   name: "select-province-com",
 
   props: {
     value: {
       type: [Number, String],
-      default: '',
+      default: "",
     },
   },
 
@@ -34,7 +38,20 @@ export default {
   },
 
   methods: {
-    handleChange(val) {
+    ...mapMutations(["uedateMapCenter", "updateLatlng"]),
+
+    handleChange(val, option) {
+      const {
+        data: {
+          attrs: { geoName, geoCoord },
+        },
+      } = option;
+      this.uedateMapCenter(geoName);
+      this.updateLatlng({
+        lng: geoCoord[0],
+        lat: geoCoord[1],
+      });
+      // console.log(val, geoName, geoCoord);
       this.$emit("change", val);
     },
   },
