@@ -17,9 +17,9 @@
       size="small"
       rowKey="id"
     >
-      <p slot="projectId" slot-scope="text">
+      <!-- <p slot="projectId" slot-scope="text">
         <ShowCompany :value="text"></ShowCompany>
-      </p>
+      </p> -->
       <p slot="action" slot-scope="text, record">
         <a-button
           type="primary"
@@ -76,8 +76,9 @@ const columns = [
   },
   {
     title: "所属单位",
-    dataIndex: "projectId",
-    scopedSlots: { customRender: "projectId" },
+    dataIndex: "projectName"
+    // dataIndex: "projectId",
+    // scopedSlots: { customRender: "projectId" },
   },
   {
     title: "操作",
@@ -91,7 +92,7 @@ export default {
   components: {
     CusModule,
     BuildingForm,
-    ShowCompany
+    // ShowCompany
   },
 
   data() {
@@ -104,6 +105,7 @@ export default {
 
   methods: {
     async getBuildingList(force = true) {
+      console.log(111, '------getBuildingList');
       if (!force) {
         // TODO:
         return;

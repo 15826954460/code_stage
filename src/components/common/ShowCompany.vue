@@ -37,19 +37,6 @@ export default {
       return __projectName;
     },
   },
-
-  mounted() {
-    this.getCompanyList();
-  },
-
-  methods: {
-    ...mapActions(["getCompanyListAct"]),
-
-    async getCompanyList() {
-      if (this.allCompanyList.length) return;
-      this.getCompanyListAct({ isAll: true });
-    },
-  },
 };
 </script>
 

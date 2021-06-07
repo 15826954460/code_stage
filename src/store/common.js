@@ -86,7 +86,6 @@ const mutations = {
   },
 
   updateLatlng(state, latlng) {
-    console.log('updateLatlng------------', latlng);
     state.latlng = latlng;
   }
 };
@@ -98,17 +97,21 @@ const actions = {
     return { code, data, msg, count };
   },
 
-  getCompanyListAct: async ({ commit /* state, rootState */ }, params = {}) => {
-    const { isAll, ...options } = params;
-    isAll && (params.pageSize = 9999);
+  getAllCompanyList: async ({ commit }, params = { pageSize: 9999 }) => {
     const { code, data, msg, count } = await api.company.getCompanyList(
-      options
+      params
     );
     if (code === 200) {
-      isAll
-        ? commit("updateAllCompanyList", data)
-        : commit("updateCompanyList", data);
+      commit("updateAllCompanyList", data);
     }
+    return { code, data, msg, count };
+  },
+
+  getCompanyListAct: async ({ commit /* state, rootState */ }, params = {}) => {
+    const { code, data, msg, count } = await api.company.getCompanyList(
+      params
+    );
+    commit("updateCompanyList", data);
     return { code, data, msg, count };
   },
 

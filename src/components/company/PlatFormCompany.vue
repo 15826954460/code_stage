@@ -107,6 +107,12 @@ const columns = [
     width: 160,
   },
   {
+    title: "上级公司",
+    dataIndex: "parentId",
+    width: 160,
+    scopedSlots: { customRender: "companyShow" },
+  },
+  {
     title: "省份",
     dataIndex: "areaCode",
     customRender: (text, record, index) => {
@@ -192,30 +198,8 @@ export default {
       row: {},
       loading: false,
       showMapSelect: false,
+      columns,
     };
-  },
-
-  computed: {
-    ...mapState(["companyList"]),
-
-    filterList() {
-      return this.companyList.filter((item) => {
-        return Number(item.type) === this.type;
-      });
-    },
-
-    columns() {
-      if (this.type !== 1) {
-        return columns;
-      }
-      columns.splice(4, 0, {
-        title: "上级公司",
-        dataIndex: "parentId",
-        width: 160,
-        scopedSlots: { customRender: "companyShow" },
-      });
-      return columns;
-    },
   },
 
   created() {
@@ -225,13 +209,14 @@ export default {
   mounted() {},
 
   methods: {
-    ...mapActions(["getCompanyListAct"]),
+    ...mapActions(["getCompanyListAct", "getAllCompanyList"]),
 
     async fetchList(force = true) {
       this.loading = true;
       const { code, data } = await this.getCompanyListAct({ type: this.type });
       if (code === 200) {
         this.dataList = data;
+        force && this.getAllCompanyList();
       }
       this.loading = false;
     },
@@ -280,7 +265,7 @@ export default {
       if (code === 200) {
         this.row = {};
         this.visible = false;
-        this.fetchList();
+        this.fetchList(true);
       }
     },
 
@@ -289,7 +274,7 @@ export default {
       if (code === 200) {
         this.row = {};
         this.visible = false;
-        this.fetchList();
+        this.fetchList(true);
       }
     },
 
@@ -297,7 +282,7 @@ export default {
       if (!id) return;
       const { code } = await api.company.delCompanyList(id);
       if (code === 200) {
-        this.fetchList();
+        this.fetchList(true);
       }
     },
 
@@ -308,7 +293,7 @@ export default {
     setFormValue(val) {
       const __formRef = this.$refs.companyFormRefs;
       __formRef.form.setFieldsValue({ mapPosition: val });
-    }
+    },
   },
 };
 </script>

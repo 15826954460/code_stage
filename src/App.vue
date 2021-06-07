@@ -22,7 +22,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getProjectListAct", "getCompanyListAct"]),
+    ...mapActions(["getProjectListAct", "getAllCompanyList"]),
 
     handleMeunItem({ keyPath, key }) {
       console.log(keyPath, key);
@@ -34,7 +34,7 @@ export default {
     },
 
     fetchCompanyAllList() {
-      this.getCompanyListAct({ isAll: true })
+      this.getAllCompanyList()
     }
   },
 };
