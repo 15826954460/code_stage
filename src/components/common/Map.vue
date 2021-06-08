@@ -110,7 +110,6 @@ export default {
   },
 
   created() {
-    this.fetchCompanyAllList();
   },
 
   mounted() {

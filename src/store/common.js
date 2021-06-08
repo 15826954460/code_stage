@@ -5,31 +5,7 @@
  */
 import api from "@/axios/api";
 import { AREA_OBJ_DATA, GEO_COORD } from "@/constant";
-
-function mapProjectTree(treeList) {
-  if (!treeList.length) return [];
-  let __mapPositionList = [];
-  let __treeList = [];
-  treeList.forEach(({ areaCode, id, nums, parentId, projectName }, idx) => {
-    const __params = {};
-    if (AREA_OBJ_DATA[Number(areaCode)]) {
-      const __item = AREA_OBJ_DATA[Number(areaCode)];
-      __params.title = `${__item.label}(${nums})`;
-      __params.key = __item.label;
-      __params.mapPosition = __item.geoCoord;
-      __params.areaCode = Number(areaCode);
-      if (nums > 0) {
-        __params.children = [];
-      }
-      __mapPositionList.push({
-        lng: __item.geoCoord[0],
-        lat: __item.geoCoord[1],
-      });
-      __treeList.push(__params);
-    }
-  });
-  return { treeList: __treeList, mapPosition: __mapPositionList };
-}
+import utils from "@/utils/common";
 
 const state = {
   isNetError: false,
@@ -119,7 +95,7 @@ const actions = {
   getProjectListAct: async ({ commit /* state, rootState */ }) => {
     const { code, data, msg, count } = await api.user.getProjectTree();
     if (code === 200) {
-      const { mapPosition, treeList } = mapProjectTree(data || []);
+      const { mapPosition, treeList } = utils.mapProjectTree(data || []);
       commit("uedateProjectTreeList", treeList);
       commit("uedateMapPositionList", mapPosition);
     }

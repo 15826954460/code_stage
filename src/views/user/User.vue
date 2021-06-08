@@ -1,10 +1,7 @@
 <template>
   <div class="__flex __rfsfs manage-container">
     <div class="left-box">
-      <a-tree
-        :load-data="onLoadData"
-        :tree-data="treeList"
-      />
+      <a-tree :load-data="onLoadData" :tree-data="treeList" @select="select" />
     </div>
     <div class="right-box">
       <map-com></map-com>
@@ -13,7 +10,12 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations, createNamespacedHelpers } from "vuex";
+import {
+  mapActions,
+  mapState,
+  mapMutations,
+  createNamespacedHelpers,
+} from "vuex";
 const {
   mapActions: mapActionsUser,
   mapState: mapStateUser,
@@ -57,26 +59,53 @@ export default {
   methods: {
     ...mapActions(["getUserListAct", "getProjectListAct"]),
 
-    ...mapMutations(["uedateMapPositionList"]),
+    ...mapMutations([
+      "uedateMapPositionList",
+      "uedateProjectTreeList",
+      "uedateMapCenter",
+    ]),
 
     async onLoadData(treeNode) {
-      console.log("---onLoadData-", treeNode);
-      if (treeNode.dataRef.children) return;
+      if (treeNode.dataRef.children.length) return;
+      const { areaCode, id } = treeNode.dataRef;
+      const { code, data, msg, count } = await api.user.getProjectTree({
+        level: id ? 3 : 2, // 省级下面没有id, 代理下返回id
+        areaCode,
+      });
 
-      // const { mapPosition } = treeNode.dataRef;
+      if (code === 200) {
+        this.uedateMapCenter(AREA_OBJ_DATA[Number(areaCode)]);
+        const { mapPosition, treeList } = utils.mapProjectTree(data || []);
+        console.log("treeList-----", treeList);
+        treeNode.dataRef.children = treeList;
+        this.updateTreeList({ code: areaCode, treeList });
+        this.uedateMapPositionList(mapPosition);
+        return true;
+      } else {
+        return;
+      }
+    },
 
-      // treeNode.dataRef.children = [
-      //   { title: "Child Node", key: `${treeNode.eventKey}-0` },
-      //   { title: "Child Node", key: `${treeNode.eventKey}-1` },
-      // ];
-      // const { code, data, msg, count } = await api.user.getProjectTree({});
-      // if (code === 200) {
-      //   const __item = {
-      //     title: `${AREA_OBJ_DATA[Number(areaCode)]} (${nums})`,
-      //     key: areaCode,
-      //   }
-      //   treeNode.dataRef.children.push(__item)
-      // }
+    select(selectedKeys, { node: { dataRef } }) {
+      const { areaCode, id, mapPosition } = dataRef;
+
+      this.uedateMapCenter(AREA_OBJ_DATA[Number(areaCode)]);
+      this.uedateMapPositionList([
+        { lng: mapPosition[0], lat: mapPosition[1] },
+      ]);
+      // console.log('--------selectedKeys', dataRef);
+      // console.log('--------options', dataRef);
+    },
+
+    updateTreeList({ treeList, code }) {
+      const __treeList = [...this.treeList];
+      __treeList.forEach(({ areaCode }, index) => {
+        if (areaCode === code) {
+          __treeList[index].children = treeList;
+          return;
+        }
+      });
+      this.uedateProjectTreeList(__treeList);
     },
   },
 };
