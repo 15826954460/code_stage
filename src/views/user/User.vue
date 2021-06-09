@@ -38,6 +38,18 @@ export default {
     return {
       loading: false,
       data: [],
+      newTreeList: [],
+      treeData: [
+        {
+          title: "Expand to load",
+          key: "0",
+          areaCode: "",
+          id: "",
+          children: [
+            { title: "", key: "", id: "", children: [{ title: "", key: "" }] },
+          ],
+        },
+      ],
     };
   },
 
@@ -66,46 +78,75 @@ export default {
     ]),
 
     async onLoadData(treeNode) {
-      if (treeNode.dataRef.children.length) return;
-      const { areaCode, id } = treeNode.dataRef;
+      if (treeNode.dataRef.children) return;
+      const { areaCode, id, projectId } = treeNode.dataRef;
       const { code, data, msg, count } = await api.user.getProjectTree({
         level: id ? 3 : 2, // 省级下面没有id, 代理下返回id
         areaCode,
+        projectId: id ? id : "",
       });
 
       if (code === 200) {
         this.uedateMapCenter(AREA_OBJ_DATA[Number(areaCode)]);
-        const { mapPosition, treeList } = utils.mapProjectTree(data || []);
-        console.log("treeList-----", treeList);
+        const { mapPosition, treeList } = this.mapProjectTree(data || []);
         treeNode.dataRef.children = treeList;
-        this.updateTreeList({ code: areaCode, treeList });
+        this.newTreeList = [...this.treeList];
+        this.updateTreeList({
+          code: areaCode,
+          children: treeList,
+          treeList: this.newTreeList,
+        });
         this.uedateMapPositionList(mapPosition);
+        this.uedateProjectTreeList(this.newTreeList);
         return true;
       } else {
         return;
       }
     },
 
-    select(selectedKeys, { node: { dataRef } }) {
-      const { areaCode, id, mapPosition } = dataRef;
-
-      this.uedateMapCenter(AREA_OBJ_DATA[Number(areaCode)]);
-      this.uedateMapPositionList([
-        { lng: mapPosition[0], lat: mapPosition[1] },
-      ]);
-      // console.log('--------selectedKeys', dataRef);
-      // console.log('--------options', dataRef);
+    mapProjectTree(treeList) {
+      if (!treeList.length) return [];
+      let __mapPositionList = [];
+      let __treeList = [];
+      treeList.forEach(
+        ({ areaCode, id, nums, parentId, projectName, mapPosition }) => {
+          const __params = {};
+          __params.title = `${projectName}(${nums})`;
+          __params.key = id;
+          __params.mapPosition = mapPosition;
+          __params.areaCode = Number(areaCode);
+          __params.id = id;
+          __params.isLeaf = nums > 0 ? false : true;
+          __mapPositionList.push({
+            lng: mapPosition.split(",")[0],
+            lat: mapPosition.split(",")[1],
+          });
+          __treeList.push(__params);
+        }
+      );
+      return { treeList: __treeList, mapPosition: __mapPositionList };
     },
 
-    updateTreeList({ treeList, code }) {
-      const __treeList = [...this.treeList];
-      __treeList.forEach(({ areaCode }, index) => {
-        if (areaCode === code) {
-          __treeList[index].children = treeList;
+    // 点击折叠跟新 mark 和 center
+    select(selectedKeys, { node: { dataRef } }) {
+      const { areaCode, id, mapPosition } = dataRef;
+      this.uedateMapCenter(AREA_OBJ_DATA[Number(areaCode)]);
+      this.uedateMapPositionList([
+        {
+          lng: mapPosition.split(",")[0],
+          lat: mapPosition.split(",")[1],
+        },
+      ]);
+    },
+
+    updateTreeList({ children, code, treeList }) {
+      for (let i = 0, len = treeList.length; i < len; i++) {
+        const { areaCode, id } = treeList[i];
+        if (id && areaCode === code) {
+          treeList[i].children = children;
           return;
         }
-      });
-      this.uedateProjectTreeList(__treeList);
+      }
     },
   },
 };
