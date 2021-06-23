@@ -39,17 +39,6 @@ export default {
       loading: false,
       data: [],
       newTreeList: [],
-      treeData: [
-        {
-          title: "Expand to load",
-          key: "0",
-          areaCode: "",
-          id: "",
-          children: [
-            { title: "", key: "", id: "", children: [{ title: "", key: "" }] },
-          ],
-        },
-      ],
     };
   },
 

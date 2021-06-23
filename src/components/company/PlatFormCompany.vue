@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="company_wrapper">
     <a-button
       type="primary"
       style="margin-bottom: 10px; margin-right: 15px"
@@ -13,7 +13,7 @@
       :loading="loading"
       bordered
       size="small"
-      rowKey="id"
+      :rowKey="(record) => record.id"
     >
       <p slot="mapPosition" slot-scope="text">
         经度：{{ text.split(",")[0] }}
@@ -23,9 +23,9 @@
       <p slot="industry" slot-scope="text">
         <IndustryShow :value="text"></IndustryShow>
       </p>
-      <p slot="bank" slot-scope="text">
+      <!-- <p slot="bank" slot-scope="text">
         <ShowBank :value="text"></ShowBank>
-      </p>
+      </p> -->
       <p slot="companyShow" slot-scope="text">
         <ShowCompany :value="text"></ShowCompany>
       </p>
@@ -85,6 +85,9 @@ import CompanyForm from "@/components/company/CompanyForm.vue";
 
 const columns = [
   {
+    title: '展开',
+  },
+  {
     title: "序号",
     customRender: (text, record, index) => {
       return index + 1;
@@ -134,7 +137,7 @@ const columns = [
   {
     title: "开户行",
     dataIndex: "bank",
-    scopedSlots: { customRender: "bank" },
+    // scopedSlots: { customRender: "bank" },
     width: 120,
   },
   {
@@ -178,7 +181,7 @@ export default {
   props: {
     type: {
       type: Number,
-      default: 1, //  1 普通公司 2 代理公司 3 个人代理
+      default: 1, //  1 普通公司 2 代理公司 3 个人代理(暂时不要)
     },
   },
 
@@ -186,7 +189,7 @@ export default {
     CusModule,
     CompanyForm,
     IndustryShow,
-    ShowBank,
+    // ShowBank,
     ShowCompany,
     MapPosition,
   },
@@ -215,7 +218,17 @@ export default {
       this.loading = true;
       const { code, data } = await this.getCompanyListAct({ type: this.type });
       if (code === 200) {
-        this.dataList = data;
+        this.dataList = data.map((item) => {
+          let __item = {};
+          if (item.list && item.list.length > 0) {
+            const { list, ...options } = item;
+            __item = { children: list, ...options };
+          } else {
+            const { list = [], ...options } = item;
+            __item = { ...options };
+          }
+          return __item;
+        });
         force && this.getAllCompanyList();
       }
       this.loading = false;
@@ -297,3 +310,11 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+#company_wrapper {
+  ::v-deep .ant-table-body {
+    margin: 0;
+  }
+}
+</style>

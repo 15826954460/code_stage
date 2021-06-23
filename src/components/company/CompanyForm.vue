@@ -129,7 +129,7 @@
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
     >
-      <SelectBank
+      <!-- <SelectBank
         v-decorator="[
           'bank',
           {
@@ -138,7 +138,17 @@
           },
         ]"
         @change="handleTypeSelectChange"
-      ></SelectBank>
+      ></SelectBank> -->
+      <a-input
+        v-decorator="[
+          'bank',
+          {
+            initialValue: row.bank,
+            rules: [{ required: true, message: '请输入开户行' }],
+          },
+        ]"
+        placeholder="请输入开户行"
+      />
     </a-form-item>
     <a-form-item
       label="银行卡号"
@@ -149,7 +159,7 @@
         v-decorator="[
           'cardNumber',
           {
-            initialValue: row.cardNumber || '',
+            initialValue: row.cardNumber,
             rules: [{ required: true, message: '请输入银行卡号' }],
           },
         ]"
@@ -211,7 +221,7 @@
 </template>
 
 <script>
-import SelectBank from "@/components/common/SelectBank.vue";
+// import SelectBank from "@/components/common/SelectBank.vue";
 import IndustryList from "@/components/common/IndustryList.vue";
 import SelectGeoCood from "@/components/common/SelectGeoCood.vue";
 import SelectCompany from "@/components/common/SelectCompany.vue";
@@ -239,7 +249,7 @@ export default {
   },
 
   components: {
-    SelectBank,
+    // SelectBank,
     IndustryList,
     SelectGeoCood,
     SelectCompany,
@@ -274,8 +284,8 @@ export default {
     },
 
     selectMapPosition() {
-      this.$emit('updateShowMapSelect', true)
-    }
+      this.$emit("updateShowMapSelect", true);
+    },
   },
 };
 </script>

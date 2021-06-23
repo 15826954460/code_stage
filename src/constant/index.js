@@ -68,15 +68,16 @@ const INDUSTRY_LIST = [
   { label: '建筑', value: 15, industryType: 15 },
   { label: '能源', value: 16, industryType: 16 },
   { label: '电子', value: 17, industryType: 17 },
-  { label: '其他', value: 18, industryType: 18 },
+  { label: '化妆平', value: 18, industryType: 18 },
+  { label: '其他', value: 19, industryType: 19 },
 ];
 
 // 树形列表
 const AREA_OBJ_DATA = {
-  11: { lable: "北京", geoCoord: [116.46, 39.92] },
-  12: { lable: "天津", geoCoord: [117.2, 39.133] },
-  13: { lable: "河北", geoCoord: [114.48, 38.03] },
-  14: { lable: "山西", geoCoord: [112.53, 37.87] },
+  11: { label: "北京", geoCoord: [116.46, 39.92] },
+  12: { label: "天津", geoCoord: [117.2, 39.133] },
+  13: { label: "河北", geoCoord: [114.48, 38.03] },
+  14: { label: "山西", geoCoord: [112.53, 37.87] },
   15: { label: "内蒙古", geoCoord: [111.65, 40.82] },
   21: { label: "辽宁", geoCoord: [123.38, 41.8] },
   22: { label: "吉林", geoCoord: [125.35, 43.88] },
