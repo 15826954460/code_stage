@@ -29,7 +29,16 @@
           :key="index"
           :position="{ lng: marker.lng, lat: marker.lat }"
           :dragging="true"
-        ></bm-marker>
+          @click="infoWindowOpen"
+        >
+          <!-- <bm-info-window
+            :key="index"
+            :show="show"
+            @close="infoWindowClose"
+            @open="infoWindowOpen"
+            >我爱北京天安门</bm-info-window
+          > -->
+        </bm-marker>
       </bml-marker-clusterer>
 
       <bm-marker v-else :position="latlng" :dragging="true">
@@ -38,6 +47,12 @@
           :labelStyle="{ color: 'red', fontSize: '24px' }"
           :offset="{ width: -35, height: 30 }"
         /> -->
+        <bm-info-window
+          :show="show"
+          @close="infoWindowClose"
+          @open="infoWindowOpen"
+          >我爱北京天安门</bm-info-window
+        >
       </bm-marker>
     </baidu-map>
   </div>
@@ -51,6 +66,8 @@ import BmView from "vue-baidu-map/components/map/MapView.vue";
 import BmScale from "vue-baidu-map/components/controls/Scale";
 import BmNavigation from "vue-baidu-map/components/controls/Navigation";
 import BmMarker from "vue-baidu-map/components/overlays/Marker";
+import BmInfoWindow from "vue-baidu-map/components/overlays/InfoWindow";
+
 // import BmGeolocation from "vue-baidu-map/components/controls/Geolocation";
 // import BmCityList from "vue-baidu-map/components/controls/CityList";
 // import BmLabel from "vue-baidu-map/components/overlays/Label";
@@ -85,6 +102,7 @@ export default {
     BmNavigation,
     BmMarker,
     BmView,
+    BmInfoWindow,
     // BmLabel,
     // BmGeolocation,
     // BmCityList,
@@ -94,6 +112,7 @@ export default {
     return {
       minZoom: 1,
       maxZoom: 100,
+      show: false,
     };
   },
 
@@ -101,7 +120,7 @@ export default {
     ...mapState({
       mapPositionList: (state) => state.mapPositionList,
       mapCenter: (state) => state.mapCenter,
-      latlng: (state) => state.latlng
+      latlng: (state) => state.latlng,
     }),
 
     mrkposList() {
@@ -109,11 +128,9 @@ export default {
     },
   },
 
-  created() {
-  },
+  created() {},
 
-  mounted() {
-  },
+  mounted() {},
 
   methods: {
     selectLat({ type, target, point, pixel, overlay }) {
@@ -125,6 +142,16 @@ export default {
       //   const { latitude, longitude } = position.coords;
       //   this.latlng = { ...this.latlng, lat: latitude, lng: longitude };
       // });
+    },
+
+    infoWindowClose() {
+      console.log("-------------", false);
+      this.show = false;
+    },
+
+    infoWindowOpen() {
+      console.log("-------------", true);
+      this.show = true;
     },
   },
 };
