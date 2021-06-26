@@ -5,7 +5,7 @@
       style="margin-bottom: 10px; margin-right: 15px"
       @click="add"
     >
-      添加建筑
+      新增
     </a-button>
 
     <a-table
@@ -105,7 +105,6 @@ export default {
 
   methods: {
     async getBuildingList(force = true) {
-      console.log(111, '------getBuildingList');
       if (!force) {
         // TODO:
         return;

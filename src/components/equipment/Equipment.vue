@@ -1,0 +1,158 @@
+<template>
+  <a-form class="company-form-container" :form="form">
+    <a-form-item
+      label="设备地址"
+      :label-col="formItemLayout.labelCol"
+      :wrapper-col="formItemLayout.wrapperCol"
+    >
+      <a-input
+        v-decorator="[
+          'deviceMac',
+          {
+            initialValue: row.deviceMac || '',
+            rules: [{ required: true, message: '请输入设备mac地址' }],
+          },
+        ]"
+        placeholder="请输入设备mac地址"
+      />
+    </a-form-item>
+    <a-form-item
+      label="检测编号"
+      :label-col="formItemLayout.labelCol"
+      :wrapper-col="formItemLayout.wrapperCol"
+    >
+      <a-input
+        v-decorator="[
+          'categoryId',
+          {
+            initialValue: row.categoryId || '',
+            rules: [{ required: true, message: '请输入设备检测编号' }],
+          },
+        ]"
+        placeholder="请输入设备检测编号"
+      />
+    </a-form-item>
+    <a-form-item
+      label="设备型号"
+      :label-col="formItemLayout.labelCol"
+      :wrapper-col="formItemLayout.wrapperCol"
+    >
+      <a-input
+        v-decorator="[
+          'modelId',
+          {
+            initialValue: row.modelId || '',
+            rules: [{ required: true, message: '请输入设备型号' }],
+          },
+        ]"
+        placeholder="请输入设备型号"
+      />
+    </a-form-item>
+    <a-form-item
+      label="网关型号"
+      :label-col="formItemLayout.labelCol"
+      :wrapper-col="formItemLayout.wrapperCol"
+    >
+      <a-input
+        v-decorator="[
+          'gatewayId',
+          {
+            initialValue: row.gatewayId || '',
+            rules: [{ required: true, message: '请输入网关型号' }],
+          },
+        ]"
+        placeholder="请输入设网关型号"
+      />
+    </a-form-item>
+    <a-form-item
+      label="设备地址"
+      :label-col="formItemLayout.labelCol"
+      :wrapper-col="formItemLayout.wrapperCol"
+    >
+      <a-input
+        v-decorator="[
+          'address',
+          {
+            initialValue: row.address || '',
+            rules: [{ required: true, message: '请输入设备位置' }],
+          },
+        ]"
+        placeholder="请输入设备位置"
+      />
+    </a-form-item>
+    <a-form-item
+      label="设备描述信"
+      :label-col="formItemLayout.labelCol"
+      :wrapper-col="formItemLayout.wrapperCol"
+    >
+      <a-input
+        v-decorator="[
+          'description',
+          {
+            initialValue: row.address || '',
+            rules: [{ required: true, message: '请输入设备描述信息' }],
+          },
+        ]"
+        placeholder="请输入设备描述信息"
+      />
+    </a-form-item>
+    <a-form-item
+      label="设备关联建筑"
+      :label-col="formItemLayout.labelCol"
+      :wrapper-col="formItemLayout.wrapperCol"
+    >
+      <a-input
+        v-decorator="[
+          'buildingId',
+          {
+            initialValue: row.buildingId || '',
+            rules: [{ required: true, message: '请输入设备关联建筑' }],
+          },
+        ]"
+        placeholder="请输入设备关联建筑"
+      />
+    </a-form-item>
+  </a-form>
+</template>
+
+<script>
+const formItemLayout = {
+  labelCol: { span: 4 },
+  wrapperCol: { span: 18 },
+};
+
+export default {
+  name: "EquipmentFormCom",
+
+  props: {
+    row: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
+  },
+
+  beforeDestroy() {
+    this.form.resetFields();
+  },
+
+  data() {
+    return {
+      formItemLayout,
+      form: this.$form.createForm(this),
+    };
+  },
+
+  components: {},
+
+  created() {},
+
+  mounted() {},
+
+  methods: {},
+};
+</script>
+
+<style lang='scss' scoped>
+</style>

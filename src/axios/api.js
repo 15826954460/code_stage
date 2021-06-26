@@ -186,4 +186,46 @@ export default {
       });
     }
   },
+
+  // 设备
+  equipment: {
+    // 获取设备列表
+    getEquipmentList({ id = '' } = {}) {
+      console.log('111111111',);
+      return getFetch({
+        url: "/devices/devices_current_data",
+        interfaceKey: "getEquipmentList",
+      });
+    },
+
+    // 编辑建筑
+    updateEquipment(params) {
+      return postFetch({
+        url: "/devices",
+        interfaceKey: "updateEquipment",
+        params,
+        method: "PUT",
+      });
+    },
+
+    // 添加设备
+    createEquipment(params) {
+      return postFetch({
+        url: "/devices",
+        interfaceKey: "createEquipment",
+        params,
+        method: "POST",
+      });
+    },
+
+    // 删除设备
+    delEquipment(id) {
+      return postFetch({
+        url: "/devices",
+        interfaceKey: "delEquipment",
+        params: { id },
+        method: "DELETE",
+      });
+    }
+  }
 };

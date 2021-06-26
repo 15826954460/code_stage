@@ -83,12 +83,12 @@
             </a-menu-item>
           </a-sub-menu>
 
-          <!-- <a-sub-menu key="sub1">
+          <a-sub-menu key="sub1">
             <span slot="title">
-              <a-icon type="deployment-unit" /> 设备信息
+              <a-icon type="deployment-unit" /> 设备管理
             </span>
-            <a-menu-item key="/equipment"> 设备列表 </a-menu-item>
-          </a-sub-menu> -->
+            <a-menu-item key="/equipment-page"> 设备列表 </a-menu-item>
+          </a-sub-menu>
 
           <!-- <a-sub-menu key="sub2">
             <span slot="title"> <a-icon type="warning" /> 报警系统 </span>
