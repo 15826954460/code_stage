@@ -58,7 +58,7 @@ import api from "@/axios/api";
 import CusModule from "@/components/common/CusModule.vue";
 import ShowCompany from "@/components/common/ShowCompany.vue";
 import BuildingForm from "@/components/building/BuildingForm.vue";
-import { mapMutations } from "vuex";
+import { mapActions } from "vuex";
 
 const columns = [
   {
@@ -77,7 +77,7 @@ const columns = [
   },
   {
     title: "所属单位",
-    dataIndex: "projectName"
+    dataIndex: "projectName",
     // dataIndex: "projectId",
     // scopedSlots: { customRender: "projectId" },
   },
@@ -100,12 +100,12 @@ export default {
     return { columns, dataList: [], loading: false, visible: false, row: {} };
   },
 
-  created() {
+  mounted() {
     this.getBuildingList();
   },
 
   methods: {
-    ...mapMutations['updateAllBuildList'],
+    ...mapActions(["getAllBuildListAct"]),
 
     async getBuildingList(force = true) {
       if (!force) {
@@ -115,8 +115,9 @@ export default {
       this.loading = true;
       const { code, data } = await api.unit.getBuildingList();
       if (code === 200) {
+        this.loading = false;
         this.dataList = data;
-        this.updateAllBuildList(data);
+        this.getAllBuildListAct();
       }
       this.loading = false;
     },
