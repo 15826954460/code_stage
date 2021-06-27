@@ -17,6 +17,9 @@
       size="small"
       rowKey="modelId"
     >
+      <div slot="buildName" slot-scope="text">
+        <ShowBuild :value="text" />
+      </div>
     </a-table>
 
     <CusModule v-if="visible" @cancel="cancel" :visible="visible" :width="800">
@@ -32,6 +35,7 @@
 
 <script>
 import api from "@/axios/api";
+import ShowBuild from "@/components/common/SelectBuild.vue";
 import CusModule from "@/components/common/CusModule.vue";
 import Equipment from "@/components/equipment/Equipment.vue";
 
@@ -69,6 +73,7 @@ const columns = [
   {
     title: "关联建筑",
     dataIndex: "buildingId",
+    scopedSlots: { customRender: "buildName" },
   },
 ];
 
@@ -88,6 +93,7 @@ export default {
   components: {
     CusModule,
     Equipment,
+    ShowBuild,
   },
 
   created() {
@@ -103,7 +109,7 @@ export default {
       this.loading = true;
       const { code, data } = await api.equipment.getEquipmentList();
       if (code === 200) {
-        this.dataList = data; 
+        this.dataList = data;
       }
       this.loading = false;
     },

@@ -20,7 +20,6 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
-import { COMPANY_TYPE } from "@/constant";
 
 export default {
   name: "select-buind-com",
@@ -41,7 +40,9 @@ export default {
   },
 
   computed: {
-    ...mapState(["buildList", "mapMutations"]),
+    ...mapState({
+      buildList: (state) => state.buildList,
+    }),
   },
 
   mounted() {
