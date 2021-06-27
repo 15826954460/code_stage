@@ -150,10 +150,11 @@ export default {
 
   unit: {
     // 获取建筑列表
-    getBuildingList() {
+    getBuildingList(params = {}) {
       return getFetch({
         url: "/buildings",
         interfaceKey: "getBuildingList",
+        params,
       });
     },
 
@@ -190,11 +191,11 @@ export default {
   // 设备
   equipment: {
     // 获取设备列表
-    getEquipmentList({ id = '' } = {}) {
-      console.log('111111111',);
+    getEquipmentList({ params = {} } = {}) {
       return getFetch({
         url: "/devices/devices_current_data",
         interfaceKey: "getEquipmentList",
+        params,
       });
     },
 

@@ -103,7 +103,7 @@ export default {
       this.loading = true;
       const { code, data } = await api.equipment.getEquipmentList();
       if (code === 200) {
-        this.dataList = data;
+        this.dataList = data; 
       }
       this.loading = false;
     },

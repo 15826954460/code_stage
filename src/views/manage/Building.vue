@@ -58,6 +58,7 @@ import api from "@/axios/api";
 import CusModule from "@/components/common/CusModule.vue";
 import ShowCompany from "@/components/common/ShowCompany.vue";
 import BuildingForm from "@/components/building/BuildingForm.vue";
+import { mapMutations } from "vuex";
 
 const columns = [
   {
@@ -104,6 +105,8 @@ export default {
   },
 
   methods: {
+    ...mapMutations['updateAllBuildList'],
+
     async getBuildingList(force = true) {
       if (!force) {
         // TODO:
@@ -113,6 +116,7 @@ export default {
       const { code, data } = await api.unit.getBuildingList();
       if (code === 200) {
         this.dataList = data;
+        this.updateAllBuildList(data);
       }
       this.loading = false;
     },

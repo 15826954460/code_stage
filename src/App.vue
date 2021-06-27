@@ -19,10 +19,15 @@ export default {
   mounted() {
     this.fetchTreeList();
     this.fetchCompanyAllList();
+    this.fetchBuildList();
   },
 
   methods: {
-    ...mapActions(["getProjectListAct", "getAllCompanyList"]),
+    ...mapActions([
+      "getProjectListAct",
+      "getAllCompanyList",
+      "getAllBuildListAct",
+    ]),
 
     handleMeunItem({ keyPath, key }) {
       console.log(keyPath, key);
@@ -34,8 +39,12 @@ export default {
     },
 
     fetchCompanyAllList() {
-      this.getAllCompanyList()
-    }
+      this.getAllCompanyList();
+    },
+
+    fetchBuildList() {
+      this.getAllBuildListAct();
+    },
   },
 };
 </script>

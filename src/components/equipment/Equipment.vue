@@ -101,21 +101,23 @@
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
     >
-      <a-input
+      <SelectBuild
         v-decorator="[
           'buildingId',
           {
             initialValue: row.buildingId || '',
-            rules: [{ required: true, message: '请输入设备关联建筑' }],
+            rules: [{ required: true, message: '请选择关联建筑' }],
           },
         ]"
-        placeholder="请输入设备关联建筑"
-      />
+        @change="handleSelectBuildSelectChange"
+      ></SelectBuild>
     </a-form-item>
   </a-form>
 </template>
 
 <script>
+import SelectBuild from "@/components/common/SelectBuild.vue";
+
 const formItemLayout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 18 },
@@ -144,13 +146,15 @@ export default {
     };
   },
 
-  components: {},
+  components: {
+    SelectBuild,
+  },
 
-  created() {},
-
-  mounted() {},
-
-  methods: {},
+  methods: {
+    handleSelectBuildSelectChange(val) {
+      this.form.setFieldsValue({ buildingId: val });
+    },
+  },
 };
 </script>
 

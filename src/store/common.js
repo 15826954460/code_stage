@@ -14,6 +14,7 @@ const state = {
   allCompanyList: [], // 所有单位列表
   companyList: [],
   projectTreeList: [],
+  buildList: [], // 建筑列表
   mapCenter: '北京',
   latlng: {
     lat: 39.915,
@@ -63,6 +64,10 @@ const mutations = {
 
   updateLatlng(state, latlng) {
     state.latlng = latlng;
+  },
+
+  updateAllBuildList(state, buildList) {
+    state.buildList = buildList;
   }
 };
 
@@ -73,7 +78,7 @@ const actions = {
     return { code, data, msg, count };
   },
 
-  getAllCompanyList: async ({ commit }, params = { pageSize: 9999 }) => {
+  getAllCompanyList: async ({ commit }, params = { pageSize: 99999 }) => {
     const { code, data, msg, count } = await api.company.getCompanyList(
       params
     );
@@ -101,6 +106,14 @@ const actions = {
     }
     return { code, data, msg, count };
   },
+
+  getAllBuildListAct: async ({ commit }, params = { pageSize: 99999 }) => {
+    const { code, data, msg, count } = await api.unit.getBuildingList(params);
+    if (code === 200) {
+      commit("updateAllBuildList", data);
+    }
+    return { code, data, msg, count };
+  }
 };
 
 export { state, mutations, actions };
