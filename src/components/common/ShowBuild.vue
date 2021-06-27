@@ -4,7 +4,7 @@
     <span
       v-for="(item, index) in buildList"
       :key="index"
-      v-show="Number(value) === item.value"
+      v-show="Number(value) === item.id"
     >
       {{ item.buildingName }}
     </span>

@@ -89,7 +89,7 @@
         v-decorator="[
           'description',
           {
-            initialValue: row.address || '',
+            initialValue: row.description || '',
             rules: [{ required: true, message: '请输入设备描述信息' }],
           },
         ]"
@@ -120,8 +120,6 @@ import SelectBuild from "@/components/common/SelectBuild.vue";
 import SelectCategorys from "@/components/common/SelectCategorys.vue";
 import SelectModel from "@/components/common/SelectModel.vue";
 import SelectGetaway from "@/components/common/SelectGetaway.vue";
-
-//
 
 const formItemLayout = {
   labelCol: { span: 4 },
