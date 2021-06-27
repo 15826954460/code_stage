@@ -5,7 +5,11 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, createNamespacedHelpers } from "vuex";
+const {
+  mapMutations: mapMutationsConfig,
+  mapActions: mapActionsConfig,
+} = createNamespacedHelpers("config");
 
 export default {
   name: "app-home",
@@ -20,6 +24,7 @@ export default {
     this.fetchTreeList();
     this.fetchCompanyAllList();
     this.fetchBuildList();
+    this.fetchDeviceConfig();
   },
 
   methods: {
@@ -27,6 +32,10 @@ export default {
       "getProjectListAct",
       "getAllCompanyList",
       "getAllBuildListAct",
+    ]),
+
+    ...mapActionsConfig([
+      "updateConfigAct"
     ]),
 
     handleMeunItem({ keyPath, key }) {
@@ -45,6 +54,10 @@ export default {
     fetchBuildList() {
       this.getAllBuildListAct();
     },
+
+    fetchDeviceConfig() {
+      this.updateConfigAct();
+    }
   },
 };
 </script>

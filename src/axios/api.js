@@ -7,6 +7,17 @@
 import { getFetch, postFetch, uploadFile } from "./axios";
 
 export default {
+  // 公用
+  common: {
+    // 获取配置
+    getConfig() {
+      return getFetch({
+        url: "/config",
+        interfaceKey: "getConfig",
+      });
+    }
+  },
+
   /** 用户模块 */
   user: {
     // -----登陆
@@ -103,6 +114,7 @@ export default {
     }
   },
 
+  // 公司
   company: {
     // ------ 获取单位列表
     getCompanyList(params) {
@@ -148,6 +160,7 @@ export default {
     },
   },
 
+  // 建筑
   unit: {
     // 获取建筑列表
     getBuildingList(params = {}) {
@@ -193,7 +206,7 @@ export default {
     // 获取设备列表
     getEquipmentList({ params = {} } = {}) {
       return getFetch({
-        url: "/devices/devices_current_data",
+        url: "/devices",
         interfaceKey: "getEquipmentList",
         params,
       });

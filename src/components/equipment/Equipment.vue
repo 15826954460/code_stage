@@ -21,48 +21,48 @@
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
     >
-      <a-input
+      <SelectCategorys
         v-decorator="[
           'categoryId',
           {
-            initialValue: row.categoryId || '',
-            rules: [{ required: true, message: '请输入设备检测编号' }],
+            initialValue: row.categoryId,
+            rules: [{ required: true, message: '请选择检测类别' }],
           },
         ]"
-        placeholder="请输入设备检测编号"
-      />
+        @change="handleSelectCategorysSelectChange"
+      ></SelectCategorys>
     </a-form-item>
     <a-form-item
       label="设备型号"
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
     >
-      <a-input
+      <SelectModel
         v-decorator="[
           'modelId',
           {
-            initialValue: row.modelId || '',
+            initialValue: row.modelId,
             rules: [{ required: true, message: '请输入设备型号' }],
           },
         ]"
-        placeholder="请输入设备型号"
-      />
+        @change="handleSelectModelSelectChange"
+      ></SelectModel>
     </a-form-item>
     <a-form-item
       label="网关型号"
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
     >
-      <a-input
+      <SelectGetaway
         v-decorator="[
           'gatewayId',
           {
-            initialValue: row.gatewayId || '',
-            rules: [{ required: true, message: '请输入网关型号' }],
+            initialValue: row.gatewayId,
+            rules: [{ required: true, message: '请选择网关型号' }],
           },
         ]"
-        placeholder="请输入设网关型号"
-      />
+        @change="handleSelectGetawaySelectChange"
+      ></SelectGetaway>
     </a-form-item>
     <a-form-item
       label="设备地址"
@@ -117,6 +117,11 @@
 
 <script>
 import SelectBuild from "@/components/common/SelectBuild.vue";
+import SelectCategorys from "@/components/common/SelectCategorys.vue";
+import SelectModel from "@/components/common/SelectModel.vue";
+import SelectGetaway from "@/components/common/SelectGetaway.vue";
+
+//
 
 const formItemLayout = {
   labelCol: { span: 4 },
@@ -148,11 +153,26 @@ export default {
 
   components: {
     SelectBuild,
+    SelectCategorys,
+    SelectModel,
+    SelectGetaway,
   },
 
   methods: {
     handleSelectBuildSelectChange(val) {
       this.form.setFieldsValue({ buildingId: val });
+    },
+
+    handleSelectCategorysSelectChange(val) {
+      this.form.setFieldsValue({ categoryId: val });
+    },
+
+    handleSelectModelSelectChange(val) {
+      this.form.setFieldsValue({ modelId: val });
+    },
+
+    handleSelectGetawaySelectChange(val) {
+      this.form.setFieldsValue({ gatewayId: val });
     },
   },
 };
