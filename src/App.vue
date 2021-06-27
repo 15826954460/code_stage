@@ -1,21 +1,25 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
+  <a-config-provider :locale="locale">
+    <div id="app">
+      <router-view></router-view>
+    </div>
+  </a-config-provider>
 </template>
 
 <script>
+import zhCN from "ant-design-vue/lib/locale-provider/zh_CN";
 import { mapActions, createNamespacedHelpers } from "vuex";
-const {
-  mapMutations: mapMutationsConfig,
-  mapActions: mapActionsConfig,
-} = createNamespacedHelpers("config");
+
+const { mapMutations: mapMutationsConfig, mapActions: mapActionsConfig } =
+  createNamespacedHelpers("config");
 
 export default {
   name: "app-home",
 
   data() {
-    return {};
+    return {
+      locale: zhCN,
+    };
   },
 
   computed: {},
@@ -34,9 +38,7 @@ export default {
       "getAllBuildListAct",
     ]),
 
-    ...mapActionsConfig([
-      "updateConfigAct"
-    ]),
+    ...mapActionsConfig(["updateConfigAct"]),
 
     handleMeunItem({ keyPath, key }) {
       console.log(keyPath, key);
@@ -57,7 +59,7 @@ export default {
 
     fetchDeviceConfig() {
       this.updateConfigAct();
-    }
+    },
   },
 };
 </script>
