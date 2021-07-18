@@ -11,9 +11,10 @@
       :data-source="dataList"
       :pagination="false"
       :loading="loading"
+      @expandedRowsChange="expandedRowsChange"
       bordered
       size="small"
-      :rowKey="(record) => record.key"
+      :rowKey="(record) => record.id"
     >
       <p slot="mapPosition" slot-scope="text">
         经度：{{ text.split(",")[0] }}
@@ -183,6 +184,7 @@ export default {
       total: 0,
       startPage: 1,
       pageSize: 10,
+      expandedRowKeys: [],
     };
   },
 
@@ -192,6 +194,10 @@ export default {
 
   methods: {
     ...mapActions(["getCompanyListAct", "getAllCompanyList"]),
+
+    expandedRowsChange(expandedRowKeys) {
+      this.expandedRowKeys = expandedRowKeys;
+    },
 
     pageSizeChange(pageSize) {
       this.pageSize = pageSize;
@@ -211,7 +217,7 @@ export default {
       });
       if (code === 200) {
         this.total = count;
-        this.dataList = [...data, ...data, ...data].map((item) => {
+        this.dataList = [...data].map((item) => {
           let __item = {};
           if (item.list && item.list.length > 0) {
             const { list, ...options } = item;
