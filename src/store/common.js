@@ -4,7 +4,6 @@
  * @description 全局store
  */
 import api from "@/axios/api";
-import { AREA_OBJ_DATA, GEO_COORD } from "@/constant";
 import utils from "@/utils/common";
 
 const state = {
