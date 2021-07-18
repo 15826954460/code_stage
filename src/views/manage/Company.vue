@@ -2,7 +2,7 @@
   <!--  1 普通公司 2 代理公司 3 个人代理 -->
   <div class="company-container">
     <a-tabs default-active-key="1">
-      <a-tab-pane key="1" tab="用户">
+      <a-tab-pane key="1" tab="单位">
         <PlatFormCompany :type="1"></PlatFormCompany>
       </a-tab-pane>
       <!-- <a-tab-pane key="2" tab="渠道">
