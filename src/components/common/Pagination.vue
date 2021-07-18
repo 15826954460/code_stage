@@ -37,7 +37,7 @@ export default {
     pageSizeOptions: {
       type: Array,
       default: () => {
-        return ["10", "20", "30", "50", "100"];
+        return ["10", "20", "30", "50", "100", "300"];
       },
     },
   },
@@ -50,7 +50,7 @@ export default {
 
   methods: {
     onShowSizeChange(currentPage, pageSize) {
-      console.log(currentPage, pageSize);
+      this.pageSize = pageSize;
       this.$emit("pageSizeChange", pageSize);
     },
 

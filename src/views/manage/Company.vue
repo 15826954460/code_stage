@@ -5,9 +5,9 @@
       <a-tab-pane key="1" tab="用户">
         <PlatFormCompany :type="1"></PlatFormCompany>
       </a-tab-pane>
-      <a-tab-pane key="2" tab="渠道">
+      <!-- <a-tab-pane key="2" tab="渠道">
         <PlatFormCompany :type="2"></PlatFormCompany>
-      </a-tab-pane>
+      </a-tab-pane> -->
       <!-- <a-tab-pane key="3" tab="个人代理">
         <PlatFormPersonal :type="3"></PlatFormPersonal>
       </a-tab-pane> -->

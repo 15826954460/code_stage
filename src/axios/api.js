@@ -117,7 +117,7 @@ export default {
   // 公司
   company: {
     // ------ 获取单位列表
-    getCompanyList(params) {
+    getCompanyList(params = {}) {
       return getFetch({
         url: "/projects",
         interfaceKey: "getCompanyList",
