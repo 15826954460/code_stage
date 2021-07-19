@@ -39,3 +39,8 @@ bys_002 / Bys_2021_002
 [ ] 建筑和设备数量关联
 [x] 创建公司权限调整
 [ ] 有待沟通，单位下需要建筑id,建筑可以关联设备 组后展示9宫格
+
+#### 清屏账号
+https://www.qingpingiot.com/devices
+账号:ling.shi@sgcchina.com
+密码:sgjc1010
