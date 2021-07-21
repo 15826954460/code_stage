@@ -82,6 +82,9 @@
             size="small"
             rowKey="id"
         >
+          <p slot="action" slot-scope="record">
+            <a-button type="danger" size="small" @click.stop="showDelDeviceConfirm($event,record.id)"> 删除</a-button>
+          </p>
         </a-table>
       </div>
     </div>
@@ -96,7 +99,6 @@
     </div>
 
     <!--添加分组-->
-<!--    <addGroup :visible="addGroupModel" @cancel="hideAddGroupModel()" @ok="handleOk()" ></addGroup>-->
     <addGroup :visible="addGroupModel" @cancel="hideAddGroupModel()"  :deviceId='id'></addGroup>
 
   </div>
@@ -131,6 +133,10 @@ const columns = [
   {
     title: "数据最新更新时间",
     dataIndex: "utime",
+  },
+  {
+    title: "操作",
+    scopedSlots: { customRender: "action" },
   },
 ];
 
