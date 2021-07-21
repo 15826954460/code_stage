@@ -48,59 +48,21 @@
           <a-menu-item key="/"> <a-icon type="home" /> 首页 </a-menu-item>
           <a-menu-item key="/user-center"> <a-icon type="home" /> 用户分布 </a-menu-item>
 
-          <!-- <a-sub-menu key="sub3" v-show="userType !== 4">
-            <span slot="title"> <a-icon type="usergroup-add" /> 用户中心 </span>
-            <a-menu-item key="/manage-list" v-if="userType === 1">
-              管理员
-            </a-menu-item>
-            <a-menu-item
-              key="/company-list"
-              v-if="userType === 1 || userType === 2 || userType === 5"
-            >
-              单位管理员
-            </a-menu-item>
-            <a-menu-item
-              key="/agent-list"
-              v-if="userType === 1 || userType === 2"
-            >
-              代理用户
-            </a-menu-item>
-            <a-menu-item key="/user-list" v-if="userType !== 4">
-              普通用户
-            </a-menu-item>
-          </a-sub-menu> -->
 
           <a-sub-menu>
             <span slot="title"> <a-icon type="setting" /> 管理中心 </span>
-            <a-menu-item key="/unit-list">
-              单位管理
-            </a-menu-item>
-            <a-menu-item key="/build-list">
-              建筑管理
-            </a-menu-item>
-            <a-menu-item key="/user-manage">
-              用户管理
-            </a-menu-item>
+            <a-menu-item key="/unit-list"> 单位管理 </a-menu-item>
+            <a-menu-item key="/build-list"> 建筑管理 </a-menu-item>
+            <a-menu-item key="/user-manage"> 用户管理 </a-menu-item>
           </a-sub-menu>
 
-          <!-- <a-sub-menu key="sub1">
-            <span slot="title">
-              <a-icon type="deployment-unit" /> 设备信息
-            </span>
-            <a-menu-item key="/equipment"> 设备列表 </a-menu-item>
-          </a-sub-menu> -->
+          <a-sub-menu key="sub1">
+            <span slot="title"><a-icon type="deployment-unit" /> 设备中心 </span>
+            <a-menu-item key="/equipment-page"> 设备管理 </a-menu-item>
+            <a-menu-item key="/equipmentList"> 设备展示 </a-menu-item>
+            <a-menu-item key="/warning"> 设备警报 </a-menu-item>
+          </a-sub-menu>
 
-          <!-- <a-sub-menu key="sub2">
-            <span slot="title"> <a-icon type="warning" /> 报警系统 </span>
-            <a-menu-item key="/warnning"> 报警列表 </a-menu-item>
-          </a-sub-menu> -->
-
-          <!-- <a-sub-menu key="sub4">
-            <span slot="title"> <a-icon type="block" /> 配置 </span>
-            <a-menu-item key="/unit" v-if="userType !== 4">
-              单位管理
-            </a-menu-item>
-          </a-sub-menu> -->
         </a-menu>
       </a-layout-sider>
       <a-layout-content style="padding-left: 10px; overflow-x: scroll">
