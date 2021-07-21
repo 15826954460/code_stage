@@ -201,7 +201,7 @@ export default {
     }
   },
 
-  // 设备
+  /** 设备模块 */
   equipment: {
     // 获取设备列表
     getEquipmentList({ params = {} } = {}) {
@@ -237,9 +237,94 @@ export default {
       return postFetch({
         url: "/devices",
         interfaceKey: "delEquipment",
+        params: {id},
+        method: "DELETE",
+      });
+    },
+
+    //设备详情
+    getDeviceDetail(id){
+      return getFetch({
+        url: "/devices/devices_current_data",
+        interfaceKey: "getDeviceDetail",
+        params: { id },
+      });
+    },
+  },
+
+  /** 设备分组模块 */
+  group: {
+    // 获取设备分组列表
+    getGroupList() {
+      return getFetch({
+        url: "/group",
+        interfaceKey: "getGroupList",
+        method: "GET",
+      });
+    },
+
+    // 编辑分组
+    updateGroupList(params) {
+      return postFetch({
+        url: "/group",
+        interfaceKey: "updateGroupList",
+        params,
+        method: "PUT",
+      });
+    },
+
+    // 添加分组
+    createGroupList(params) {
+      return postFetch({
+        url: "/group",
+        interfaceKey: "createGroupList",
+        params,
+        method: "POST",
+      });
+    },
+
+    // 删除分组
+    delGroup(id) {
+      return postFetch({
+        url: "/group",
+        interfaceKey: "delGroup",
         params: { id },
         method: "DELETE",
       });
-    }
-  }
+    },
+
+    //（绑定/解绑）设备至设备分组
+    bindGroup(type,groupId,deviceIds) {
+      return postFetch({
+        url: "/group/devices",
+        interfaceKey: "bindGroup",
+        params:{type,groupId,deviceIds},
+        method: "POST",
+      });
+    },
+
+  },
+
+
+  /** 设备警报模块 */
+  event: {
+    // 获取实时警报列表
+    getEventRealTime() {
+      return getFetch({
+        //url: "/events",
+        interfaceKey: "getEventRealTime",
+        method: "GET",
+      });
+    },
+
+    // 获取实时警报列表
+    getEventHistory() {
+      return getFetch({
+        //url: "/events",
+        interfaceKey: "getEventHistory",
+        method: "GET",
+      });
+    },
+
+  },
 };

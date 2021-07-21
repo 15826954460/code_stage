@@ -1,54 +1,39 @@
 <template>
   <div class="equipment-wrapper">
     <a-button
-      type="primary"
-      style="margin-bottom: 10px; margin-right: 15px"
-      @click="add"
+        type="primary"
+        style="margin-bottom: 10px; margin-right: 15px"
+        @click="add"
     >
-      新增
+      新增设备
     </a-button>
 
     <a-table
-      :columns="columns"
-      :data-source="dataList"
-      :pagination="false"
-      :loading="loading"
-      bordered
-      size="small"
-      rowKey="id"
+        :columns="columns"
+        :data-source="dataList"
+        :pagination="false"
+        :loading="loading"
+        bordered
+        size="small"
+        rowKey="id"
     >
-      <div slot="buildName" slot-scope="text">
-        <ShowBuild :value="text" />
-      </div>
-
-      <div slot="categoryName" slot-scope="text">
-        <ShowCategorys :value="text" />
-      </div>
-
-      <div slot="modleName" slot-scope="text">
-        <ShowModel :value="text" />
-      </div>
-
-      <div slot="getawayName" slot-scope="text">
-        <ShowGetaway :value="text" />
-      </div>
 
       <p slot="action" slot-scope="text, record">
         <a-button
-          type="primary"
-          size="small"
-          style="margin-right: 10px"
-          @click="edit(record)"
+            type="primary"
+            size="small"
+            style="margin-right: 10px"
+            @click="edit(record)"
         >
           编辑
         </a-button>
 
         <a-popconfirm
-          :title="`确认删除当前用户${record.trueName}`"
-          ok-text="确认"
-          cancel-text="取消"
-          @confirm="del(record)"
-          @cancel="cancel"
+            :title="`确认删除当前设备${record.deviceName}`"
+            ok-text="确认"
+            cancel-text="取消"
+            @confirm="del(record)"
+            @cancel="cancel"
         >
           <a-button type="danger" size="small"> 删除</a-button>
         </a-popconfirm>
@@ -57,9 +42,9 @@
 
     <div class="pagination-wrap">
       <Paginagion
-        :total="total"
-        @pageSizeChange="pageSizeChange"
-        @pageNumChange="pageNumChange"
+          :total="total"
+          @pageSizeChange="pageSizeChange"
+          @pageNumChange="pageNumChange"
       />
     </div>
 
@@ -76,10 +61,6 @@
 
 <script>
 import api from "@/axios/api";
-import ShowBuild from "@/components/common/ShowBuild.vue";
-import ShowCategorys from "@/components/common/ShowCategorys.vue";
-import ShowModel from "@/components/common/ShowModel.vue";
-import ShowGetaway from "@/components/common/ShowGetaway.vue";
 import Paginagion from "@/components/common/Pagination.vue";
 
 import CusModule from "@/components/common/CusModule.vue";
@@ -93,23 +74,24 @@ const columns = [
     },
   },
   {
+    title: "设备名称",
+    dataIndex: "deviceName",
+  },
+  {
     title: "mac地址",
     dataIndex: "deviceMac",
   },
   {
     title: "检测编号",
-    dataIndex: "categoryId",
-    scopedSlots: { customRender: "categoryName" },
+    dataIndex: "categoryName",
   },
   {
     title: "设备型号",
-    dataIndex: "modelId",
-    scopedSlots: { customRender: "modleName" },
+    dataIndex: "modelName",
   },
   {
     title: "网关型号",
-    dataIndex: "gatewayId",
-    scopedSlots: { customRender: "getawayName" },
+    dataIndex: "gatewayName",
   },
   {
     title: "设备位置描述",
@@ -121,8 +103,7 @@ const columns = [
   },
   {
     title: "关联建筑",
-    dataIndex: "buildingId",
-    scopedSlots: { customRender: "buildName" },
+    dataIndex: "buildingName",
   },
   {
     title: "操作",
@@ -149,10 +130,6 @@ export default {
   components: {
     CusModule,
     Equipment,
-    ShowBuild,
-    ShowCategorys,
-    ShowModel,
-    ShowGetaway,
     Paginagion,
   },
 

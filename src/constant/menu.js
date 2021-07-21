@@ -11,12 +11,20 @@ export const munus = [
   },
   {
     key: "sub1",
-    text: "设备信息",
+    text: "设备中心",
     icon: "deployment-unit",
     children: [
       {
         key: "/equipment",
-        text: "设备列表",
+        text: "设备管理",
+      },
+      {
+        key: "/quipmentList",
+        text: "设备展示",
+      },
+      {
+        key: "/warning",
+        text: "设备警报",
       },
     ]
   },
