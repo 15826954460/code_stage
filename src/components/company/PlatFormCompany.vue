@@ -11,6 +11,7 @@
       :data-source="dataList"
       :pagination="false"
       :loading="loading"
+      @expandedRowsChange="expandedRowsChange"
       bordered
       size="small"
       :rowKey="(record) => record.id"
@@ -23,9 +24,6 @@
       <p slot="industry" slot-scope="text">
         <IndustryShow :value="text"></IndustryShow>
       </p>
-      <!-- <p slot="bank" slot-scope="text">
-        <ShowBank :value="text"></ShowBank>
-      </p> -->
       <p slot="companyShow" slot-scope="text">
         <ShowCompany :value="text"></ShowCompany>
       </p>
@@ -50,6 +48,13 @@
         </a-popconfirm>
       </p>
     </a-table>
+    <div class="__pagination-wrap">
+      <Paginagion
+        :total="total"
+        @pageSizeChange="pageSizeChange"
+        @pageNumChange="pageNumChange"
+      />
+    </div>
     <CusModule v-if="visible" @cancel="cancel" :visible="visible" :width="800">
       <CompanyForm
         ref="companyFormRefs"
@@ -77,42 +82,33 @@ import { AREA_OBJ_DATA } from "@/constant";
 
 import CusModule from "@/components/common/CusModule.vue";
 import IndustryShow from "@/components/common/IndustryShow.vue";
-import ShowBank from "@/components/common/ShowBank.vue";
 import ShowCompany from "@/components/common/ShowCompany.vue";
 import MapPosition from "@/components/common/MapPosition.vue";
-
 import CompanyForm from "@/components/company/CompanyForm.vue";
+import Paginagion from "@/components/common/Pagination.vue";
 
 const columns = [
-  {
-    title: '展开',
-  },
   {
     title: "序号",
     customRender: (text, record, index) => {
       return index + 1;
     },
-    width: 80,
   },
   {
     title: "单位名称",
     dataIndex: "projectName",
-    width: 160,
   },
   {
     title: "单位地址",
     dataIndex: "address",
-    width: 160,
   },
   {
     title: "营业地址",
     dataIndex: "workAddress",
-    width: 160,
   },
   {
     title: "上级公司",
     dataIndex: "parentId",
-    width: 160,
     scopedSlots: { customRender: "companyShow" },
   },
   {
@@ -121,53 +117,36 @@ const columns = [
     customRender: (text, record, index) => {
       return AREA_OBJ_DATA[Number(text)].label;
     },
-    width: 160,
   },
   {
     title: "经纬度",
     dataIndex: "mapPosition",
     scopedSlots: { customRender: "mapPosition" },
-    width: 160,
   },
   {
     title: "纳税号",
     dataIndex: "taxFileNumber",
-    width: 120,
   },
   {
     title: "开户行",
     dataIndex: "bank",
-    // scopedSlots: { customRender: "bank" },
-    width: 120,
   },
   {
     title: "银行卡号",
     dataIndex: "cardNumber",
-    width: 160,
   },
   {
     title: "联系电话",
     dataIndex: "contactInfo",
-    width: 160,
   },
   {
     title: "行业",
     dataIndex: "businessId",
     scopedSlots: { customRender: "industry" },
-    width: 80,
   },
   {
     title: "官网地址",
     dataIndex: "website",
-    width: 250,
-  },
-  {
-    title: "用户类型",
-    dataIndex: "type",
-    width: 160,
-    customRender: (text, record, index) => {
-      return Number(text) === 1 ? "代理" : "个人";
-    },
   },
   {
     title: "操作",
@@ -181,7 +160,7 @@ export default {
   props: {
     type: {
       type: Number,
-      default: 1, //  1 普通公司 2 代理公司 3 个人代理(暂时不要)
+      default: 1, //  1 普通公司 2 代理公司(暂时不要) 3 个人代理(暂时不要)
     },
   },
 
@@ -189,19 +168,23 @@ export default {
     CusModule,
     CompanyForm,
     IndustryShow,
-    // ShowBank,
     ShowCompany,
     MapPosition,
+    Paginagion,
   },
 
   data() {
     return {
       dataList: [],
+      columns,
       visible: false,
       row: {},
       loading: false,
       showMapSelect: false,
-      columns,
+      total: 0,
+      startPage: 1,
+      pageSize: 10,
+      expandedRowKeys: [],
     };
   },
 
@@ -209,16 +192,32 @@ export default {
     this.fetchList(false);
   },
 
-  mounted() {},
-
   methods: {
     ...mapActions(["getCompanyListAct", "getAllCompanyList"]),
 
+    expandedRowsChange(expandedRowKeys) {
+      this.expandedRowKeys = expandedRowKeys;
+    },
+
+    pageSizeChange(pageSize) {
+      this.pageSize = pageSize;
+      this.fetchList(false);
+    },
+
+    pageNumChange(pageNum) {
+      this.startPage = pageNum;
+      this.fetchList(false);
+    },
+
     async fetchList(force = true) {
       this.loading = true;
-      const { code, data } = await this.getCompanyListAct({ type: this.type });
+      const { code, data, count } = await this.getCompanyListAct({
+        page: this.startPage,
+        pageSize: this.pageSize,
+      });
       if (code === 200) {
-        this.dataList = data.map((item) => {
+        this.total = count;
+        this.dataList = [...data].map((item) => {
           let __item = {};
           if (item.list && item.list.length > 0) {
             const { list, ...options } = item;
@@ -260,13 +259,12 @@ export default {
           this.update({
             id,
             ...params,
-            type: this.type,
             parentId,
           });
         } else {
           this.create({
             ...params,
-            type: this.type,
+            type: parentId === 1 ? this.type : 2,
             parentId,
           });
         }
@@ -278,7 +276,7 @@ export default {
       if (code === 200) {
         this.row = {};
         this.visible = false;
-        this.fetchList(true);
+        this.fetchList();
       }
     },
 
@@ -287,7 +285,7 @@ export default {
       if (code === 200) {
         this.row = {};
         this.visible = false;
-        this.fetchList(true);
+        this.fetchList();
       }
     },
 
@@ -295,7 +293,7 @@ export default {
       if (!id) return;
       const { code } = await api.company.delCompanyList(id);
       if (code === 200) {
-        this.fetchList(true);
+        this.fetchList();
       }
     },
 

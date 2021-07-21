@@ -24,6 +24,14 @@ const ADMIN_ROLE_TYPE_LIST = [
   { label: '信息录入员', value: 4, adminType: 4 },
 ]
 
+// 操作状态
+const OPERATION_STATUS = {
+  '1': '待审核',
+  '2': '审核通过',
+  '3': '已移除',
+  '4': '移除'
+}
+
 // 公司列表划分
 const COMPANY_TYPE = {
   1: '普通公司',
@@ -166,4 +174,5 @@ export {
   AREA_OBJ_DATA,
   GEO_COORD,
   COMPANY_TYPE,
+  OPERATION_STATUS,
 }

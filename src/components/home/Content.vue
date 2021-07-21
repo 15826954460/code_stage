@@ -63,7 +63,7 @@
           </a-sub-menu>
         </a-menu>
       </a-layout-sider>
-      <a-layout-content style="padding-left: 10px; overflow-x: scroll">
+      <a-layout-content style="padding-left: 10px;">
         <router-view></router-view>
       </a-layout-content>
     </a-layout>

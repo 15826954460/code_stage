@@ -13,7 +13,7 @@
       :value="Number(item.id)"
       :key="item.id"
     >
-      {{ item.projectName }}--{{ item.label }}
+      {{ item.projectName }}
     </a-select-option>
     <a-select-option :value="1"> {{ "释格" }}--{{ "总公司" }} </a-select-option>
   </a-select>
@@ -49,9 +49,6 @@ export default {
         return { projectName, id, label: COMPANY_TYPE[type] };
       });
     },
-  },
-
-  mounted() {
   },
 
   methods: {
