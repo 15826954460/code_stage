@@ -20,6 +20,23 @@
       <!-- <p slot="projectId" slot-scope="text">
         <ShowCompany :value="text"></ShowCompany>
       </p> -->
+      <div slot="deviceId" slot-scope="text">
+        <span
+          style="display: inline-block"
+          v-for="(id, index) in text"
+          :key="`${id}-${index}`"
+        >
+          <a-tooltip placement="topLeft" :title="`查看设备${id}详情`">
+            <a-button
+              size="small"
+              @click="toDevicesDetail(id)"
+              style="margin-bottom: 3px; margin-right: 3px; cursor: pointer"
+            >
+              {{ id }}
+            </a-button>
+          </a-tooltip>
+        </span>
+      </div>
       <p slot="action" slot-scope="text, record">
         <a-button
           type="primary"
@@ -82,6 +99,11 @@ const columns = [
     // scopedSlots: { customRender: "projectId" },
   },
   {
+    title: "设备id",
+    dataIndex: "deviceIds",
+    scopedSlots: { customRender: "deviceId" },
+  },
+  {
     title: "操作",
     scopedSlots: { customRender: "action" },
   },
@@ -106,6 +128,15 @@ export default {
 
   methods: {
     ...mapActions(["getAllBuildListAct"]),
+
+    toDevicesDetail(deviceId) {
+      if (deviceId) {
+        this.$router.push({
+          path: "/equipmentDetail",
+          query: { id: deviceId },
+        });
+      }
+    },
 
     async getBuildingList(force = true) {
       if (!force) {

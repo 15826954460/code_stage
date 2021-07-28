@@ -11,9 +11,12 @@
       :data-source="dataList"
       :pagination="false"
       :loading="loading"
+      :row-selection="rowSelection"
+      :expanded-row-keys.sync="expandedRowKeys"
       @expandedRowsChange="expandedRowsChange"
       bordered
       size="small"
+      :scroll="{ x: 1500, y: 800 }"
       :rowKey="(record) => record.id"
     >
       <p slot="mapPosition" slot-scope="text">
@@ -27,6 +30,23 @@
       <p slot="companyShow" slot-scope="text">
         <ShowCompany :value="text"></ShowCompany>
       </p>
+      <div slot="buildingId" slot-scope="text">
+        <span
+          style="display: inline-block"
+          v-for="(id, index) in text"
+          :key="`${id}-${index}`"
+        >
+          <a-tooltip placement="topLeft" :title="`查看建筑${id}详情`">
+            <a-button
+              size="small"
+              style="margin-bottom: 3px; margin-right: 3px; cursor: pointer"
+              @click="getBuildDetail(id)"
+            >
+              {{ id }}
+            </a-button>
+          </a-tooltip>
+        </span>
+      </div>
       <p slot="action" slot-scope="text, record">
         <a-button
           type="primary"
@@ -72,6 +92,9 @@
       @updateShowMapSelect="updateShowMapSelect"
       @setFormValue="setFormValue"
     ></MapPosition>
+    <CusModule v-if="showBuildDetail" @cancel="closeBuildModal" :visible="showBuildDetail" :width="800">
+      <BuildingForm ref="buildingFormRef" :row="buildRow"></BuildingForm>
+    </CusModule>
   </div>
 </template>
 
@@ -86,16 +109,37 @@ import ShowCompany from "@/components/common/ShowCompany.vue";
 import MapPosition from "@/components/common/MapPosition.vue";
 import CompanyForm from "@/components/company/CompanyForm.vue";
 import Paginagion from "@/components/common/Pagination.vue";
+import BuildingForm from "@/components/building/BuildingForm.vue";
+
+const rowSelection = {
+  onChange: (selectedRowKeys, selectedRows) => {
+    console.log(
+      `selectedRowKeys: ${selectedRowKeys}`,
+      "selectedRows: ",
+      selectedRows
+    );
+  },
+  onSelect: (record, selected, selectedRows) => {
+    console.log(record, selected, selectedRows);
+  },
+  onSelectAll: (selected, selectedRows, changeRows) => {
+    console.log(selected, selectedRows, changeRows);
+  },
+};
 
 const columns = [
   {
     title: "序号",
+    fixed: "left",
+    width: 100,
     customRender: (text, record, index) => {
       return index + 1;
     },
   },
   {
     title: "单位名称",
+    fixed: "left",
+    width: 150,
     dataIndex: "projectName",
   },
   {
@@ -149,7 +193,14 @@ const columns = [
     dataIndex: "website",
   },
   {
+    title: "建筑id",
+    dataIndex: "buildingIds",
+    scopedSlots: { customRender: "buildingId" },
+  },
+  {
     title: "操作",
+    fixed: "right",
+    width: 150,
     scopedSlots: { customRender: "action" },
   },
 ];
@@ -171,6 +222,7 @@ export default {
     ShowCompany,
     MapPosition,
     Paginagion,
+    BuildingForm,
   },
 
   data() {
@@ -185,6 +237,9 @@ export default {
       startPage: 1,
       pageSize: 10,
       expandedRowKeys: [],
+      rowSelection,
+      showBuildDetail: false,
+      buildRow: {},
     };
   },
 
@@ -305,6 +360,19 @@ export default {
       const __formRef = this.$refs.companyFormRefs;
       __formRef.form.setFieldsValue({ mapPosition: val });
     },
+
+    async getBuildDetail(buildId) {
+      const { code, data } = await api.unit.getBuildingList({ id: buildId });
+      if (code === 200) {
+        this.buildRow = data.building || {};
+        this.showBuildDetail = true;
+      }
+    },
+
+    closeBuildModal() {
+      this.buildRow = {};
+      this.showBuildDetail = false;
+    }
   },
 };
 </script>
