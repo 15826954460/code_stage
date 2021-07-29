@@ -93,7 +93,7 @@
       @setFormValue="setFormValue"
     ></MapPosition>
     <CusModule v-if="showBuildDetail" @cancel="closeBuildModal" :visible="showBuildDetail" :width="800">
-      <BuildingForm ref="buildingFormRef" :row="buildRow"></BuildingForm>
+      <BuildingForm ref="buildingFormRef" :row="buildRow" :onlyShow="true"></BuildingForm>
     </CusModule>
   </div>
 </template>
