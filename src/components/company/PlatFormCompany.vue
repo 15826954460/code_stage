@@ -68,7 +68,7 @@
         </a-popconfirm>
       </p>
     </a-table>
-    <div class="__pagination-wrap">
+    <div v-show="total > 0" class="__pagination-wrap" >
       <Paginagion
         :total="total"
         @pageSizeChange="pageSizeChange"

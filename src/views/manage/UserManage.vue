@@ -101,7 +101,7 @@
     <a-button
       type="primary"
       style="margin-bottom: 10px; margin-right: 15px"
-      @click="getUserList"
+      @click="getUserListTree"
     >
       刷新用户列表
     </a-button>
@@ -125,7 +125,7 @@
       <p slot="statusTag" slot-scope="text">
         <!-- 1：正常 0：禁用 -->
         <a-tag v-if="Number(text) === 1" color="#87d068">正常</a-tag>
-        <a-tag v-else color="#f50">禁用</a-tag>
+        <a-tag v-else color="#f50">冻结</a-tag>
       </p>
       <p slot="action" slot-scope="text, record">
         <a-button
@@ -152,6 +152,14 @@
       </p>
     </a-table>
 
+    <div v-show="total > 0" class="__pagination-wrap">
+      <Paginagion
+        :total="total"
+        @pageSizeChange="pageSizeChange"
+        @pageNumChange="pageNumChange"
+      />
+    </div>
+
     <CusModule v-if="visible" @cancel="cancel" :visible="visible" :width="800">
       <UserForm ref="uesrFormRef" :row="row"></UserForm>
 
@@ -167,6 +175,7 @@
 import { mapActions, mapState, createNamespacedHelpers } from "vuex";
 import CusModule from "@/components/common/CusModule.vue";
 import SelectUserType from "@/components/common/SelectUserType.vue";
+import Paginagion from "@/components/common/Pagination.vue";
 import UserForm from "@/components/user/UserForm.vue";
 import SelectStatus from "@/components/user/SelectStatus.vue";
 import api from "@/axios/api";
@@ -227,12 +236,15 @@ export default {
 
   data() {
     return {
+      formItemLayout,
       dataList: [],
       columns,
-      visible: false,
       row: {},
+      total: 0,
+      startPage: 1,
+      pageSize: 10,
+      visible: false,
       loading: false,
-      formItemLayout,
       searchForm: this.$form.createForm(this, { name: "coordinated" }),
       searchRow: {},
     };
@@ -243,6 +255,7 @@ export default {
     UserForm,
     SelectStatus,
     SelectUserType,
+    Paginagion,
   },
 
   computed: {
@@ -252,17 +265,40 @@ export default {
   },
 
   mounted() {
-    this.getUserList();
+    this.getUserListTree();
   },
 
   methods: {
     ...mapActions(["getUserListAct"]),
 
-    async getUserList(force = true) {
+    pageSizeChange(pageSize) {
+      this.pageSize = pageSize;
+      this.refreshUserList();
+    },
+
+    pageNumChange(pageNum) {
+      this.startPage = pageNum;
+      this.refreshUserList();
+    },
+
+    refreshUserList() {
+      console.log('------------', JSON.stringify(this.searchRow) === "{}");
+      if (JSON.stringify(this.searchRow) === "{}") {
+        this.getUserListTree();
+      } else {
+        this.getUserListLine(this.searchRow);
+      }
+    },
+
+    async getUserListTree(force = true) {
       if (!force) return;
       this.loading = true;
-      const { code, data, msg } = await this.getUserListAct();
+      const { code, count, data } = await this.getUserListAct({
+        page: this.startPage,
+        pageSize: this.pageSize,
+      });
       if (code === 200) {
+        this.total = count;
         this.dataList = [...data].map((item) => {
           let __item = {};
           if (item.downlineAccounts && item.downlineAccounts.length > 0) {
@@ -289,6 +325,19 @@ export default {
       this.loading = false;
     },
 
+    async getUserListLine(params = {}) {
+      this.loading = true;
+      const { code, data } = await this.getUserListAct({
+        ...params,
+        page: this.startPage,
+        pageSize: this.pageSize,
+      });
+      if (code === 200) {
+        this.dataList = data;
+      }
+      this.loading = false;
+    },
+
     add() {
       this.row = {
         userType: this.userInfo.adminType ? 1 : 2,
@@ -297,10 +346,8 @@ export default {
     },
 
     edit(record) {
-      const projectIds = record.projects.map(({ id: projectId }) => {
-        return projectId;
-      });
-      this.row = { ...record, projectIds };
+      const projectId = record.project.id;
+      this.row = { ...record, projectId,  };
       this.visible = true;
     },
 
@@ -333,7 +380,7 @@ export default {
       if (code === 200) {
         this.row = {};
         this.visible = false;
-        this.getUserList();
+        this.refreshUserList();
       }
     },
 
@@ -342,7 +389,7 @@ export default {
       if (code === 200) {
         this.row = {};
         this.visible = false;
-        this.getUserList();
+        this.refreshUserList();
       }
     },
 
@@ -354,20 +401,15 @@ export default {
           this.$message.error(codeMessage[code].msg, 5);
           break;
         default:
-          this.getUserList();
+          this.refreshUserList();
           break;
       }
     },
 
-    async handleSearch() {
+    handleSearch() {
       this.searchForm.validateFields(async (err, values) => {
         if (err) return;
-        this.loading = true;
-        const { code, data } = await this.getUserListAct(values);
-        if (code === 200) {
-          this.dataList = data;
-        }
-        this.loading = false;
+        this.getUserListLine(values);
       });
     },
   },
