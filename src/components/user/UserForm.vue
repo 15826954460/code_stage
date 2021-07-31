@@ -80,7 +80,7 @@
           },
         ]"
         @change="handleCompanySelectChange"
-        :multiple="true"
+        :multiple="false"
       ></SelectCompany>
     </a-form-item>
     <a-form-item

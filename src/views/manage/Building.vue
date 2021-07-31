@@ -26,7 +26,7 @@
           v-for="(id, index) in text"
           :key="`${id}-${index}`"
         >
-          <a-tooltip placement="topLeft" :title="`查看设备${id}详情`">
+          <a-tooltip placement="topLeft" :title="`设备${id}详情`">
             <a-button
               size="small"
               @click="toDevicesDetail(id)"

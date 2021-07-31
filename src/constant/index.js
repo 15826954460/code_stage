@@ -10,6 +10,19 @@ const USER_INFO = "USER_INFO";
 const DEFAULT_SELECT_KEYS = "DEFAULT_SELECT_KEYS";
 const DEFAULT_OPEN_KEYS = "DEFAULT_OPEN_KEYS";
 
+const TAG_COLOR_LIST = [
+  "magenta",
+  "volcano",
+  "orange",
+  "gold",
+  "lime",
+  "green",
+  "cyan",
+  "blue",
+  "geekblue",
+  "purple",
+];
+
 // 用户角色列表
 const USER_ROLE_TYPE = [
   { label: '管理员用户', value: 1, adminType: 1 },
@@ -175,4 +188,5 @@ export {
   GEO_COORD,
   COMPANY_TYPE,
   OPERATION_STATUS,
+  TAG_COLOR_LIST,
 }

@@ -121,18 +121,6 @@ export default {
       visible: false,
       row: {},
       loading: false,
-      colorList: [
-        "magenta",
-        "volcano",
-        "orange",
-        "gold",
-        "lime",
-        "green",
-        "cyan",
-        "blue",
-        "geekblue",
-        "purple",
-      ],
     };
   },
 
@@ -141,7 +129,11 @@ export default {
     UserForm,
   },
 
-  created() {},
+  computed: {
+    ...mapStateUser({
+      userInfo: state => state.userInfo,
+    })
+  },
 
   mounted() {
     this.getUserList();
@@ -163,7 +155,10 @@ export default {
     },
 
     add() {
-      this.row = {};
+      console.log(1111, this.userInfo);
+      this.row = {
+        userType: this.userInfo.adminType ? 1 : 2,
+      };
       this.visible = true;
     },
 

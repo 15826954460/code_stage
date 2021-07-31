@@ -1,9 +1,10 @@
 <template>
-  <div class="test-container">待开发</div>
+  <div class="test-container">
+
+  </div>
 </template>
 
 <script>
-import { areaList } from "@/constant/province-data";
 
 export default {
   components: {},
@@ -13,10 +14,6 @@ export default {
   computed: {},
   created() {},
   mounted() {
-    const obj = {};
-    areaList.forEach(({ code, label }) => {
-        obj[code] = label;
-    });
   },
 };
 </script>
