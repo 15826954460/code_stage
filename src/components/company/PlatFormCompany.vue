@@ -122,6 +122,13 @@
       @click="createUser"
       >添加单位</a-button
     >
+    <a-button
+      type="primary"
+      style="margin-bottom: 10px; margin-right: 15px"
+      @click="fetchComplanyListTree(false)"
+    >
+      刷新用户列表
+    </a-button>
     <a-table
       :columns="columns"
       :data-source="dataList"
