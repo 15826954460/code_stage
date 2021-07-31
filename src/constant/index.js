@@ -10,6 +10,11 @@ const USER_INFO = "USER_INFO";
 const DEFAULT_SELECT_KEYS = "DEFAULT_SELECT_KEYS";
 const DEFAULT_OPEN_KEYS = "DEFAULT_OPEN_KEYS";
 
+const USER_STATUE_LIST = [
+  { status: 1, label: '正常' },
+  { status: 0, label: '禁用' },
+];
+
 const TAG_COLOR_LIST = [
   "magenta",
   "volcano",
@@ -21,6 +26,10 @@ const TAG_COLOR_LIST = [
   "blue",
   "geekblue",
   "purple",
+  "#f50",
+  "#2db7f5",
+  "#87d068",
+  "#108ee9"
 ];
 
 // 用户角色列表
@@ -189,4 +198,5 @@ export {
   COMPANY_TYPE,
   OPERATION_STATUS,
   TAG_COLOR_LIST,
+  USER_STATUE_LIST,
 }
