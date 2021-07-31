@@ -115,12 +115,11 @@
       rowKey="id"
     >
       <div slot="projectName" slot-scope="text">
-        <a-tag
-          v-for="(item, index) in text"
-          :key="`${item.id}-${index}`"
-          style="margin-bottom: 3px"
-        >
-          {{ item.projectName }}
+        <!-- v-for="(item, index) in text" -->
+        <!-- :key="`${item.id}-${index}`" -->
+        <!-- style="margin-bottom: 3px" -->
+        <a-tag>
+          {{ text.projectName }}
         </a-tag>
       </div>
       <p slot="statusTag" slot-scope="text">
@@ -204,7 +203,7 @@ const columns = [
   },
   {
     title: "单位名称",
-    dataIndex: "projects",
+    dataIndex: "project",
     scopedSlots: { customRender: "projectName" },
   },
   {
@@ -264,8 +263,27 @@ export default {
       this.loading = true;
       const { code, data, msg } = await this.getUserListAct();
       if (code === 200) {
-        this.dataList = (data || []).filter((item) => {
-          return !item.adminType;
+        this.dataList = [...data].map((item) => {
+          let __item = {};
+          if (item.downlineAccounts && item.downlineAccounts.length > 0) {
+            const { downlineAccounts, ...options } = item;
+            const newDownlimeAccounts = downlineAccounts.map((it) => {
+              return {
+                ...it,
+                project: {
+                  projectName: item.project.projectName,
+                },
+              };
+            });
+            __item = {
+              children: newDownlimeAccounts,
+              ...options,
+            };
+          } else {
+            const { downlineAccounts = [], ...options } = item;
+            __item = { ...options };
+          }
+          return __item;
         });
       }
       this.loading = false;
