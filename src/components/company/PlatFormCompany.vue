@@ -1,5 +1,121 @@
 <template>
   <div id="company_wrapper">
+    <a-form :form="searchForm" class="search-box">
+      <a-row type="flex" :gutter="16">
+        <a-col :span="6">
+          <a-form-item
+            label="单位名称:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="单位名称"
+              v-decorator="[
+                'projectName',
+                { initialValue: searchRow.projectName },
+              ]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item
+            label="单位地址:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="单位地址"
+              v-decorator="['address', { initialValue: searchRow.address }]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item
+            label="营业地址:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="营业地址"
+              v-decorator="[
+                'workAddress',
+                { initialValue: searchRow.workAddress },
+              ]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item
+            label="上级公司:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="上级公司"
+              v-decorator="[
+                'parentName',
+                { initialValue: searchRow.parentName },
+              ]"
+            />
+          </a-form-item>
+        </a-col>
+      </a-row>
+      <a-row>
+        <a-col :span="6">
+          <a-form-item
+            label="省份:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="省份"
+              v-decorator="[
+                'provincesName',
+                { initialValue: searchRow.provincesName },
+              ]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item
+            label="联系电话:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="联系电话"
+              v-decorator="['phone', { initialValue: searchRow.phone }]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item
+            label="行业:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="行业"
+              v-decorator="[
+                'industryName',
+                { initialValue: searchRow.industryName },
+              ]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <div class="__flex __rfec">
+            <a-button
+              type="primary"
+              style="margin-right: 15px"
+              @click="handleSearch"
+              >搜索</a-button
+            >
+            <a-button @click="searchForm.resetFields()">重置</a-button>
+          </div>
+        </a-col>
+      </a-row>
+    </a-form>
     <a-button
       type="primary"
       style="margin-bottom: 10px; margin-right: 15px"
@@ -68,7 +184,7 @@
         </a-popconfirm>
       </p>
     </a-table>
-    <div v-show="total > 0" class="__pagination-wrap" >
+    <div v-show="total > 0" class="__pagination-wrap">
       <Paginagion
         :total="total"
         @pageSizeChange="pageSizeChange"
@@ -120,6 +236,11 @@ import CompanyForm from "@/components/company/CompanyForm.vue";
 import Paginagion from "@/components/common/Pagination.vue";
 import BuildingForm from "@/components/building/BuildingForm.vue";
 
+const formItemLayout = {
+  labelCol: { span: 6 },
+  wrapperCol: { span: 18 },
+};
+
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
     console.log(
@@ -168,7 +289,9 @@ const columns = [
     title: "省份",
     dataIndex: "areaCode",
     customRender: (text, record, index) => {
-      return AREA_OBJ_DATA[Number(text)].label;
+      return (
+        (AREA_OBJ_DATA[Number(text)] && AREA_OBJ_DATA[Number(text)].label) || ""
+      );
     },
   },
   {
@@ -249,11 +372,14 @@ export default {
       rowSelection,
       showBuildDetail: false,
       buildRow: {},
+      searchForm: this.$form.createForm(this, { name: "coordinated" }),
+      searchRow: {},
+      formItemLayout,
     };
   },
 
   created() {
-    this.fetchList(false);
+    this.fetchComplanyListTree(false);
   },
 
   methods: {
@@ -265,15 +391,37 @@ export default {
 
     pageSizeChange(pageSize) {
       this.pageSize = pageSize;
-      this.fetchList(false);
+      this.refreshCompanyList();
     },
 
     pageNumChange(pageNum) {
       this.startPage = pageNum;
-      this.fetchList(false);
+      this.refreshCompanyList();
     },
 
-    async fetchList(force = true) {
+    refreshCompanyList() {
+      console.log("------------", JSON.stringify(this.searchRow) === "{}");
+      if (JSON.stringify(this.searchRow) === "{}") {
+        this.fetchComplanyListTree();
+      } else {
+        this.getCompanyListLine(this.searchRow);
+      }
+    },
+
+    async getCompanyListLine(params = {}) {
+      this.loading = true;
+      const { code, data } = await this.getCompanyListAct({
+        ...params,
+        page: this.startPage,
+        pageSize: this.pageSize,
+      });
+      if (code === 200) {
+        this.dataList = data;
+      }
+      this.loading = false;
+    },
+
+    async fetchComplanyListTree(force = true) {
       this.loading = true;
       const { code, data, count } = await this.getCompanyListAct({
         page: this.startPage,
@@ -340,7 +488,7 @@ export default {
       if (code === 200) {
         this.row = {};
         this.visible = false;
-        this.fetchList();
+        this.refreshCompanyList();
       }
     },
 
@@ -349,7 +497,7 @@ export default {
       if (code === 200) {
         this.row = {};
         this.visible = false;
-        this.fetchList();
+        this.refreshCompanyList();
       }
     },
 
@@ -357,7 +505,7 @@ export default {
       if (!id) return;
       const { code } = await api.company.delCompanyList(id);
       if (code === 200) {
-        this.fetchList();
+        this.refreshCompanyList();
       }
     },
 
@@ -382,6 +530,13 @@ export default {
       this.buildRow = {};
       this.showBuildDetail = false;
     },
+
+    handleSearch() {
+      this.searchForm.validateFields(async (err, values) => {
+        if (err) return;
+        this.getCompanyListLine(values);
+      });
+    },
   },
 };
 </script>
@@ -391,5 +546,6 @@ export default {
   ::v-deep .ant-table-body {
     margin: 0;
   }
+  margin-right: 10px;
 }
 </style>
