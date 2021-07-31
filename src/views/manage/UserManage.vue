@@ -155,7 +155,6 @@ export default {
     },
 
     add() {
-      console.log(1111, this.userInfo);
       this.row = {
         userType: this.userInfo.adminType ? 1 : 2,
       };

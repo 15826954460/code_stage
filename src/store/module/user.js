@@ -19,8 +19,10 @@ const state = {
 
 const mutations = {
   updateUserInfo(state, userinfo) {
+    const { isAdmin: adminType, ...options } = userinfo;
     state.userInfo = {
-      ...state.userInfo,
+      ...options,
+      adminType,
       ...userinfo,
     };
   },

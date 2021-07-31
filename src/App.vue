@@ -34,7 +34,7 @@ export default {
   methods: {
     ...mapActions([
       "getProjectListAct",
-      "getAllCompanyList",
+      "getSelectCompanyList",
       "getAllBuildListAct",
     ]),
 
@@ -50,7 +50,7 @@ export default {
     },
 
     fetchCompanyAllList() {
-      this.getAllCompanyList();
+      this.getSelectCompanyList();
     },
 
     fetchBuildList() {

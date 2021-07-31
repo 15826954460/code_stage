@@ -73,14 +73,15 @@
     >
       <SelectCompany
         v-decorator="[
-          'projectIds',
+          'projectId',
           {
-            initialValue: row.projectIds || [],
+            initialValue: row.projectId || '',
             rules: [{ required: true, message: '请选择单位' }],
           },
         ]"
         @change="handleCompanySelectChange"
         :multiple="false"
+        :isShowShige="false"
       ></SelectCompany>
     </a-form-item>
     <a-form-item
@@ -154,7 +155,7 @@ export default {
     },
 
     handleCompanySelectChange(val) {
-      this.form.setFieldsValue({ projectIds: val });
+      this.form.setFieldsValue({ projectId: val });
     },
 
         // 自定义密码验证

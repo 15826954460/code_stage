@@ -92,8 +92,17 @@
       @updateShowMapSelect="updateShowMapSelect"
       @setFormValue="setFormValue"
     ></MapPosition>
-    <CusModule v-if="showBuildDetail" @cancel="closeBuildModal" :visible="showBuildDetail" :width="800">
-      <BuildingForm ref="buildingFormRef" :row="buildRow" :onlyShow="true"></BuildingForm>
+    <CusModule
+      v-if="showBuildDetail"
+      @cancel="closeBuildModal"
+      :visible="showBuildDetail"
+      :width="800"
+    >
+      <BuildingForm
+        ref="buildingFormRef"
+        :row="buildRow"
+        :onlyShow="true"
+      ></BuildingForm>
     </CusModule>
   </div>
 </template>
@@ -211,7 +220,7 @@ export default {
   props: {
     type: {
       type: Number,
-      default: 1, //  1 普通公司 2 代理公司(暂时不要) 3 个人代理(暂时不要)
+      default: 1, //  1 普通公司 2 代理公司(不单独处理,根据公司下面是否有关联其它公司来判断) 3 个人代理(暂时不要)
     },
   },
 
@@ -248,7 +257,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getCompanyListAct", "getAllCompanyList"]),
+    ...mapActions(["getCompanyListAct", "getSelectCompanyList"]),
 
     expandedRowsChange(expandedRowKeys) {
       this.expandedRowKeys = expandedRowKeys;
@@ -283,7 +292,7 @@ export default {
           }
           return __item;
         });
-        force && this.getAllCompanyList();
+        force && this.getSelectCompanyList();
       }
       this.loading = false;
     },
@@ -372,7 +381,7 @@ export default {
     closeBuildModal() {
       this.buildRow = {};
       this.showBuildDetail = false;
-    }
+    },
   },
 };
 </script>

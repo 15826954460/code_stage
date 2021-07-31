@@ -15,7 +15,7 @@
     >
       {{ item.projectName }}
     </a-select-option>
-    <a-select-option :value="1"> {{ "释格" }}--{{ "总公司" }} </a-select-option>
+    <a-select-option v-if="isShowShige" :value="1"> {{ "释格" }}--{{ "总公司" }}</a-select-option>
   </a-select>
 </template>
 
@@ -38,6 +38,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    isShowShige: {
+      type: Boolean,
+      default: true,
     }
   },
 
