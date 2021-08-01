@@ -14,7 +14,7 @@
           },
         ]"
         placeholder="请输入用户名"
-        :disabled="isAdminUser"
+        :disabled="true"
       />
     </a-form-item>
     <a-form-item
@@ -33,7 +33,7 @@
           },
         ]"
         placeholder="请输入密码"
-        :disabled="isAdminUser"
+        :disabled="true"
       />
     </a-form-item>
     <a-form-item
@@ -50,7 +50,7 @@
           },
         ]"
         placeholder="请输入姓名"
-        :disabled="isAdminUser"
+        :disabled="true"
       />
     </a-form-item>
     <a-form-item
@@ -73,7 +73,7 @@
           },
         ]"
         placeholder="请输入手机号"
-        :disabled="isAdminUser"
+        :disabled="true"
       />
     </a-form-item>
     <a-form-item
@@ -96,7 +96,7 @@
           },
         ]"
         placeholder="请输入邮箱"
-        :disabled="isAdminUser"
+        :disabled="true"
       />
     </a-form-item>
     <a-form-item
@@ -112,6 +112,7 @@
             initialValue: Number(userInfo.userType) || '',
           },
         ]"
+        :disabled="true"
         @change="handleTypeSelectChange"
       ></SelectUserType>
     </a-form-item>
@@ -122,7 +123,7 @@
       :wrapper-col="formItemLayout.wrapperCol"
     >
       <SelectAdminType
-        :disabled="isAdminUser"
+        :disabled="true"
         v-decorator="[
           'adminType',
           {

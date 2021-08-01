@@ -1,7 +1,7 @@
 <template>
   <div id="company_wrapper">
     <a-form :form="searchForm" class="search-box">
-      <a-row type="flex" :gutter="16">
+      <a-row :gutter="16">
         <a-col :span="6">
           <a-form-item
             label="单位名称:"
@@ -60,7 +60,7 @@
           </a-form-item>
         </a-col>
       </a-row>
-      <a-row>
+      <a-row :gutter="16">
         <a-col :span="6">
           <a-form-item
             label="省份:"
@@ -111,7 +111,7 @@
               @click="handleSearch"
               >搜索</a-button
             >
-            <a-button @click="searchForm.resetFields()">重置</a-button>
+            <a-button @click="handleResetSearch">重置</a-button>
           </div>
         </a-col>
       </a-row>
@@ -122,13 +122,6 @@
       @click="createUser"
       >添加单位</a-button
     >
-    <a-button
-      type="primary"
-      style="margin-bottom: 10px; margin-right: 15px"
-      @click="fetchComplanyListTree(false)"
-    >
-      刷新用户列表
-    </a-button>
     <a-table
       :columns="columns"
       :data-source="dataList"
@@ -187,7 +180,9 @@
           @confirm="del(record)"
           @cancel="cancel"
         >
-          <a-button type="danger" size="small"> 删除</a-button>
+          <a-button type="danger" size="small" :disabled="disabledDelete">
+            删除</a-button
+          >
         </a-popconfirm>
       </p>
     </a-table>
@@ -232,7 +227,7 @@
 
 <script>
 import api from "@/axios/api";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState, createNamespacedHelpers } from "vuex";
 import { AREA_OBJ_DATA } from "@/constant";
 
 import CusModule from "@/components/common/CusModule.vue";
@@ -242,6 +237,10 @@ import MapPosition from "@/components/common/MapPosition.vue";
 import CompanyForm from "@/components/company/CompanyForm.vue";
 import Paginagion from "@/components/common/Pagination.vue";
 import BuildingForm from "@/components/building/BuildingForm.vue";
+import codeMessage from "@/constant/code-message";
+
+const { mapActions: mapActionsUser, mapState: mapStateUser } =
+  createNamespacedHelpers("user");
 
 const formItemLayout = {
   labelCol: { span: 6 },
@@ -350,7 +349,7 @@ export default {
   props: {
     type: {
       type: Number,
-      default: 1, //  1 普通公司 2 代理公司(不单独处理,根据公司下面是否有关联其它公司来判断) 3 个人代理(暂时不要)
+      default: 1, //  1 普通公司 2 代理公司(不单独处理,根据公司下面是否有关联其它公司来判断)
     },
   },
 
@@ -385,8 +384,31 @@ export default {
     };
   },
 
+  computed: {
+    ...mapState({
+      token: (state) => state.token,
+    }),
+    ...mapStateUser({
+      userInfo: (state) => state.userInfo,
+    }),
+    disabledDelete() {
+      const { adminType, userType } = this.userInfo;
+      if (adminType) {
+        return adminType !== 1;
+      } else {
+        return userType !== 1;
+      }
+    },
+  },
+
+  watch: {
+    token() {
+      this.fetchComplanyListTree();
+    },
+  },
+
   created() {
-    this.fetchComplanyListTree(false);
+    this.fetchComplanyListTree();
   },
 
   methods: {
@@ -409,15 +431,14 @@ export default {
     },
 
     refreshCompanyList(flag = true) {
-      console.log("------------", JSON.stringify(this.searchRow) === "{}");
       if (JSON.stringify(this.searchRow) === "{}") {
         this.fetchComplanyListTree(flag);
       } else {
-        this.getCompanyListLine(this.searchRow);
+        this.getCompanyListLine({ params: this.searchRow, flag });
       }
     },
 
-    async getCompanyListLine(params = {}) {
+    async getCompanyListLine({ params = {}, flag } = {}) {
       this.loading = true;
       const { code, data } = await this.getCompanyListAct({
         ...params,
@@ -426,6 +447,7 @@ export default {
       });
       if (code === 200) {
         this.dataList = data;
+        flag && this.getSelectCompanyList();
       }
       this.loading = false;
     },
@@ -449,6 +471,7 @@ export default {
           }
           return __item;
         });
+        // 跟新单位下拉选择数据信息
         force && this.getSelectCompanyList();
       }
       this.loading = false;
@@ -515,6 +538,8 @@ export default {
       const { code } = await api.company.delCompanyList(id);
       if (code === 200) {
         this.refreshCompanyList();
+      } else {
+        this.$message.error(codeMessage[code].msg, 5);
       }
     },
 
@@ -540,11 +565,17 @@ export default {
       this.showBuildDetail = false;
     },
 
-    handleSearch() {
+    handleSearch(e) {
       this.searchForm.validateFields(async (err, values) => {
         if (err) return;
-        this.getCompanyListLine(values);
+        this.searchRow = values;
+        this.refreshCompanyList(false);
       });
+    },
+
+    handleResetSearch() {
+      this.searchForm.resetFields();
+      this.searchRow = {};
     },
   },
 };

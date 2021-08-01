@@ -1,7 +1,7 @@
 <template>
   <div class="user-manage-container">
     <a-form :form="searchForm" class="search-box">
-      <a-row type="flex" :gutter="16">
+      <a-row :gutter="16">
         <a-col :span="6">
           <a-form-item
             label="用户名:"
@@ -51,7 +51,7 @@
           </a-form-item>
         </a-col>
       </a-row>
-      <a-row>
+      <a-row :gutter="16">
         <a-col :span="6">
           <a-form-item
             label="单位名称:"
@@ -252,11 +252,25 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      token: (state) => state.token,
+    }),
     ...mapStateUser({
       userInfo: (state) => state.userInfo,
     }),
     disabledDelete() {
-      return this.userInfo.adminType !== 1 || this.userInfo.userType !== 1;
+      const { adminType, userType } = this.userInfo;
+      if (adminType) {
+        return adminType !== 1;
+      } else {
+        return userType !== 1;
+      }
+    },
+  },
+
+  watch: {
+    token() {
+      this.getUserListTree();
     },
   },
 
@@ -386,8 +400,7 @@ export default {
         this.row = {};
         this.visible = false;
         this.refreshUserList();
-      }
-      if (code === 7011) {
+      } else {
         this.$message.error(codeMessage[code].msg, 5);
       }
     },
@@ -395,13 +408,10 @@ export default {
     async del({ id }) {
       if (!id) return;
       const { code } = await api.user.delUser(id);
-      switch (code) {
-        case 10000:
-          this.$message.error(codeMessage[code].msg, 5);
-          break;
-        default:
-          this.refreshUserList();
-          break;
+      if (code === 200) {
+        this.refreshUserList();
+      } else {
+        this.$message.error(codeMessage[code].msg, 5);
       }
     },
 
@@ -423,6 +433,9 @@ export default {
 
 <style lang='scss' scoped>
 .user-manage-container {
+  ::v-deep .ant-table-body {
+    margin: 0;
+  }
   margin-top: 20px;
   margin-right: 10px;
 }

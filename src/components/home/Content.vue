@@ -48,7 +48,7 @@
           <a-menu-item v-show="adminType === 1 || adminType === 2" key="/">
             <a-icon type="home" /> 首页
           </a-menu-item>
-          <a-menu-item key="/user-center">
+          <a-menu-item v-show="adminType === 1 || adminType === 2" key="/user-center">
             <a-icon type="home" /> 用户分布
           </a-menu-item>
 

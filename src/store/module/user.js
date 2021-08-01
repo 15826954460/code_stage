@@ -5,10 +5,10 @@
  */
 import api from "@/axios/api";
 
-// 服务端业务有调整，根据isAdmin 来判断是否是甲方管理员，根据 userType 1 2 来区分超管和普通管理员
+// 用户信息根据isAdmin 来判断是否是甲方管理员，结合 userType 1 2 来区分超管和普通管理员
 const state = {
   userInfo: {
-    adminType: null, // 1: 超级管理员 2: 管理员 3: 审核员 4: 信息录入员
+    adminType: null, // 1: 超级管理员 2: 管理员
     userType: null, // 1: 管理员 2: 普通用户
     phone: null,
     username: "",
