@@ -83,6 +83,7 @@
         @change="handleCompanySelectChange"
         :multiple="false"
         :isShowShige="false"
+        :disabled="row.id ? true : false"
       ></SelectCompany>
     </a-form-item>
     <a-form-item

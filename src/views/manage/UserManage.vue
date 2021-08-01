@@ -86,7 +86,7 @@
               @click="handleSearch"
               >搜索</a-button
             >
-            <a-button @click="searchForm.resetFields()">重置</a-button>
+            <a-button @click="handleResetSearch">重置</a-button>
           </div>
         </a-col>
       </a-row>
@@ -97,13 +97,6 @@
       @click="add"
     >
       添加用户
-    </a-button>
-    <a-button
-      type="primary"
-      style="margin-bottom: 10px; margin-right: 15px"
-      @click="getUserListTree"
-    >
-      刷新用户列表
     </a-button>
     <a-table
       :columns="columns"
@@ -284,7 +277,6 @@ export default {
     },
 
     refreshUserList() {
-      console.log('------------', JSON.stringify(this.searchRow) === "{}");
       if (JSON.stringify(this.searchRow) === "{}") {
         this.getUserListTree();
       } else {
@@ -292,8 +284,7 @@ export default {
       }
     },
 
-    async getUserListTree(force = true) {
-      if (!force) return;
+    async getUserListTree() {
       this.loading = true;
       const { code, count, data } = await this.getUserListAct({
         page: this.startPage,
@@ -393,6 +384,9 @@ export default {
         this.visible = false;
         this.refreshUserList();
       }
+      if (code === 7011) {
+        this.$message.error(codeMessage[code].msg, 5);
+      }
     },
 
     async del({ id }) {
@@ -411,9 +405,15 @@ export default {
     handleSearch() {
       this.searchForm.validateFields(async (err, values) => {
         if (err) return;
-        this.getUserListLine(values);
+        this.searchRow = values;
+        this.refreshUserList();
       });
     },
+
+    handleResetSearch() {
+      this.searchForm.resetFields();
+      this.searchRow = {};
+    }
   },
 };
 </script>
