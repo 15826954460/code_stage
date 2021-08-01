@@ -271,13 +271,15 @@ export default {
   methods: {
     ...mapActions(["getUserListAct"]),
 
-    pageSizeChange(pageSize) {
+    pageSizeChange({ pageSize, pageNum }) {
       this.pageSize = pageSize;
+      this.startPage = pageNum;
       this.refreshUserList();
     },
 
-    pageNumChange(pageNum) {
+    pageNumChange({ pageNum, pageSize }) {
       this.startPage = pageNum;
+      this.pageSize = pageSize;
       this.refreshUserList();
     },
 

@@ -396,20 +396,22 @@ export default {
       this.expandedRowKeys = expandedRowKeys;
     },
 
-    pageSizeChange(pageSize) {
+    pageSizeChange({ pageSize, pageNum }) {
       this.pageSize = pageSize;
-      this.refreshCompanyList();
-    },
-
-    pageNumChange(pageNum) {
       this.startPage = pageNum;
-      this.refreshCompanyList();
+      this.refreshCompanyList(false);
     },
 
-    refreshCompanyList() {
+    pageNumChange({ pageSize, pageNum }) {
+      this.startPage = pageNum;
+      this.pageSize = pageSize;
+      this.refreshCompanyList(false);
+    },
+
+    refreshCompanyList(flag = true) {
       console.log("------------", JSON.stringify(this.searchRow) === "{}");
       if (JSON.stringify(this.searchRow) === "{}") {
-        this.fetchComplanyListTree();
+        this.fetchComplanyListTree(flag);
       } else {
         this.getCompanyListLine(this.searchRow);
       }
