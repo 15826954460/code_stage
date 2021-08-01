@@ -45,8 +45,12 @@
           theme="dark"
           @click="handleMeunItem"
         >
-          <a-menu-item key="/"> <a-icon type="home" /> 首页 </a-menu-item>
-          <a-menu-item key="/user-center"> <a-icon type="home" /> 用户分布 </a-menu-item>
+          <a-menu-item v-show="adminType === 1 || adminType === 2" key="/">
+            <a-icon type="home" /> 首页
+          </a-menu-item>
+          <a-menu-item key="/user-center">
+            <a-icon type="home" /> 用户分布
+          </a-menu-item>
 
           <a-sub-menu>
             <span slot="title"> <a-icon type="setting" /> 管理中心 </span>
@@ -56,14 +60,16 @@
           </a-sub-menu>
 
           <a-sub-menu key="sub1">
-            <span slot="title"><a-icon type="deployment-unit" /> 设备中心 </span>
+            <span slot="title"
+              ><a-icon type="deployment-unit" /> 设备中心
+            </span>
             <a-menu-item key="/equipment-page"> 设备管理 </a-menu-item>
             <a-menu-item key="/equipmentList"> 设备展示 </a-menu-item>
             <a-menu-item key="/warning"> 设备警报 </a-menu-item>
           </a-sub-menu>
         </a-menu>
       </a-layout-sider>
-      <a-layout-content style="padding-left: 10px;">
+      <a-layout-content style="padding-left: 10px">
         <router-view></router-view>
       </a-layout-content>
     </a-layout>
@@ -120,6 +126,7 @@ export default {
     ...mapStateUser({
       username: (state) => state.userInfo.username,
       userType: (state) => state.userInfo.userType,
+      adminType: (state) => state.userInfo.adminType,
     }),
   },
 

@@ -138,9 +138,9 @@
           @confirm="del(record)"
           @cancel="cancel"
         >
-          <a-button type="danger" size="small" :disabled="text === 0">
-            删除</a-button
-          >
+          <a-button type="danger" size="small" :disabled="disabledDelete">
+            删除
+          </a-button>
         </a-popconfirm>
       </p>
     </a-table>
@@ -255,6 +255,9 @@ export default {
     ...mapStateUser({
       userInfo: (state) => state.userInfo,
     }),
+    disabledDelete() {
+      return this.userInfo.adminType !== 1 || this.userInfo.userType !== 1;
+    },
   },
 
   mounted() {
@@ -340,7 +343,7 @@ export default {
 
     edit(record) {
       const projectId = record.project.id;
-      this.row = { ...record, projectId,  };
+      this.row = { ...record, projectId };
       this.visible = true;
     },
 
@@ -413,7 +416,7 @@ export default {
     handleResetSearch() {
       this.searchForm.resetFields();
       this.searchRow = {};
-    }
+    },
   },
 };
 </script>
