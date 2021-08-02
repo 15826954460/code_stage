@@ -33,7 +33,7 @@ export default {
           type: "pie",
         },
         title: {
-          text: "2018 年浏览器市场份额",
+          text: "2021 年各地区用户分布",
         },
         tooltip: {
           pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>",
@@ -50,29 +50,33 @@ export default {
         },
         series: [
           {
-            name: "Brands",
+            name: "地区",
             colorByPoint: true,
             data: [
               {
-                name: "Chrome",
+                name: "北京",
                 y: 61.41,
                 sliced: true,
                 selected: true,
               },
               {
-                name: "Internet Explorer",
+                name: "上海",
                 y: 11.84,
               },
               {
-                name: "Firefox",
+                name: "广州",
                 y: 10.85,
               },
               {
-                name: "Edge",
+                name: "江西",
                 y: 4.67,
               },
               {
-                name: "Safari",
+                name: "湖北",
+                y: 4.18,
+              },
+              {
+                name: "海南",
                 y: 4.18,
               },
               {
