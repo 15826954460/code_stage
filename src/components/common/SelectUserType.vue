@@ -1,5 +1,5 @@
 <template>
-  <a-select :value="value" placeholder="请选择角色" @change="handleChange">
+  <a-select :value="value" placeholder="请选择角色" @change="handleChange" :disabled="disabled">
     <a-select-option
       v-for="item in roleList"
       :value="Number(item.value)"
@@ -24,6 +24,10 @@ export default {
       type: [String, Number],
       default: "",
     },
+    disabled: {
+      type: Boolean,
+      default: true,
+    }
   },
 
   data() {

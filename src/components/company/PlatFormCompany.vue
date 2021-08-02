@@ -1,5 +1,121 @@
 <template>
   <div id="company_wrapper">
+    <a-form :form="searchForm" class="search-box">
+      <a-row :gutter="16">
+        <a-col :span="6">
+          <a-form-item
+            label="单位名称:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="单位名称"
+              v-decorator="[
+                'projectName',
+                { initialValue: searchRow.projectName },
+              ]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item
+            label="单位地址:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="单位地址"
+              v-decorator="['address', { initialValue: searchRow.address }]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item
+            label="营业地址:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="营业地址"
+              v-decorator="[
+                'workAddress',
+                { initialValue: searchRow.workAddress },
+              ]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item
+            label="上级公司:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="上级公司"
+              v-decorator="[
+                'parentName',
+                { initialValue: searchRow.parentName },
+              ]"
+            />
+          </a-form-item>
+        </a-col>
+      </a-row>
+      <a-row :gutter="16">
+        <a-col :span="6">
+          <a-form-item
+            label="省份:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="省份"
+              v-decorator="[
+                'provincesName',
+                { initialValue: searchRow.provincesName },
+              ]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item
+            label="联系电话:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="联系电话"
+              v-decorator="['phone', { initialValue: searchRow.phone }]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item
+            label="行业:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="行业"
+              v-decorator="[
+                'industryName',
+                { initialValue: searchRow.industryName },
+              ]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <div class="__flex __rfec">
+            <a-button
+              type="primary"
+              style="margin-right: 15px"
+              @click="handleSearch"
+              >搜索</a-button
+            >
+            <a-button @click="handleResetSearch">重置</a-button>
+          </div>
+        </a-col>
+      </a-row>
+    </a-form>
     <a-button
       type="primary"
       style="margin-bottom: 10px; margin-right: 15px"
@@ -11,8 +127,12 @@
       :data-source="dataList"
       :pagination="false"
       :loading="loading"
+      :row-selection="rowSelection"
+      :expanded-row-keys.sync="expandedRowKeys"
+      @expandedRowsChange="expandedRowsChange"
       bordered
       size="small"
+      :scroll="{ x: 1500, y: 800 }"
       :rowKey="(record) => record.id"
     >
       <p slot="mapPosition" slot-scope="text">
@@ -23,12 +143,26 @@
       <p slot="industry" slot-scope="text">
         <IndustryShow :value="text"></IndustryShow>
       </p>
-      <!-- <p slot="bank" slot-scope="text">
-        <ShowBank :value="text"></ShowBank>
-      </p> -->
       <p slot="companyShow" slot-scope="text">
         <ShowCompany :value="text"></ShowCompany>
       </p>
+      <div slot="buildingId" slot-scope="text">
+        <span
+          style="display: inline-block"
+          v-for="(id, index) in text"
+          :key="`${id}-${index}`"
+        >
+          <a-tooltip placement="topLeft" :title="`查看建筑${id}详情`">
+            <a-button
+              size="small"
+              style="margin-bottom: 3px; margin-right: 3px; cursor: pointer"
+              @click="getBuildDetail(id)"
+            >
+              {{ id }}
+            </a-button>
+          </a-tooltip>
+        </span>
+      </div>
       <p slot="action" slot-scope="text, record">
         <a-button
           type="primary"
@@ -46,10 +180,19 @@
           @confirm="del(record)"
           @cancel="cancel"
         >
-          <a-button type="danger" size="small"> 删除</a-button>
+          <a-button type="danger" size="small" :disabled="disabledDelete">
+            删除</a-button
+          >
         </a-popconfirm>
       </p>
     </a-table>
+    <div v-show="total > 0" class="__pagination-wrap">
+      <Paginagion
+        :total="total"
+        @pageSizeChange="pageSizeChange"
+        @pageNumChange="pageNumChange"
+      />
+    </div>
     <CusModule v-if="visible" @cancel="cancel" :visible="visible" :width="800">
       <CompanyForm
         ref="companyFormRefs"
@@ -67,110 +210,135 @@
       @updateShowMapSelect="updateShowMapSelect"
       @setFormValue="setFormValue"
     ></MapPosition>
+    <CusModule
+      v-if="showBuildDetail"
+      @cancel="closeBuildModal"
+      :visible="showBuildDetail"
+      :width="800"
+    >
+      <BuildingForm
+        ref="buildingFormRef"
+        :row="buildRow"
+        :onlyShow="true"
+      ></BuildingForm>
+    </CusModule>
   </div>
 </template>
 
 <script>
 import api from "@/axios/api";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState, createNamespacedHelpers } from "vuex";
 import { AREA_OBJ_DATA } from "@/constant";
 
 import CusModule from "@/components/common/CusModule.vue";
 import IndustryShow from "@/components/common/IndustryShow.vue";
-import ShowBank from "@/components/common/ShowBank.vue";
 import ShowCompany from "@/components/common/ShowCompany.vue";
 import MapPosition from "@/components/common/MapPosition.vue";
-
 import CompanyForm from "@/components/company/CompanyForm.vue";
+import Paginagion from "@/components/common/Pagination.vue";
+import BuildingForm from "@/components/building/BuildingForm.vue";
+import codeMessage from "@/constant/code-message";
+
+const { mapActions: mapActionsUser, mapState: mapStateUser } =
+  createNamespacedHelpers("user");
+
+const formItemLayout = {
+  labelCol: { span: 6 },
+  wrapperCol: { span: 18 },
+};
+
+const rowSelection = {
+  onChange: (selectedRowKeys, selectedRows) => {
+    console.log(
+      `selectedRowKeys: ${selectedRowKeys}`,
+      "selectedRows: ",
+      selectedRows
+    );
+  },
+  onSelect: (record, selected, selectedRows) => {
+    console.log(record, selected, selectedRows);
+  },
+  onSelectAll: (selected, selectedRows, changeRows) => {
+    console.log(selected, selectedRows, changeRows);
+  },
+};
 
 const columns = [
   {
-    title: '展开',
-  },
-  {
     title: "序号",
+    fixed: "left",
+    width: 100,
     customRender: (text, record, index) => {
       return index + 1;
     },
-    width: 80,
   },
   {
     title: "单位名称",
+    fixed: "left",
+    width: 150,
     dataIndex: "projectName",
-    width: 160,
   },
   {
     title: "单位地址",
     dataIndex: "address",
-    width: 160,
   },
   {
     title: "营业地址",
     dataIndex: "workAddress",
-    width: 160,
   },
   {
     title: "上级公司",
     dataIndex: "parentId",
-    width: 160,
     scopedSlots: { customRender: "companyShow" },
   },
   {
     title: "省份",
     dataIndex: "areaCode",
     customRender: (text, record, index) => {
-      return AREA_OBJ_DATA[Number(text)].label;
+      return (
+        (AREA_OBJ_DATA[Number(text)] && AREA_OBJ_DATA[Number(text)].label) || ""
+      );
     },
-    width: 160,
   },
   {
     title: "经纬度",
     dataIndex: "mapPosition",
     scopedSlots: { customRender: "mapPosition" },
-    width: 160,
   },
   {
     title: "纳税号",
     dataIndex: "taxFileNumber",
-    width: 120,
   },
   {
     title: "开户行",
     dataIndex: "bank",
-    // scopedSlots: { customRender: "bank" },
-    width: 120,
   },
   {
     title: "银行卡号",
     dataIndex: "cardNumber",
-    width: 160,
   },
   {
     title: "联系电话",
     dataIndex: "contactInfo",
-    width: 160,
   },
   {
     title: "行业",
     dataIndex: "businessId",
     scopedSlots: { customRender: "industry" },
-    width: 80,
   },
   {
     title: "官网地址",
     dataIndex: "website",
-    width: 250,
   },
   {
-    title: "用户类型",
-    dataIndex: "type",
-    width: 160,
-    customRender: (text, record, index) => {
-      return Number(text) === 1 ? "代理" : "个人";
-    },
+    title: "建筑id",
+    dataIndex: "buildingIds",
+    scopedSlots: { customRender: "buildingId" },
   },
   {
     title: "操作",
+    fixed: "right",
+    width: 150,
     scopedSlots: { customRender: "action" },
   },
 ];
@@ -181,7 +349,7 @@ export default {
   props: {
     type: {
       type: Number,
-      default: 1, //  1 普通公司 2 代理公司 3 个人代理(暂时不要)
+      default: 1, //  1 普通公司 2 代理公司(不单独处理,根据公司下面是否有关联其它公司来判断)
     },
   },
 
@@ -189,36 +357,110 @@ export default {
     CusModule,
     CompanyForm,
     IndustryShow,
-    // ShowBank,
     ShowCompany,
     MapPosition,
+    Paginagion,
+    BuildingForm,
   },
 
   data() {
     return {
       dataList: [],
+      columns,
       visible: false,
       row: {},
       loading: false,
       showMapSelect: false,
-      columns,
+      total: 0,
+      startPage: 1,
+      pageSize: 10,
+      expandedRowKeys: [],
+      rowSelection,
+      showBuildDetail: false,
+      buildRow: {},
+      searchForm: this.$form.createForm(this, { name: "coordinated" }),
+      searchRow: {},
+      formItemLayout,
     };
   },
 
-  created() {
-    this.fetchList(false);
+  computed: {
+    ...mapState({
+      token: (state) => state.token,
+    }),
+    ...mapStateUser({
+      userInfo: (state) => state.userInfo,
+    }),
+    disabledDelete() {
+      const { adminType, userType } = this.userInfo;
+      if (adminType) {
+        return adminType !== 1;
+      } else {
+        return userType !== 1;
+      }
+    },
   },
 
-  mounted() {},
+  watch: {
+    token() {
+      this.fetchComplanyListTree();
+    },
+  },
+
+  created() {
+    this.fetchComplanyListTree();
+  },
 
   methods: {
-    ...mapActions(["getCompanyListAct", "getAllCompanyList"]),
+    ...mapActions(["getCompanyListAct", "getSelectCompanyList"]),
 
-    async fetchList(force = true) {
+    expandedRowsChange(expandedRowKeys) {
+      this.expandedRowKeys = expandedRowKeys;
+    },
+
+    pageSizeChange({ pageSize, pageNum }) {
+      this.pageSize = pageSize;
+      this.startPage = pageNum;
+      this.refreshCompanyList(false);
+    },
+
+    pageNumChange({ pageSize, pageNum }) {
+      this.startPage = pageNum;
+      this.pageSize = pageSize;
+      this.refreshCompanyList(false);
+    },
+
+    refreshCompanyList(flag = true) {
+      if (JSON.stringify(this.searchRow) === "{}") {
+        this.fetchComplanyListTree(flag);
+      } else {
+        this.getCompanyListLine({ params: this.searchRow, flag });
+      }
+    },
+
+    async getCompanyListLine({ params = {}, flag } = {}) {
       this.loading = true;
-      const { code, data } = await this.getCompanyListAct({ type: this.type });
+      const { code, data } = await this.getCompanyListAct({
+        ...params,
+        page: this.startPage,
+        pageSize: this.pageSize,
+      });
       if (code === 200) {
-        this.dataList = data.map((item) => {
+        this.dataList = data;
+        flag && this.getSelectCompanyList();
+      }
+      this.loading = false;
+    },
+
+    async fetchComplanyListTree(force = true) {
+      this.loading = true;
+      const { code, data, count } = await this.getCompanyListAct({
+        page: this.startPage,
+        pageSize: this.pageSize,
+      });
+      if (code === 200) {
+        this.total = count;
+        this.dataList = [...data].map((item) => {
           let __item = {};
           if (item.list && item.list.length > 0) {
             const { list, ...options } = item;
@@ -229,7 +471,8 @@ export default {
           }
           return __item;
         });
-        force && this.getAllCompanyList();
+        // 跟新单位下拉选择数据信息
+        force && this.getSelectCompanyList();
       }
       this.loading = false;
     },
@@ -260,13 +503,12 @@ export default {
           this.update({
             id,
             ...params,
-            type: this.type,
             parentId,
           });
         } else {
           this.create({
             ...params,
-            type: this.type,
+            type: parentId === 1 ? this.type : 2,
             parentId,
           });
         }
@@ -278,7 +520,7 @@ export default {
       if (code === 200) {
         this.row = {};
         this.visible = false;
-        this.fetchList(true);
+        this.refreshCompanyList();
       }
     },
 
@@ -287,7 +529,7 @@ export default {
       if (code === 200) {
         this.row = {};
         this.visible = false;
-        this.fetchList(true);
+        this.refreshCompanyList();
       }
     },
 
@@ -295,7 +537,9 @@ export default {
       if (!id) return;
       const { code } = await api.company.delCompanyList(id);
       if (code === 200) {
-        this.fetchList(true);
+        this.refreshCompanyList();
+      } else {
+        this.$message.error(codeMessage[code].msg, 5);
       }
     },
 
@@ -307,6 +551,32 @@ export default {
       const __formRef = this.$refs.companyFormRefs;
       __formRef.form.setFieldsValue({ mapPosition: val });
     },
+
+    async getBuildDetail(buildId) {
+      const { code, data } = await api.unit.getBuildingList({ id: buildId });
+      if (code === 200) {
+        this.buildRow = data.building || {};
+        this.showBuildDetail = true;
+      }
+    },
+
+    closeBuildModal() {
+      this.buildRow = {};
+      this.showBuildDetail = false;
+    },
+
+    handleSearch(e) {
+      this.searchForm.validateFields(async (err, values) => {
+        if (err) return;
+        this.searchRow = values;
+        this.refreshCompanyList(false);
+      });
+    },
+
+    handleResetSearch() {
+      this.searchForm.resetFields();
+      this.searchRow = {};
+    },
   },
 };
 </script>
@@ -316,5 +586,6 @@ export default {
   ::v-deep .ant-table-body {
     margin: 0;
   }
+  margin-right: 10px;
 }
 </style>

@@ -373,13 +373,15 @@ export default {
 
 
     //分页
-    pageSizeChange(pageSize) {
+    pageSizeChange({ pageSize, pageNum }) {
       this.pageSize = pageSize;
+      this.startPage = pageNum;
       this.getEquipmentList();
     },
 
-    pageNumChange(pageNum) {
+    pageNumChange({ pageSize, pageNum }) {
       this.startPage = pageNum;
+      this.pageSize = pageSize;
       this.getEquipmentList();
     },
 

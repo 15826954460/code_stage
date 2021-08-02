@@ -4,7 +4,6 @@
  * @description 全局store
  */
 import api from "@/axios/api";
-import { AREA_OBJ_DATA, GEO_COORD } from "@/constant";
 import utils from "@/utils/common";
 
 const state = {
@@ -46,7 +45,7 @@ const mutations = {
     state.companyList = [...state.companyList, ...list];
   },
 
-  updateAllCompanyList(state, list = []) {
+  updateSelectCompanyList(state, list = []) {
     state.allCompanyList = list;
   },
 
@@ -78,16 +77,16 @@ const actions = {
     return { code, data, msg, count };
   },
 
-  getAllCompanyList: async ({ commit }, params = { pageSize: 99999 }) => {
-    const { code, data, msg, count } = await api.company.getCompanyList(
-      params
-    );
+  // 获取所有公司的列表，共下拉选择用
+  getSelectCompanyList: async ({ commit }) => {
+    const { code, data, msg, count } = await api.company.getSelectCompany();
     if (code === 200) {
-      commit("updateAllCompanyList", data);
+      commit("updateSelectCompanyList", data);
     }
     return { code, data, msg, count };
   },
 
+  // 获取公司列表(会有对应的分页)
   getCompanyListAct: async ({ commit /* state, rootState */ }, params = {}) => {
     const { code, data, msg, count } = await api.company.getCompanyList(
       params

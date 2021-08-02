@@ -10,6 +10,28 @@ const USER_INFO = "USER_INFO";
 const DEFAULT_SELECT_KEYS = "DEFAULT_SELECT_KEYS";
 const DEFAULT_OPEN_KEYS = "DEFAULT_OPEN_KEYS";
 
+const USER_STATUE_LIST = [
+  { status: 1, label: '正常' },
+  { status: 0, label: '禁用' },
+];
+
+const TAG_COLOR_LIST = [
+  "magenta",
+  "volcano",
+  "orange",
+  "gold",
+  "lime",
+  "green",
+  "cyan",
+  "blue",
+  "geekblue",
+  "purple",
+  "#f50",
+  "#2db7f5",
+  "#87d068",
+  "#108ee9"
+];
+
 // 用户角色列表
 const USER_ROLE_TYPE = [
   { label: '管理员用户', value: 1, adminType: 1 },
@@ -23,6 +45,14 @@ const ADMIN_ROLE_TYPE_LIST = [
   { label: '审核员', value: 3, adminType: 3 },
   { label: '信息录入员', value: 4, adminType: 4 },
 ]
+
+// 操作状态
+const OPERATION_STATUS = {
+  '1': '待审核',
+  '2': '审核通过',
+  '3': '已移除',
+  '4': '移除'
+}
 
 // 公司列表划分
 const COMPANY_TYPE = {
@@ -166,4 +196,7 @@ export {
   AREA_OBJ_DATA,
   GEO_COORD,
   COMPANY_TYPE,
+  OPERATION_STATUS,
+  TAG_COLOR_LIST,
+  USER_STATUE_LIST,
 }

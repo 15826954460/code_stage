@@ -5,10 +5,11 @@
  */
 import api from "@/axios/api";
 
+// 用户信息根据isAdmin 来判断是否是甲方管理员，结合 userType 1 2 来区分超管和普通管理员
 const state = {
   userInfo: {
-    adminType: null, // 1: 超级管理员 2: 管理员 3: 审核员 4: 信息录入员
-    userType: null,  // 1: 管理员 2: 普通用户
+    adminType: null, // 1: 超级管理员 2: 管理员
+    userType: null, // 1: 管理员 2: 普通用户
     phone: null,
     username: "",
     tureName: "",
@@ -19,9 +20,12 @@ const state = {
 
 const mutations = {
   updateUserInfo(state, userinfo) {
+    const { isAdmin, userType, ...options } = userinfo;
+    const adminType = (isAdmin === 1 && userType) || "";
     state.userInfo = {
-      ...state.userInfo,
-      ...userinfo,
+      ...options,
+      userType,
+      adminType,
     };
   },
 
@@ -35,7 +39,7 @@ const actions = {
   updateUserInfoAct: async ({ commit, state, rootState }, params) => {
     const { code, data } = await api.user.getUserInfo(params);
     if (code === 200) {
-      commit('updateUserInfo', data);
+      commit("updateUserInfo", data);
     }
     return { code, data };
   },
@@ -44,7 +48,7 @@ const actions = {
   loginAct: async ({ commit, state, rootState }, params) => {
     const { code, data } = await api.user.login(params);
     if (code === 200) {
-      commit('updateUserInfo', data);
+      commit("updateUserInfo", data);
     }
     return { code, data };
   },

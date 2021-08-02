@@ -13,6 +13,7 @@
             rules: [{ required: true, message: '请输入建筑名称' }],
           },
         ]"
+        :disabled="onlyShow"
         placeholder="请输入建筑名称"
       />
     </a-form-item>
@@ -29,6 +30,7 @@
             rules: [{ required: true, message: '请输入楼层' }],
           },
         ]"
+        :disabled="onlyShow"
         placeholder="请输入楼层"
       />
     </a-form-item>
@@ -45,6 +47,7 @@
             rules: [{ required: true, message: '请选择所属单位' }],
           },
         ]"
+        :disabled="onlyShow"
         @change="handleSelectChange"
       ></SelectCompany>
     </a-form-item>
@@ -69,6 +72,10 @@ export default {
         return {};
       },
     },
+    onlyShow: {
+      type: Boolean,
+      default: false,
+    }
   },
 
   components: {

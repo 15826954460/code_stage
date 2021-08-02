@@ -12,8 +12,8 @@
     :show-total="(total) => `共 ${total} 条`"
   >
     <template slot="buildOptionText" slot-scope="props">
-      <span v-if="props.value !== '100'">{{ props.value }}条/页</span>
-      <span v-if="props.value === '100'">全部</span>
+      <span v-if="props.value !== '300'">{{ props.value }}条/页</span>
+      <span v-if="props.value === '300'">全部</span>
     </template>
   </a-pagination>
 </template>
@@ -37,7 +37,7 @@ export default {
     pageSizeOptions: {
       type: Array,
       default: () => {
-        return ["10", "20", "30", "50", "100"];
+        return ["10", "20", "30", "50", "100", "300"];
       },
     },
   },
@@ -49,13 +49,13 @@ export default {
   },
 
   methods: {
-    onShowSizeChange(currentPage, pageSize) {
-      console.log(currentPage, pageSize);
-      this.$emit("pageSizeChange", pageSize);
+    onShowSizeChange(pageNum, pageSize) {
+      this.pageSize = pageSize;
+      this.$emit("pageSizeChange", { pageNum, pageSize });
     },
 
     pageSizeChange(pageNum, pageSize) {
-      this.$emit("pageNumChange", pageNum);
+      this.$emit("pageNumChange", { pageNum, pageSize });
     }
   },
 };

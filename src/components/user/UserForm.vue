@@ -14,6 +14,7 @@
           },
         ]"
         placeholder="请输入用户名"
+        :disabled="row.id ? true : false"
       />
     </a-form-item>
     <a-form-item v-if="!row.id"
@@ -31,7 +32,7 @@
           },
         ]"
         placeholder="请输入密码"
-        :disabled="row.id"
+        :disabled="row.id ? true : false"
       />
     </a-form-item>
     <a-form-item
@@ -50,7 +51,7 @@
         placeholder="请输入姓名"
       />
     </a-form-item>
-    <a-form-item
+    <!-- <a-form-item
       label="角色"
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
@@ -65,7 +66,7 @@
         ]"
         @change="handleIndustrySelectChange"
       ></SelectUserType>
-    </a-form-item>
+    </a-form-item> -->
     <a-form-item
       label="单位"
       :label-col="formItemLayout.labelCol"
@@ -73,14 +74,16 @@
     >
       <SelectCompany
         v-decorator="[
-          'projectIds',
+          'projectId',
           {
-            initialValue: row.projectIds || [],
+            initialValue: row.projectId || '',
             rules: [{ required: true, message: '请选择单位' }],
           },
         ]"
         @change="handleCompanySelectChange"
-        :multiple="true"
+        :multiple="false"
+        :isShowShige="false"
+        :disabled="row.id ? true : false"
       ></SelectCompany>
     </a-form-item>
     <a-form-item
@@ -103,7 +106,7 @@
 </template>
 
 <script>
-import SelectUserType from "@/components/common/SelectUserType.vue";
+// import SelectUserType from "@/components/common/SelectUserType.vue";
 import SelectCompany from "@/components/common/SelectCompany.vue";
 
 const formItemLayout = {
@@ -133,7 +136,7 @@ export default {
   },
 
   components: {
-    SelectUserType,
+    // SelectUserType,
     SelectCompany
   },
 
@@ -154,7 +157,7 @@ export default {
     },
 
     handleCompanySelectChange(val) {
-      this.form.setFieldsValue({ projectIds: val });
+      this.form.setFieldsValue({ projectId: val });
     },
 
         // 自定义密码验证

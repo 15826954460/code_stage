@@ -8,7 +8,7 @@
 
 <script>
 import zhCN from "ant-design-vue/lib/locale-provider/zh_CN";
-import { mapActions, createNamespacedHelpers } from "vuex";
+import { mapActions, createNamespacedHelpers, mapState } from "vuex";
 
 const { mapMutations: mapMutationsConfig, mapActions: mapActionsConfig } =
   createNamespacedHelpers("config");
@@ -22,7 +22,20 @@ export default {
     };
   },
 
-  computed: {},
+  computed: {
+    ...mapState({
+      token: (state) => state.token,
+    }),
+  },
+
+  watch: {
+    token() {
+      this.fetchTreeList();
+      this.fetchCompanyAllList();
+      this.fetchBuildList();
+      this.fetchDeviceConfig();
+    },
+  },
 
   mounted() {
     this.fetchTreeList();
@@ -34,7 +47,7 @@ export default {
   methods: {
     ...mapActions([
       "getProjectListAct",
-      "getAllCompanyList",
+      "getSelectCompanyList",
       "getAllBuildListAct",
     ]),
 
@@ -50,7 +63,7 @@ export default {
     },
 
     fetchCompanyAllList() {
-      this.getAllCompanyList();
+      this.getSelectCompanyList();
     },
 
     fetchBuildList() {

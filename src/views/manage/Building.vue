@@ -1,5 +1,77 @@
 <template>
   <div class="building-container">
+    <a-form :form="searchForm" class="search-box">
+      <a-row :gutter="16">
+        <a-col :span="6">
+          <a-form-item
+            label="建筑名称:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="建筑名称"
+              v-decorator="[
+                'buildingName',
+                { initialValue: searchRow.buildingName },
+              ]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item
+            label="楼层:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="楼层"
+              v-decorator="['floor', { initialValue: searchRow.floor }]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item
+            label="单位:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="单位"
+              v-decorator="[
+                'projectName',
+                { initialValue: searchRow.projectName },
+              ]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item
+            label="设备ID:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <a-input
+              placeholder="设备ID"
+              v-decorator="['deviceIds', { initialValue: searchRow.deviceIds }]"
+            />
+          </a-form-item>
+        </a-col>
+      </a-row>
+      <a-row :gutter="16">
+        <a-col :span="24">
+          <div class="__flex __rfec">
+            <a-button
+              type="primary"
+              style="margin-right: 15px"
+              @click="handleSearch"
+            >
+              搜索
+            </a-button>
+            <a-button @click="searchForm.resetFields()">重置</a-button>
+          </div>
+        </a-col>
+      </a-row>
+    </a-form>
     <a-button
       type="primary"
       style="margin-bottom: 10px; margin-right: 15px"
@@ -20,6 +92,23 @@
       <!-- <p slot="projectId" slot-scope="text">
         <ShowCompany :value="text"></ShowCompany>
       </p> -->
+      <div slot="deviceId" slot-scope="text">
+        <span
+          style="display: inline-block"
+          v-for="(id, index) in text"
+          :key="`${id}-${index}`"
+        >
+          <a-tooltip placement="topLeft" :title="`设备${id}详情`">
+            <a-button
+              size="small"
+              @click="toDevicesDetail(id)"
+              style="margin-bottom: 3px; margin-right: 3px; cursor: pointer"
+            >
+              {{ id }}
+            </a-button>
+          </a-tooltip>
+        </span>
+      </div>
       <p slot="action" slot-scope="text, record">
         <a-button
           type="primary"
@@ -37,10 +126,18 @@
           @confirm="del(record)"
           @cancel="cancel"
         >
-          <a-button type="danger" size="small"> 删除</a-button>
+          <a-button type="danger" size="small" :disabled="disabledDelete"> 删除</a-button>
         </a-popconfirm>
       </p>
     </a-table>
+
+    <div v-show="total > 0" class="__pagination-wrap">
+      <Paginagion
+        :total="total"
+        @pageSizeChange="pageSizeChange"
+        @pageNumChange="pageNumChange"
+      />
+    </div>
 
     <CusModule v-if="visible" @cancel="cancel" :visible="visible" :width="800">
       <BuildingForm ref="buildingFormRef" :row="row"></BuildingForm>
@@ -55,10 +152,19 @@
 
 <script>
 import api from "@/axios/api";
+import Paginagion from "@/components/common/Pagination.vue";
 import CusModule from "@/components/common/CusModule.vue";
 import ShowCompany from "@/components/common/ShowCompany.vue";
 import BuildingForm from "@/components/building/BuildingForm.vue";
-import { mapActions } from "vuex";
+import { mapActions, mapState, createNamespacedHelpers } from "vuex";
+
+const { mapActions: mapActionsUser, mapState: mapStateUser } =
+  createNamespacedHelpers("user");
+
+const formItemLayout = {
+  labelCol: { span: 6 },
+  wrapperCol: { span: 18 },
+};
 
 const columns = [
   {
@@ -66,6 +172,10 @@ const columns = [
     customRender: (text, record, index) => {
       return index + 1;
     },
+  },
+  {
+    title: "建筑id",
+    dataIndex: "id"
   },
   {
     title: "建筑名称",
@@ -82,6 +192,11 @@ const columns = [
     // scopedSlots: { customRender: "projectId" },
   },
   {
+    title: "设备id",
+    dataIndex: "deviceIds",
+    scopedSlots: { customRender: "deviceId" },
+  },
+  {
     title: "操作",
     scopedSlots: { customRender: "action" },
   },
@@ -93,11 +208,47 @@ export default {
   components: {
     CusModule,
     BuildingForm,
-    // ShowCompany
+    // ShowCompany,
+    Paginagion,
+  },
+
+  computed: {
+    ...mapState({
+      token: (state) => state.token,
+    }),
+    ...mapStateUser({
+      userInfo: (state) => state.userInfo,
+    }),
+    disabledDelete() {
+      const { adminType, userType } = this.userInfo;
+      if (adminType) {
+        return adminType !== 1;
+      } else {
+        return userType !== 1;
+      }
+    },
+  },
+
+  watch: {
+    token: () => {
+      this.getBuildingList();
+    },
   },
 
   data() {
-    return { columns, dataList: [], loading: false, visible: false, row: {} };
+    return {
+      columns,
+      dataList: [],
+      loading: false,
+      visible: false,
+      row: {},
+      total: 0,
+      startPage: 1,
+      pageSize: 10,
+      formItemLayout,
+      searchRow: {},
+      searchForm: this.$form.createForm(this, { name: "coordinated" }),
+    };
   },
 
   mounted() {
@@ -107,17 +258,39 @@ export default {
   methods: {
     ...mapActions(["getAllBuildListAct"]),
 
-    async getBuildingList(force = true) {
-      if (!force) {
-        // TODO:
-        return;
+    pageSizeChange({ pageSize, pageNum }) {
+      this.pageSize = pageSize;
+      this.startPage = pageNum;
+      this.getBuildingList({ isUpdateBuildList: false });
+    },
+
+    pageNumChange({ pageSize, pageNum }) {
+      this.startPage = pageNum;
+      this.pageSize = pageSize;
+      this.getBuildingList({ isUpdateBuildList: false });
+    },
+
+    toDevicesDetail(deviceId) {
+      if (deviceId) {
+        this.$router.push({
+          path: "/equipmentDetail",
+          query: { id: deviceId },
+        });
       }
+    },
+
+    async getBuildingList({ params = {}, isUpdateBuildList = true } = {}) {
       this.loading = true;
-      const { code, data } = await api.unit.getBuildingList();
+      const { code, data, count } = await api.unit.getBuildingList({
+        ...params,
+        page: this.startPage,
+        pageSize: this.pageSize,
+      });
       if (code === 200) {
+        this.total = count;
         this.loading = false;
-        this.dataList = data;
-        this.getAllBuildListAct();
+        this.dataList = data.filter((item) => item.projectId !== 1);
+        isUpdateBuildList && this.getAllBuildListAct();
       }
       this.loading = false;
     },
@@ -177,6 +350,13 @@ export default {
       if (code === 200) {
         this.getBuildingList();
       }
+    },
+
+    handleSearch() {
+      this.searchForm.validateFields(async (err, values) => {
+        if (err) return;
+        this.getBuildingList({ params: values });
+      });
     },
   },
 };

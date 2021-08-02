@@ -116,8 +116,8 @@ export default {
 
   // 公司
   company: {
-    // ------ 获取单位列表
-    getCompanyList(params) {
+    // 获取单位列表
+    getCompanyList(params = {}) {
       return getFetch({
         url: "/projects",
         interfaceKey: "getCompanyList",
@@ -127,6 +127,14 @@ export default {
           ...params,
         },
       });
+    },
+
+    // 获取公司下拉列表
+    getSelectCompany() {
+      return getFetch({
+        url: '/projects/all',
+        interfaceKey: 'getSelectCompany'
+      })
     },
 
     // 编辑单位
