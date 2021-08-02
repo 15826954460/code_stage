@@ -1,7 +1,7 @@
 <template>
   <div class="warnning-container">
     <div class="search-box">
-      <a-select  placeholder="日志类型" style="width: 150px" @change="onTypeChange">
+      <a-select  placeholder="事件类型" style="width: 150px" @change="onTypeChange">
         <a-select-option
             v-for="item in logType"
             :key="item"
@@ -16,34 +16,46 @@
       <a-input-search placeholder="请输入名称查询" style="width: 200px" enter-button  @search="onSearch"/>
     </div>
     <div class="content">
-      <a-table
-          :columns="columns"
-          :data-source="tableData"
-          :customRow="rowClick"
-          row-key="key"
-      />
+      <a-table  :columns="columns"
+                :dataSource="tableData"
+                :customRow="rowClick"
+                :rowKey="(record,index)=>{return index}" >
+      </a-table>
     </div>
   </div>
 </template>
 
 <script>
+import moment from 'moment'
 import api from "@/axios/api";
 const columns = [
   {
-    title: "事件名称",
-    dataIndex: "eventName",
+    title: "设备名称",
+    dataIndex: "dmac",
+  },
+  {
+    title: "分组",
+    dataIndex: "groupName",
   },
   {
     title: "警报类型",
-    dataIndex: "eventType",
+    dataIndex: "rname",
+    scopedSlots: { customRender: 'rname' },
+    customRender:(rname,row,index)=> {
+      return  rname.slice(5,-1)
+    }
   },
   {
     title: "警报內容",
-    dataIndex: "remark",
+    dataIndex: "msg",
   },
   {
     title: "警报时间",
-    dataIndex: "",
+    dataIndex: "wtime",
+    scopedSlots: { customRender: 'wtime' },
+    customRender:(wtime,row,index)=> {
+      return moment.unix(wtime).format('YYYY-MM-DD HH:mm:ss')
+    }
   },
 ];
 
@@ -62,14 +74,14 @@ export default {
   components: {},
 
   created() {
-    this.getEventRealTime()
+    this.getWarnRealTime()
   },
 
   mounted() {},
 
   methods: {
-    //获取实时警告数据
-    async getEventRealTime(force = true) {
+      //获取实时警告数据
+    async getWarnRealTime(force = true) {
       if (!force) { return;}
       this.loading = true;
       let params = {
@@ -86,7 +98,7 @@ export default {
         params.startTime= this.start_time;
         params.endTime= this.end_time;
       }
-      const { code, data , count} = await api.event.getEventRealTime({params});
+      const { code, data , count} = await api.warn.getWarnRealTime({params});
       if (code === 200) {
         this.tableData = data;
         this.total = count;
@@ -97,7 +109,7 @@ export default {
     //搜索
     onSearch(value) {
       this.keyWord = value;
-      this.getEventRealTime()
+      this.getWarnRealTime()
     },
 
     onTypeChange(value) {
@@ -110,7 +122,7 @@ export default {
       //   this.tableData = this.data
       // }
       this.eventType = value;
-      this.getEventRealTime()
+      this.getWarnRealTime()
     },
 
     //日期选择
@@ -133,7 +145,7 @@ export default {
         on: {
           click: () => {
             console.log(record, index, 2222);
-            this.$router.push({path:'/equipmentDetail'});
+            this.$router.push({path:'/equipmentDetail',query:{id:record.did}});
           },
         }
       };

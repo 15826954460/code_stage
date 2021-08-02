@@ -22,7 +22,7 @@
           <div class="info-item" v-else-if ="detail.status = 2">状态：离线</div>
           <div class="info-item">类型：{{ detail.modelName }}</div>
           <div class="info-item">MAC：{{ detail.deviceMac }}</div>
-          <div class="info-item">电量：57%</div>
+<!--          <div class="info-item">电量：57%</div>-->
           <div class="info-item">数据更新时间：{{ detail.dataUpdateTime }}</div>
           <div class="info-item">地址：{{ detail.address }}</div>
           <div class="info-item">关联建筑：{{ detail.buildingName }}</div>
@@ -32,9 +32,13 @@
         <div class="device-top clearfix">
           <h4 class="title fl ">设备读数</h4>
           <div class="fr part-top-r">
-            <a-range-picker show-time
+<!--            <a-range-picker show-time
                             :default-value="[moment(getCurrentData(), dateFormat), moment(getCurrentData(), dateFormat)]"
-                            :format="dateFormat" />
+                            :format="dateFormat" />-->
+            <a-date-picker
+                :default-value="moment(getCurrentData(), dateFormat)"
+                :format="dateFormat"
+                @change="onChangeTime"/>
             <span class="link-btn" @click="toHistory">数据列表<a-icon type="right" /></span>
 
           </div>
@@ -79,9 +83,9 @@ export default {
   name: "detail",
   data() {
     return {
-      dateFormat: 'YYYY/MM/DD',
-      monthFormat: 'YYYY/MM',
-      dateFormatList: ['DD/MM/YYYY', 'DD/MM/YY'],
+       dateFormat: 'YYYY-MM-DD',
+      // monthFormat: 'YYYY/MM',
+      // dateFormatList: ['DD/MM/YYYY', 'DD/MM/YY'],
       visible: false,
       confirmLoading: false,
       detail:[],
@@ -160,6 +164,11 @@ export default {
           console.log('Cancel');
         },
       });
+    },
+
+    //选择日期
+    onChangeTime(date, dateString) {
+      console.log(date, dateString);
     },
 
     toExport(){
