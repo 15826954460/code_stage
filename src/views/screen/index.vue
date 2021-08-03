@@ -66,7 +66,10 @@ for (let i = 0; i < 16; i++) {
 
 export default {
   name: 'screenPage',
-  components: {vueSeamlessScroll,screenfull},
+  components: {
+    vueSeamlessScroll,
+    // screenfull
+  },
   data() {
     return {
       curData:moment().format("YYYY-MM-DD  h:mm:ss dddd"),
