@@ -48,25 +48,23 @@
           <a-menu-item v-show="adminType === 1 || adminType === 2" key="/">
             <a-icon type="home" /> 首页
           </a-menu-item>
-          <a-menu-item v-show="adminType === 1 || adminType === 2" key="/user-center">
-            <a-icon type="home" /> 用户分布
-          </a-menu-item>
+
+          <a-sub-menu key="sub1">
+            <span slot="title"><a-icon type="deployment-unit" /> 设备中心</span>
+            <a-menu-item key="/equipment-page"> 设备管理 </a-menu-item>
+            <a-menu-item key="/equipmentList"> 设备展示 </a-menu-item>
+            <a-menu-item key="/warning"> 设备警报 </a-menu-item>
+          </a-sub-menu>
+
 
           <a-sub-menu>
-            <span slot="title"> <a-icon type="setting" /> 管理中心 </span>
+            <span slot="title"> <a-icon type="setting" /> 用户中心 </span>
+            <a-menu-item key="/user-center"  v-show="adminType === 1 || adminType === 2">用户分布 </a-menu-item>
             <a-menu-item key="/unit-list"> 单位管理 </a-menu-item>
             <a-menu-item key="/build-list"> 建筑管理 </a-menu-item>
             <a-menu-item key="/user-manage"> 用户管理 </a-menu-item>
           </a-sub-menu>
 
-          <a-sub-menu key="sub1">
-            <span slot="title"
-              ><a-icon type="deployment-unit" /> 设备中心
-            </span>
-            <a-menu-item key="/equipment-page"> 设备管理 </a-menu-item>
-            <a-menu-item key="/equipmentList"> 设备展示 </a-menu-item>
-            <a-menu-item key="/warning"> 设备警报 </a-menu-item>
-          </a-sub-menu>
         </a-menu>
       </a-layout-sider>
       <a-layout-content style="padding-left: 10px">

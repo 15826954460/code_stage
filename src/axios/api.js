@@ -315,21 +315,21 @@ export default {
 
 
   /** 设备警报模块 */
-  event: {
+  warn: {
     // 获取实时警报列表
-    getEventRealTime() {
+    getWarnRealTime() {
       return getFetch({
-        //url: "/events",
-        interfaceKey: "getEventRealTime",
+        url: "/warning",
+        interfaceKey: "getWarnRealTime",
         method: "GET",
       });
     },
 
     // 获取实时警报列表
-    getEventHistory() {
+    getWarnHistory() {
       return getFetch({
-        //url: "/events",
-        interfaceKey: "getEventHistory",
+        url: "/warning/history",
+        interfaceKey: "getWarnHistory",
         method: "GET",
       });
     },

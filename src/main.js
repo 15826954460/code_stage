@@ -6,12 +6,13 @@ import store from "./store";
 
 import Antd from "ant-design-vue";
 
+
 import "@/assets/style/reset.scss";
 import "@/assets/style/common.scss";
 import "@/assets/style/flex.scss";
 import "ant-design-vue/dist/antd.css";
 
-Vue.use(Antd)
+Vue.use(Antd);
 Vue.config.productionTip = false;
 
 new Vue({
