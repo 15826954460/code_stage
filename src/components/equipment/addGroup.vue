@@ -111,8 +111,8 @@ export default {
     onCheckGroup(index,id){
       this.isActive = index;
       this.groupId = id;
-      console.log('index='+index,'-------id='+id);
-      console.log(this.groupId);
+      //console.log('index='+index,'-------id='+id);
+      //console.log(this.groupId);
 
     },
 
@@ -121,16 +121,16 @@ export default {
       if (!force) { return;}
       this.loading = true;
       const { code, data, count } = await api.group.bindGroup('1',this.groupId,this.deviceId,{
-        params: {
-          type:'1',
-          groupId:this.groupId,
-          deviceIds:this.deviceId,
-        }
+        // params: {
+        //   type:'1',
+        //   groupId:this.groupId,
+        //   deviceIds:this.deviceId,
+        // }
       });
       if (code === 200) {
+        this.$emit('cancel')
         this.$message.success({ content: '绑定该分组成功!' });
-        this.visible = false;
-        console.log("绑定成功");
+        //this.visible = false;
       }
       this.loading = false;
     },

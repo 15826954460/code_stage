@@ -1,5 +1,5 @@
 <template>
-  <div class="device-detail">
+  <div class="device-detail" >
     <div class="back-page">
       <div class=""> <a-icon type="left" class="left-icon" @click="$router.back(-1)"/>设备详情</div>
     </div>
@@ -7,8 +7,8 @@
      <div class="clearfix">
        <div class="name fl"><img src="../../assets/image/devices/name.png" alt="设备名称"><b>{{ detail.deviceName }}</b></div>
        <div class="fun-box fr">
-         <a-button type="primary" class="btn" @click="toExport">导出历史数据</a-button>
-         <a-button type="primary" class="btn" @click="changeName">修改名称</a-button>
+<!--         <a-button type="primary" class="btn" @click="toExport">导出历史数据</a-button>-->
+<!--         <a-button type="primary" class="btn" @click="changeName">修改名称</a-button>-->
          <a-button type="primary" class="btn" @click="showDeleteConfirm">删除</a-button>
        </div>
      </div>
@@ -17,12 +17,13 @@
           <h4 class="title fl">设备信息</h4>
         </div>
         <div class="info">
-          <div class="info-item">分组：{{ detail.gatewayName }}</div>
+          <div class="info-item">分组：{{ detail.groupName }}</div>
           <div class="info-item" v-if="detail.status = 1">状态：在线</div>
           <div class="info-item" v-else-if ="detail.status = 2">状态：离线</div>
+          <div class="info-item">网关型号：{{ detail.gatewayName }}</div>
           <div class="info-item">类型：{{ detail.modelName }}</div>
           <div class="info-item">MAC：{{ detail.deviceMac }}</div>
-<!--          <div class="info-item">电量：57%</div>-->
+      <!--<div class="info-item">电量：57%</div>-->
           <div class="info-item">数据更新时间：{{ detail.dataUpdateTime }}</div>
           <div class="info-item">地址：{{ detail.address }}</div>
           <div class="info-item">关联建筑：{{ detail.buildingName }}</div>

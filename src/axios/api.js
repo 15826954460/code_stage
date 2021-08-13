@@ -258,6 +258,15 @@ export default {
         params: { id },
       });
     },
+
+    // 获取设备状态
+    getEquipmentStatus() {
+      return getFetch({
+        url: "/devices/count",
+        interfaceKey: "getEquipmentStatus",
+        method: "GET",
+      });
+    },
   },
 
   /** 设备分组模块 */
@@ -317,22 +326,47 @@ export default {
   /** 设备警报模块 */
   warn: {
     // 获取实时警报列表
-    getWarnRealTime() {
+    getWarnRealTime({ params = {} } = {}) {
       return getFetch({
         url: "/warning",
         interfaceKey: "getWarnRealTime",
         method: "GET",
+        params,
       });
     },
 
     // 获取实时警报列表
-    getWarnHistory() {
+    getWarnHistory({ params = {} } = {}) {
       return getFetch({
         url: "/warning/history",
         interfaceKey: "getWarnHistory",
         method: "GET",
+        params,
       });
     },
+  },
 
+  // 系统设置
+  system: {
+    // 获取所有事件类型
+    getEventTypeList() {
+      return getFetch({
+        url: "/events/all",
+        interfaceKey: "getEventTypeList",
+      });
+    },
+  },
+
+  /** 设备警报模块 */
+  export: {
+    // 获取实时警报列表
+    getExportData({ params = {} } = {}) {
+      return getFetch({
+        url: "/export/device",
+        interfaceKey: "getExportData",
+        method: "GET",
+        params,
+      });
+    },
   },
 };

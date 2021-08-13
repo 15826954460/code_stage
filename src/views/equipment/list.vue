@@ -3,8 +3,8 @@
     <div class="search-area">
       <div class="search-area-l">
         <a-select placeholder="设备分组" style="width: 150px;margin-right: 15px" @change="groupChange">
-          <a-select-option value="group">全部分组</a-select-option>
-          <a-select-option value="ungroup">未分组</a-select-option>
+          <a-select-option value="all">全部分组</a-select-option>
+          <a-select-option value="0">未分组</a-select-option>
           <a-select-opt-group label="自定义分组">
             <a-select-option v-for="item in groupList" :key="item.id" :value="item.id">{{ item.groupName }}</a-select-option>
           </a-select-opt-group>
@@ -16,7 +16,7 @@
         </a-select>
       </div>
       <div class="search-area-r">
-        <router-link class="download-icon" to='/export'><a-icon type="download" /></router-link>
+<!--        <router-link class="download-icon" to='/export'><a-icon type="download" /></router-link>-->
 
         <a-input-search class="search-box"  placeholder="请输入设备名称" style="width: 200px" @search="onSearch" />
 
@@ -33,7 +33,7 @@
           <div class="icon" :style="{background:item.color}"><img :src="require('../../assets/image/devices/'+item.icon)"></div>
           <div class="status-num">
             <span>{{ item.status }}</span>
-        <!--<b class="text">{{ item.num }}</b>-->
+            <b class="text">{{ item.num }}</b>
           </div>
         </li>
       </ol>
@@ -41,8 +41,12 @@
       <div v-if="layout == 'card'" class="card">
         <!-- 卡片模式 -->
         <div class="clearfix"  v-if="tableData && tableData.length > 0">
-          <div class="card-item"  v-for="(item,index) in tableData" :key="index" @click.prevent="toDetail(item.id)">
+          <div class="card-item"  v-for="(item,index) in tableData" :key="index" @click.prevent="toDetail(item.id)" :class="selectedIds.indexOf(item.id) != -1  ? 'card-item-b' : ''">
             <a-checkbox  :checked="selectedIds.indexOf(item.id) != -1" class="check-icon"  @click.stop="onChecked($event,item.id)"></a-checkbox>
+            <a-tooltip placement="bottom">
+              <template slot="title">导出历史数据</template>
+              <span class="download-icon" @click.stop="showExportPop($event,item.id)" :class="selectedIds.indexOf(item.id) != -1  ? 'download-icon-b' : ''"><a-icon type="download" /></span>
+            </a-tooltip>
             <div class="del-icon" :class="selectedIds.indexOf(item.id) != -1  ? 'del-icon-b' : ''"  @click.stop="showDelDeviceConfirm($event,item.id)"></div>
             <div class="item-top name">{{ item.deviceName }}<span class="status-icon" :class="item.index = 1 ? 'online' : 'offline'"></span></div>
             <div class="item-top group">{{item.groupName}}</div>
@@ -84,6 +88,7 @@
         >
           <p slot="action" slot-scope="record">
             <a-button type="danger" size="small" @click.stop="showDelDeviceConfirm($event,record.id)"> 删除</a-button>
+            <a-button type="primary" size="small" @click.stop="showExportPop($event,record.id)" style="margin-left: 10px;">导出数据</a-button>
           </p>
         </a-table>
       </div>
@@ -100,6 +105,18 @@
 
     <!--添加分组-->
     <addGroup :visible="addGroupModel" @cancel="hideAddGroupModel()"  :deviceId='id'></addGroup>
+
+    <!--导出历史数据选择时间弹窗-->
+    <a-modal
+        v-model="exportShow"
+        title="导出历史数据"
+        :ok-button-props="{ props: { disabled: false } }"
+        @ok="exportOk"
+    >
+      <a-range-picker @change="onChangeTime">
+        <a-icon slot="suffixIcon" type="calendar" />
+      </a-range-picker>
+    </a-modal>
 
   </div>
 </template>
@@ -152,9 +169,9 @@ export default {
       curNum:0,
       isStatus: '',
       statusArr:[
-        {tabIndex:"",status:'全部', icon: 'all.png', num:'210',color:'#fff'},
-        {tabIndex:1,status:'在线', icon: 'online-white.png', num:'210',color:'#1890ff'},
-        {tabIndex:0,status:'离线', icon: 'offline-white.png', num:'210',color:'#c1bfbf'},
+        {tabIndex:"",status:'全部', icon: 'all.png',color:'#fff',num:(this.total)},
+        {tabIndex:1,status:'在线', icon: 'online-white.png',color:'#1890ff'},
+        {tabIndex:0,status:'离线', icon: 'offline-white.png',color:'#c1bfbf'},
         // {tabIndex:2,icon: 'alarm.png', num:'210',color:'#fff'},
         // {tabIndex:3,icon: 'alarm.png', num:'210',color:'#ffc518'},
         // {tabIndex:4, icon: 'upgrade.png', num:'210',color:'#fff'},
@@ -189,7 +206,8 @@ export default {
             id: record.id + ''//使得id的数据类型为string
           }
         })
-      }
+      },
+      exportShow: false,     // 导出历史数据选择时间弹窗
     }
   },
 
@@ -198,7 +216,8 @@ export default {
   created() {
     this.getEquipmentList();
     this.getGroupList();
-    this.getConfig()
+    this.getConfig();
+    this.getEquipmentStatus()
   },
 
   mounted() {},
@@ -266,7 +285,7 @@ export default {
     statusTab(index,tabIndex) {
       this.curNum= index;
       this.isStatus = tabIndex;
-      console.log('isStatus=' + this.isStatus);
+      //console.log('isStatus=' + this.isStatus);
       this.getEquipmentList()
     },
 
@@ -285,7 +304,7 @@ export default {
         page: this.startPage,
         pageSize: this.pageSize,
       }
-      if(this.groupId){
+      if(this.groupId != 'all' ){
         params.groupId = this.groupId
       }
       if(this.modelId){
@@ -319,6 +338,7 @@ export default {
     //获取设备类型
     async getConfig(force = true) {
       if (!force) { return;}
+      this.loading = false;
       const { code ,data} = await api.common.getConfig();
       if (code === 200) {
         this.deviceType = data.models;
@@ -326,17 +346,32 @@ export default {
       this.loading = false;
     },
 
+    //获取设备状态
+    async getEquipmentStatus(force = true) {
+      let _this = this;
+      if (!force) { return;}
+      this.loading = true;
+      const { code ,data} = await api.equipment.getEquipmentStatus();
+      if (code === 200) {
+        this.$set(this.statusArr[0], 'num', this.total)
+        this.$set(this.statusArr[1], 'num', data[0].count)
+        this.$set(this.statusArr[2], 'num', this.total - data[0].count)
+        //console.log(this.statusArr)
+      }
+      this.loading = false;
+    },
+
+
     //显示添加至分组弹窗
     showAddGroupModel(){
       this.addGroupModel = true;
     },
+
     //隐藏添加至分组弹窗
     hideAddGroupModel() {
+      this.getEquipmentList()
       this.addGroupModel = false;
-      console.log('add cancel')
-    },
-    handleOk(){
-      console.log('add ok')
+      //console.log('add cancel')
     },
 
     //删除设备
@@ -366,9 +401,38 @@ export default {
           // });
         },
         onCancel() {
-          console.log('Cancel');
+          //console.log('Cancel');
         },
       });
+    },
+
+    showExportPop(e,id){
+      this.exportShow = true;
+      this.deviceId = id;
+      //console.log(this.deviceId,2);
+    },
+
+    onChangeTime(date, dateString) {
+      //console.log(date, dateString);
+      if (dateString && dateString != "") {
+        this.start_time = dateString[0];
+        this.end_time = dateString[1];
+      }
+    },
+
+    async exportOk() {
+      this.loading = true;
+      const { code, data, count } = await api.equipment.getEquipmentList({
+        params: {
+          deviceId:this.deviceId,
+          startTime:this.start_time,
+          endTime:this.end_time,
+        }
+      });
+      if (code === 200) {
+        //console.log(11111);
+      }
+      this.loading = false;
     },
 
 
@@ -395,7 +459,7 @@ export default {
       return {
         on: {
           click: () => {
-            console.log(record, index);
+            //console.log(record, index);
             this.$router.push({path:'/equipmentDetail',query:{id:record}});
           },
         }
@@ -472,8 +536,7 @@ export default {
       border-bottom: 1px solid #f2f2f2;
       .status-item{
         display: inline-block;
-        width: 15%;
-        max-width: 147px;
+        min-width: 15%;
         border: 1px solid #b3b3b3;
         border-radius: 5px;
         float: left;
@@ -500,12 +563,13 @@ export default {
           display: inline-block;
           vertical-align: middle;
           padding-left: 15px;
+          text-align: center;
           .text{
             display: block;
             font-size: 24px;
             font-weight: 500;
             color: #4c4c4c;
-            padding-top: 13px;
+            padding-top: 10px;
             line-height: 18px;
           }
         }
@@ -551,10 +615,24 @@ export default {
             background-color: rgb(24,144,255,0.2)
           }
         }
+        &.card-item-b{
+          border: 1px solid #1890ff;
+        }
         .check-icon{
           position: absolute;
           left: 10px;
           top: 12px;
+        }
+        .download-icon{
+          position: absolute;
+          right: 10px;
+          top: 40px;
+          color: rgba(0, 0, 0, 0.4);
+          font-size: 16px;
+          z-index: 2;
+          &.download-icon-b{
+            color: #1890ff;
+          }
         }
         .del-icon{
           width: 16px;
@@ -626,6 +704,7 @@ export default {
           padding-top: 10px;
           border-top: 1px dashed #f2f2f2;
           text-align: center;
+          position: relative;
           .item{
             div{
               position: relative;
@@ -672,5 +751,7 @@ export default {
     }
   }
 }
-
+.ant-modal-body{
+  text-align: center;
+}
 </style>

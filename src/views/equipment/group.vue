@@ -87,7 +87,7 @@ export default {
   mounted() {},
   methods: {
     async getGroupList(force = true) {
-      console.log(111, '------getGroupList');
+      //console.log(111, '------getGroupList');
       if (!force) {
         // TODO:
         return;
