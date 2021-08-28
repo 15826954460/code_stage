@@ -120,7 +120,7 @@
         </a-button>
 
         <a-popconfirm
-          :title="`确认删除当前用户${record.trueName}`"
+          :title="`确认删除当前建筑: ${record.buildingName}`"
           ok-text="确认"
           cancel-text="取消"
           @confirm="del(record)"
@@ -158,6 +158,7 @@ import Paginagion from "@/components/common/Pagination.vue";
 import CusModule from "@/components/common/CusModule.vue";
 import ShowCompany from "@/components/common/ShowCompany.vue";
 import BuildingForm from "@/components/building/BuildingForm.vue";
+import codeMessage from "@/constant/code-message";
 import { mapActions, mapState, createNamespacedHelpers } from "vuex";
 
 const { mapActions: mapActionsUser, mapState: mapStateUser } =
@@ -348,9 +349,12 @@ export default {
 
     async del({ id }) {
       if (!id) return;
-      const { code } = await api.unit.delBuilding(id);
+      const res = await api.unit.delBuilding(id);
+      const { code } = res;
       if (code === 200) {
         this.getBuildingList();
+      } else {
+        this.$message.error(codeMessage[code].msg, 5);
       }
     },
 
