@@ -47,7 +47,8 @@
             rules: [{ required: true, message: '请选择所属单位' }],
           },
         ]"
-        :disabled="onlyShow"
+        :disabled="onlyShow || row.id"
+        :isShowShige="false"
         @change="handleSelectChange"
       ></SelectCompany>
     </a-form-item>
