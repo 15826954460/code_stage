@@ -1,5 +1,5 @@
 <template>
-  <div class="building-container">
+  <div id="building-container">
     <a-form :form="searchForm" class="search-box">
       <a-row :gutter="16">
         <a-col :span="6">
@@ -31,20 +31,20 @@
         </a-col>
         <a-col :span="6">
           <a-form-item
-            label="单位:"
+            label="单位名称:"
             :label-col="formItemLayout.labelCol"
             :wrapper-col="formItemLayout.wrapperCol"
           >
             <a-input
-              placeholder="单位"
+              placeholder="单位名称"
               v-decorator="[
-                'projectName',
-                { initialValue: searchRow.projectName },
+                'buildingName',
+                { initialValue: searchRow.buildingName },
               ]"
             />
           </a-form-item>
         </a-col>
-        <a-col :span="6">
+        <!-- <a-col :span="6">
           <a-form-item
             label="设备ID:"
             :label-col="formItemLayout.labelCol"
@@ -55,7 +55,7 @@
               v-decorator="['deviceIds', { initialValue: searchRow.deviceIds }]"
             />
           </a-form-item>
-        </a-col>
+        </a-col> -->
       </a-row>
       <a-row :gutter="16">
         <a-col :span="24">
@@ -67,7 +67,7 @@
             >
               搜索
             </a-button>
-            <a-button @click="searchForm.resetFields()">重置</a-button>
+            <a-button @click="handleResetSearch">重置</a-button>
           </div>
         </a-col>
       </a-row>
@@ -126,7 +126,9 @@
           @confirm="del(record)"
           @cancel="cancel"
         >
-          <a-button type="danger" size="small" :disabled="disabledDelete"> 删除</a-button>
+          <a-button type="danger" size="small" :disabled="disabledDelete">
+            删除</a-button
+          >
         </a-popconfirm>
       </p>
     </a-table>
@@ -175,7 +177,7 @@ const columns = [
   },
   {
     title: "建筑id",
-    dataIndex: "id"
+    dataIndex: "id",
   },
   {
     title: "建筑名称",
@@ -279,10 +281,10 @@ export default {
       }
     },
 
-    async getBuildingList({ params = {}, isUpdateBuildList = true } = {}) {
+    async getBuildingList({ isUpdateBuildList = true } = {}) {
       this.loading = true;
       const { code, data, count } = await api.unit.getBuildingList({
-        ...params,
+        ...this.searchRow,
         page: this.startPage,
         pageSize: this.pageSize,
       });
@@ -355,15 +357,25 @@ export default {
     handleSearch() {
       this.searchForm.validateFields(async (err, values) => {
         if (err) return;
-        this.getBuildingList({ params: values });
+        this.searchRow = values;
+        this.getBuildingList();
       });
+    },
+
+    handleResetSearch() {
+      this.searchForm.resetFields();
+      this.searchRow = {};
     },
   },
 };
 </script>
 
 <style scoped lang="scss">
-.building-container {
+#building-container {
   margin-top: 20px;
+  margin-right: 10px;
+  ::v-deep .ant-table-body {
+    margin: 0;
+  }
 }
 </style>
