@@ -2,25 +2,23 @@
   <div class="warnning-container">
     <div class="search-box">
       <a-select  placeholder="事件类型" style="width: 150px" @change="onTypeChange">
-        <a-select-option
-            v-for="item in logType"
-            :key="item"
-            :value="item">{{item}}
-        </a-select-option>
+        <a-select-option v-for="item in eventType" :key="item.id" :value="item.id">{{item.rname}}</a-select-option>
       </a-select>
 
       <a-range-picker @change="onChange">
         <a-icon slot="suffixIcon" type="calendar" />
       </a-range-picker>
 
-      <a-input-search placeholder="请输入名称查询" style="width: 200px" enter-button  @search="onSearch"/>
+      <a-input-search placeholder="请输入设备编码查询" style="width: 200px" enter-button  @search="onSearch"/>
     </div>
     <div class="content">
       <a-table  :columns="columns"
                 :dataSource="tableData"
+                :pagination="false"
                 :customRow="rowClick"
                 :rowKey="(record,index)=>{return index}" >
       </a-table>
+      <Paginagion :total="total" @pageSizeChange="pageSizeChange" @pageNumChange="pageNumChange" class="paginagion"/>
     </div>
   </div>
 </template>
@@ -28,9 +26,14 @@
 <script>
 import moment from 'moment'
 import api from "@/axios/api";
+import Paginagion from "@/components/common/Pagination.vue";
 const columns = [
-  {
+ /* {
     title: "设备名称",
+    dataIndex: "",
+  },*/
+  {
+    title: "设备编码",
     dataIndex: "dmac",
   },
   {
@@ -40,10 +43,10 @@ const columns = [
   {
     title: "警报类型",
     dataIndex: "rname",
-    scopedSlots: { customRender: 'rname' },
-    customRender:(rname,row,index)=> {
-      return  rname.slice(5,-1)
-    }
+    // scopedSlots: { customRender: 'rname' },
+    // customRender:(rname,row,index)=> {
+    //   return  rname.slice(5,-1)
+    // }
   },
   {
     title: "警报內容",
@@ -64,23 +67,38 @@ export default {
 
   data() {
     return {
-      logType:['正常','异常'],
       columns,
       tableData:[],
       keyWord:'',
+      eventType:[],
+      total: 0,
+      startPage: 1,
+      pageSize: 10,
     }
   },
 
-  components: {},
+  components: {Paginagion},
 
   created() {
     this.getWarnRealTime()
+    this.getEventTypeList()
   },
 
   mounted() {},
 
   methods: {
-      //获取实时警告数据
+    //获取设备类型
+    async getEventTypeList(force = true) {
+      if (!force) { return;}
+      this.loading = true;
+      const { code ,data} = await api.system.getEventTypeList();
+      if (code === 200) {
+        this.eventType = data;
+      }
+      this.loading = false;
+    },
+
+    //获取实时警告数据
     async getWarnRealTime(force = true) {
       if (!force) { return;}
       this.loading = true;
@@ -88,11 +106,11 @@ export default {
         page: this.startPage,
         pageSize: this.pageSize,
       }
-      if(this.eventType){
-        params.eventType = this.eventType
+      if(this.rid){
+        params.rid = this.rid
       }
       if(this.keyWord){
-        params.deviceName = this.keyWord
+        params.deviceMac = this.keyWord
       }
       if (this.start_time && this.start_time != "" && this.end_time && this.end_time != "") {
         params.startTime= this.start_time;
@@ -106,37 +124,26 @@ export default {
       this.loading = false;
     },
 
+
     //搜索
     onSearch(value) {
       this.keyWord = value;
       this.getWarnRealTime()
     },
 
+    //选择事件类型
     onTypeChange(value) {
-      // console.log(`selected ${value}`);
-      // if (value && value !== '') {
-      //   this.tableData = this.data.filter(
-      //       (p) => p.type.indexOf(value) !== -1
-      //   )
-      // } else {
-      //   this.tableData = this.data
-      // }
-      this.eventType = value;
+      this.rid = value;
       this.getWarnRealTime()
     },
 
     //日期选择
     onChange(date, dateString) {
-      console.log(date, dateString);
       if (dateString && dateString != "") {
         this.start_time = dateString[0];
         this.end_time = dateString[1];
       }
-      // this.params = {
-      //   startTime: this.start_time,
-      //   endTime: this.end_time,
-      // };
-      console.log(this.start_time,this.end_time,222222);
+      this.getWarnRealTime()
     },
 
     //点击跳转至设备详情
@@ -144,12 +151,26 @@ export default {
       return {
         on: {
           click: () => {
-            console.log(record, index, 2222);
             this.$router.push({path:'/equipmentDetail',query:{id:record.did}});
           },
         }
       };
     },
+
+    //分页
+    pageSizeChange({ pageSize, pageNum }) {
+      this.pageSize = pageSize;
+      this.startPage = pageNum;
+      this.getWarnRealTime();
+    },
+
+    pageNumChange({ pageSize, pageNum }) {
+      this.startPage = pageNum;
+      this.pageSize = pageSize;
+      this.getWarnRealTime();
+    },
+
+
   }
 }
 </script>
@@ -165,6 +186,10 @@ export default {
   }
   .content{
     padding-right: 10px;
+  }
+  .paginagion{
+    text-align: right;
+    margin-top: 4%;
   }
 }
 </style>
