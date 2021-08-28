@@ -29,7 +29,7 @@
             />
           </a-form-item>
         </a-col>
-        <a-col :span="6">
+        <!-- <a-col :span="6">
           <a-form-item
             label="单位名称:"
             :label-col="formItemLayout.labelCol"
@@ -38,12 +38,12 @@
             <a-input
               placeholder="单位名称"
               v-decorator="[
-                'buildingName',
-                { initialValue: searchRow.buildingName },
+                'projectName',
+                { initialValue: searchRow.projectName },
               ]"
             />
           </a-form-item>
-        </a-col>
+        </a-col> -->
         <!-- <a-col :span="6">
           <a-form-item
             label="设备ID:"
