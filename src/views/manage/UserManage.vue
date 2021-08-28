@@ -108,9 +108,6 @@
       rowKey="id"
     >
       <div slot="projectName" slot-scope="text">
-        <!-- v-for="(item, index) in text" -->
-        <!-- :key="`${item.id}-${index}`" -->
-        <!-- style="margin-bottom: 3px" -->
         <a-tag>
           {{ text.projectName }}
         </a-tag>
