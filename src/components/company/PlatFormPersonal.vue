@@ -43,7 +43,9 @@
           @confirm="del(record)"
           @cancel="cancel"
         >
-          <a-button type="danger" size="small"> 删除</a-button>
+          <a-button type="danger" size="small" :disabled="disabledDelete">
+            删除</a-button
+          >
         </a-popconfirm>
       </p>
     </a-table>
@@ -175,12 +177,27 @@ export default {
   },
 
   computed: {
-    ...mapState(["companyList"]),
+    ...mapState({
+      companyList: (state) => state.companyList,
+    }),
+
+    ...mapStateUser({
+      userInfo: (state) => state.userInfo,
+    }),
 
     filterList() {
       return this.companyList.filter((item) => {
         return Number(item.type) === this.type;
       });
+    },
+
+    disabledDelete() {
+      const { adminType, userType } = this.userInfo;
+      if (adminType) {
+        return adminType !== 1;
+      } else {
+        return userType !== 1;
+      }
     },
   },
 
