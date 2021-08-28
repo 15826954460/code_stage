@@ -5,8 +5,6 @@ import store from "./store";
 import i18n from "@/i18n/index";
 import Antd from 'ant-design-vue';
 
-
-
 import "@/assets/style/reset.scss";
 import "@/assets/style/common.scss";
 import "@/assets/style/flex.scss";

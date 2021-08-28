@@ -98,7 +98,7 @@ const INDUSTRY_LIST = [
   { label: '建筑', value: 15, industryType: 15 },
   { label: '能源', value: 16, industryType: 16 },
   { label: '电子', value: 17, industryType: 17 },
-  { label: '化妆平', value: 18, industryType: 18 },
+  { label: '化妆品', value: 18, industryType: 18 },
   { label: '其他', value: 19, industryType: 19 },
 ];
 

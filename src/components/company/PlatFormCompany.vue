@@ -46,38 +46,6 @@
         </a-col>
         <a-col :span="6">
           <a-form-item
-            label="上级公司:"
-            :label-col="formItemLayout.labelCol"
-            :wrapper-col="formItemLayout.wrapperCol"
-          >
-            <a-input
-              placeholder="上级公司"
-              v-decorator="[
-                'parentName',
-                { initialValue: searchRow.parentName },
-              ]"
-            />
-          </a-form-item>
-        </a-col>
-      </a-row>
-      <a-row :gutter="16">
-        <a-col :span="6">
-          <a-form-item
-            label="省份:"
-            :label-col="formItemLayout.labelCol"
-            :wrapper-col="formItemLayout.wrapperCol"
-          >
-            <a-input
-              placeholder="省份"
-              v-decorator="[
-                'provincesName',
-                { initialValue: searchRow.provincesName },
-              ]"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :span="6">
-          <a-form-item
             label="联系电话:"
             :label-col="formItemLayout.labelCol"
             :wrapper-col="formItemLayout.wrapperCol"
@@ -88,17 +56,51 @@
             />
           </a-form-item>
         </a-col>
+      </a-row>
+      <a-row :gutter="16">
+        <a-col :span="6">
+          <a-form-item
+            label="上级公司:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <SelectCompany
+              placeholder="上级公司"
+              v-decorator="[
+                'parentId',
+                { initialValue: searchRow.parentId },
+              ]"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item
+            label="省份:"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
+          >
+            <SelectGeoCood
+              placeholder="省份"
+              v-decorator="[
+                'areaCode',
+                {
+                  initialValue: searchRow.areaCode,
+                },
+              ]"
+            />
+          </a-form-item>
+        </a-col>
         <a-col :span="6">
           <a-form-item
             label="行业:"
             :label-col="formItemLayout.labelCol"
             :wrapper-col="formItemLayout.wrapperCol"
           >
-            <a-input
+            <IndustryList
               placeholder="行业"
               v-decorator="[
-                'industryName',
-                { initialValue: searchRow.industryName },
+                'businessId',
+                { initialValue: searchRow.businessId },
               ]"
             />
           </a-form-item>
@@ -230,6 +232,9 @@ import api from "@/axios/api";
 import { mapActions, mapState, createNamespacedHelpers } from "vuex";
 import { AREA_OBJ_DATA } from "@/constant";
 
+import IndustryList from "@/components/common/IndustryList.vue";
+import SelectGeoCood from "@/components/common/SelectGeoCood.vue";
+import SelectCompany from "@/components/common/SelectCompany.vue";
 import CusModule from "@/components/common/CusModule.vue";
 import IndustryShow from "@/components/common/IndustryShow.vue";
 import ShowCompany from "@/components/common/ShowCompany.vue";
@@ -361,6 +366,9 @@ export default {
     MapPosition,
     Paginagion,
     BuildingForm,
+    IndustryList,
+    SelectGeoCood,
+    SelectCompany
   },
 
   data() {
@@ -432,8 +440,10 @@ export default {
 
     refreshCompanyList(flag = true) {
       if (JSON.stringify(this.searchRow) === "{}") {
+        // 获取树形数据列表
         this.fetchComplanyListTree(flag);
       } else {
+        // 获取线行数据列表
         this.getCompanyListLine({ params: this.searchRow, flag });
       }
     },
