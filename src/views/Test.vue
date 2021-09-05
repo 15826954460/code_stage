@@ -8,7 +8,7 @@
             @openChange="handleAreaOpenChange"
             :value="areaCurrentYear"
             :mode="['year', 'year']"
-            :placeholder="['起始年份', '结束年份']"
+            :placeholder="['起始年', '结束年']"
             format="YYYY"
           />
         </div>
@@ -26,7 +26,7 @@
             @openChange="handleIndustryOpenChange"
             :value="industryCurrentYear"
             :mode="['year', 'year']"
-            :placeholder="['起始年份', '结束年份']"
+            :placeholder="['起始年', '结束年']"
             format="YYYY"
           />
         </div>
@@ -38,7 +38,9 @@
         ></apexchart>
       </div>
     </div>
-    <div class="column-box"></div>
+    <div class="line-box">
+      <lineCom></lineCom>
+    </div>
   </div>
 </template>
 
@@ -47,9 +49,14 @@ import api from "@/axios/api";
 import { AREA_OBJ_DATA, INDUSTRY_OBJ } from "@/constant";
 import codeMessage from "@/constant/code-message";
 import dayjs from "dayjs";
+import lineCom from "@/components/dataview/line.vue";
 
 export default {
   name: "data-view-page",
+
+  components: {
+    lineCom,
+  },
 
   data() {
     return {
@@ -194,7 +201,7 @@ export default {
         (this.areaCurrentYear[0] !==
           new Date(this.areaParams.startTime).getFullYear() ||
           this.areaCurrentYear[1] !==
-            new Date(this.areaCurrentYear[1]).getFullYear())
+            new Date(this.areaParams.endTime).getFullYear())
       ) {
         this.areaParams = {
           ...this.areaParams,
@@ -219,7 +226,7 @@ export default {
         (this.industryCurrentYear[0] !==
           new Date(this.industryParams.startTime).getFullYear() ||
           this.industryCurrentYear[1] !==
-            new Date(this.industryCurrentYear[1]).getFullYear())
+            new Date(this.industryParams.endTime).getFullYear())
       ) {
         this.industryParams = {
           ...this.industryParams,
@@ -236,6 +243,8 @@ export default {
 <style scoped lang="scss">
 .test-container {
   margin-right: 10px;
+  display: flex;
+  flex-direction: column;
 
   .bread-wrap {
     display: flex;
@@ -252,6 +261,15 @@ export default {
         top: 10px;
       }
     }
+  
+    .area-box {
+      margin-right: 15px;
+    }
+  }
+
+  .line-box {
+    margin-top: 15px;
+    width: 100%;
   }
 }
 </style>
