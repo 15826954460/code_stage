@@ -50,6 +50,7 @@ import { AREA_OBJ_DATA, INDUSTRY_OBJ } from "@/constant";
 import codeMessage from "@/constant/code-message";
 import dayjs from "dayjs";
 import lineCom from "@/components/dataview/line.vue";
+import { mapActions, mapState, createNamespacedHelpers } from "vuex";
 
 export default {
   name: "data-view-page",
@@ -99,7 +100,25 @@ export default {
     };
   },
 
-  mounted() {
+  computed: {
+    ...mapState({
+      isLogined: (state) => state.isLogined,
+    }),
+  },
+
+  watch: {
+    isLogined(nv, ov) {
+      if (nv) {
+        this.initPieData(1);
+        this.initPieData(2);
+      }
+    }
+  },
+
+  async mounted() {
+    if (!this.isLogined) {
+      return;
+    }
     this.initPieData(1);
     this.initPieData(2);
   },
@@ -183,7 +202,10 @@ export default {
           this.industrySeries = __series;
         }
       } else {
-        this.$message.error(codeMessage[code].msg, 5);
+        this.$message.error(
+          (codeMessage[code] && codeMessage[code].msg) || msg,
+          5
+        );
       }
     },
 
@@ -261,7 +283,7 @@ export default {
         top: 10px;
       }
     }
-  
+
     .area-box {
       margin-right: 15px;
     }
