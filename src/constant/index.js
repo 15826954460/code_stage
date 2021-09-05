@@ -99,8 +99,31 @@ const INDUSTRY_LIST = [
   { label: '能源', value: 16, industryType: 16 },
   { label: '电子', value: 17, industryType: 17 },
   { label: '化妆品', value: 18, industryType: 18 },
-  { label: '其他', value: 19, industryType: 19 },
+  { label: '其它', value: 19, industryType: 19 },
 ];
+
+// 行业对象
+const INDUSTRY_OBJ = {
+  1: '食品',
+  2: '制药',
+  3: '冷链',
+  4: '仓储',
+  5: '医药流通',
+  6: '商超',
+  7: '油气',
+  8: '化工',
+  9: '冶金',
+  10: '建材',
+  11: '科研教育机构',
+  12: '环保',
+  13: '机械制造',
+  14: '汽车',
+  15: '建筑',
+  16: '能源',
+  17: '电子',
+  18: '化妆品',
+  19: '其它',
+}
 
 // 树形列表
 const AREA_OBJ_DATA = {
@@ -193,6 +216,7 @@ export {
   ADMIN_ROLE_TYPE_LIST,
   BANK_LIST,
   INDUSTRY_LIST,
+  INDUSTRY_OBJ,
   AREA_OBJ_DATA,
   GEO_COORD,
   COMPANY_TYPE,

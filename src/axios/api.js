@@ -15,6 +15,14 @@ export default {
         url: "/config",
         interfaceKey: "getConfig",
       });
+    },
+    // 统计用户数据
+    userDataStatistics(params = {}) {
+      return getFetch({
+        url: '/tj/users',
+        interfaceKey: "userDataStatistics",
+        params,
+      });
     }
   },
 

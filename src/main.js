@@ -5,7 +5,9 @@ import router from "./router";
 import store from "./store";
 
 import Antd from "ant-design-vue";
-
+import VueApexCharts from 'vue-apexcharts'
+Vue.use(VueApexCharts)
+Vue.component('apexchart', VueApexCharts)
 
 import "@/assets/style/reset.scss";
 import "@/assets/style/common.scss";

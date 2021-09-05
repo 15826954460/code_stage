@@ -156,7 +156,6 @@
 import api from "@/axios/api";
 import Paginagion from "@/components/common/Pagination.vue";
 import CusModule from "@/components/common/CusModule.vue";
-import ShowCompany from "@/components/common/ShowCompany.vue";
 import BuildingForm from "@/components/building/BuildingForm.vue";
 import codeMessage from "@/constant/code-message";
 import { mapActions, mapState, createNamespacedHelpers } from "vuex";
