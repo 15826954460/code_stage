@@ -82,9 +82,13 @@ const columns = [
     dataIndex: "deviceMac",
   },
   {
-    title: "检测编号",
-    dataIndex: "categoryName",
+    title: "设备id",
+    dataIndex: "id",
   },
+  // {
+  //   title: "检测编号",
+  //   dataIndex: "categoryName",
+  // },
   {
     title: "设备型号",
     dataIndex: "modelName",
@@ -179,6 +183,7 @@ export default {
         this.getEquipmentList();
       }
     },
+
 
     async create(values) {
       const { code } = await api.equipment.createEquipment(values);

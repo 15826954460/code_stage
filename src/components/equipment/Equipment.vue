@@ -1,7 +1,7 @@
 <template>
   <a-form class="company-form-container" :form="form">
     <a-form-item
-      label="设备地址"
+      label="设备mac地址"
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
     >

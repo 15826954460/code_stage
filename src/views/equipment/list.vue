@@ -48,7 +48,7 @@
               <span class="download-icon" @click.stop="showExportPop($event,item.id)" :class="selectedIds.indexOf(item.id) != -1  ? 'download-icon-b' : ''"><a-icon type="download" /></span>
             </a-tooltip>
             <div class="del-icon" :class="selectedIds.indexOf(item.id) != -1  ? 'del-icon-b' : ''"  @click.stop="showDelDeviceConfirm($event,item.id)"></div>
-            <div class="item-top name">{{ item.deviceName }}<span class="status-icon" :class="item.index = 1 ? 'online' : 'offline'"></span></div>
+            <div class="item-top name">{{ item.deviceName }}<!--<span class="status-icon" :class="item.status = 1 ? 'online' : 'offline'"></span>--></div>
             <div class="item-top group">{{item.groupName}}</div>
             <div class="item-top time">{{ item.dataUpdateTime }}</div>
             <div class="data-show">
@@ -122,6 +122,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import api from "@/axios/api";
 import addGroup from "@/components/equipment/addGroup.vue";
 import Paginagion from "@/components/common/Pagination.vue";
@@ -169,7 +170,7 @@ export default {
       curNum:0,
       isStatus: '',
       statusArr:[
-        {tabIndex:"",status:'全部', icon: 'all.png',color:'#fff',num:(this.total)},
+        {tabIndex:"",status:'全部', icon: 'all.png',color:'#fff'},
         {tabIndex:1,status:'在线', icon: 'online-white.png',color:'#1890ff'},
         {tabIndex:0,status:'离线', icon: 'offline-white.png',color:'#c1bfbf'},
         // {tabIndex:2,icon: 'alarm.png', num:'210',color:'#fff'},
@@ -217,7 +218,7 @@ export default {
     this.getEquipmentList();
     this.getGroupList();
     this.getConfig();
-    this.getEquipmentStatus()
+
   },
 
   mounted() {},
@@ -242,7 +243,7 @@ export default {
       }else if(index == -1 && e.target.checked){
         oldIds.push(id)
       }
-      console.log(oldIds)
+      //console.log(oldIds)
 
       oldIds.forEach((v) => {
         if(v){
@@ -257,7 +258,7 @@ export default {
       this.isSelectAll = !this.isSelectAll
       if(this.isSelectAll){
         this.selectedIds  = this.tableData.map((v) => {
-          console.log(v)
+          //console.log(v)
           return v.id
         })
       }else {
@@ -269,14 +270,14 @@ export default {
     },
     //选择设备分组
     groupChange(value) {
-      console.log("groupId=" + value );
+      //console.log("groupId=" + value );
       this.groupId = value;
       this.getEquipmentList()
     },
 
     //选择设备类型
     typeChange(value) {
-      console.log("modelId=" + value );
+      //console.log("modelId=" + value );
       this.modelId = value;
       this.getEquipmentList()
     },
@@ -304,7 +305,7 @@ export default {
         page: this.startPage,
         pageSize: this.pageSize,
       }
-      if(this.groupId != 'all' ){
+      if(this.groupId != 'all' && this.groupId){
         params.groupId = this.groupId
       }
       if(this.modelId){
@@ -322,6 +323,7 @@ export default {
         this.total = count;
       }
       this.loading = false;
+      this.getEquipmentStatus()
     },
 
     //获取分组列表
@@ -348,14 +350,20 @@ export default {
 
     //获取设备状态
     async getEquipmentStatus(force = true) {
-      let _this = this;
       if (!force) { return;}
       this.loading = true;
       const { code ,data} = await api.equipment.getEquipmentStatus();
       if (code === 200) {
-        this.$set(this.statusArr[0], 'num', this.total)
-        this.$set(this.statusArr[1], 'num', data[0].count)
-        this.$set(this.statusArr[2], 'num', this.total - data[0].count)
+        let temp = {
+          0:0,
+          1:0
+        }
+        data.forEach((v) => {
+          temp[v.status] = v.count
+        })
+        this.$set(this.statusArr[0], 'num', temp[0] + temp[1])
+        this.$set(this.statusArr[1], 'num', temp[1])
+        this.$set(this.statusArr[2], 'num', temp[0])
         //console.log(this.statusArr)
       }
       this.loading = false;
@@ -412,25 +420,37 @@ export default {
       //console.log(this.deviceId,2);
     },
 
-    onChangeTime(date, dateString) {
+    /*onChangeTime(date, dateString) {
       //console.log(date, dateString);
       if (dateString && dateString != "") {
         this.start_time = dateString[0];
         this.end_time = dateString[1];
+        // this.start_time = (new Date(dateString[0])).getTime()/1000;;
+        // this.end_time = (new Date(dateString[1])).getTime()/1000;
       }
+    },*/
+    onChangeTime(date, dateString) {
+      console.log(date, dateString);
+      if (dateString && dateString != "") {
+        this.start_time = moment(dateString[0]).format('x') / 1000;
+        this.end_time = moment(dateString[1]).format('x') / 1000;//零点时间
+      }
+      console.log(this.start_time,this.end_time,222222);
+      console.log('dateString1',this.end_time);
+      console.log('dateString2',this.end_time);
     },
 
     async exportOk() {
       this.loading = true;
       const { code, data, count } = await api.equipment.getEquipmentList({
         params: {
-          deviceId:this.deviceId,
+          deviceIds:this.deviceId,
           startTime:this.start_time,
           endTime:this.end_time,
         }
       });
       if (code === 200) {
-        //console.log(11111);
+        this.exportShow = false;
       }
       this.loading = false;
     },
@@ -625,11 +645,14 @@ export default {
         }
         .download-icon{
           position: absolute;
-          right: 10px;
-          top: 40px;
+          right: 35px;
+          top: 12px;
           color: rgba(0, 0, 0, 0.4);
           font-size: 16px;
           z-index: 2;
+          &:hover{
+            color: #1890ff;
+          }
           &.download-icon-b{
             color: #1890ff;
           }
