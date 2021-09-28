@@ -109,24 +109,32 @@ export default {
 
     //选中当前分组
     onCheckGroup(index,id){
-      this.isActive = index;
+      //this.isActive = index;
       this.groupId = id;
       //console.log('index='+index,'-------id='+id);
       //console.log(this.groupId);
-
+      if (index != this.isActive){
+        this.isActive = index;
+      }else {
+        this.isActive = -1;
+      }
     },
 
     //（绑定/解绑）设备至设备分组
     async bindGroup(force = true) {
       if (!force) { return;}
       this.loading = true;
-      const { code, data, count } = await api.group.bindGroup('1',this.groupId,this.deviceId,{
-        // params: {
-        //   type:'1',
-        //   groupId:this.groupId,
-        //   deviceIds:this.deviceId,
-        // }
-      });
+      let params = {
+        groupId: this.groupId,
+        deviceIds:this.deviceId,
+      }
+      if(this.isActive != '-1'){
+        params.type = 1
+      }else {
+        params.type = 2
+      }
+      // const { code, data, count } = await api.group.bindGroup('1',this.groupId,this.deviceId,{});
+      const { code, data, count } = await api.group.bindGroup({params})
       if (code === 200) {
         this.$emit('cancel')
         this.$message.success({ content: '绑定该分组成功!' });

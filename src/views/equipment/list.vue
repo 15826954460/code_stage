@@ -43,12 +43,12 @@
         <div class="clearfix"  v-if="tableData && tableData.length > 0">
           <div class="card-item"  v-for="(item,index) in tableData" :key="index" @click.prevent="toDetail(item.id)" :class="selectedIds.indexOf(item.id) != -1  ? 'card-item-b' : ''">
             <a-checkbox  :checked="selectedIds.indexOf(item.id) != -1" class="check-icon"  @click.stop="onChecked($event,item.id)"></a-checkbox>
-            <a-tooltip placement="bottom">
+<!--            <a-tooltip placement="bottom">
               <template slot="title">导出历史数据</template>
               <span class="download-icon" @click.stop="showExportPop($event,item.id)" :class="selectedIds.indexOf(item.id) != -1  ? 'download-icon-b' : ''"><a-icon type="download" /></span>
-            </a-tooltip>
+            </a-tooltip>-->
             <div class="del-icon" :class="selectedIds.indexOf(item.id) != -1  ? 'del-icon-b' : ''"  @click.stop="showDelDeviceConfirm($event,item.id)"></div>
-            <div class="item-top name">{{ item.deviceName }}<!--<span class="status-icon" :class="item.status = 1 ? 'online' : 'offline'"></span>--></div>
+            <div class="item-top name">{{ item.deviceName }}<span class="status-icon" :class="item.status == 1  ? 'online' : 'offline'"></span></div>
             <div class="item-top group">{{item.groupName}}</div>
             <div class="item-top time">{{ item.dataUpdateTime }}</div>
             <div class="data-show">
@@ -99,12 +99,13 @@
         <a-button type="primary" class="check-all-btn" @click="selectAll" v-if="layout == 'card'">全选</a-button>
         <a-button type="primary" class="check-all-btn" v-if="selectedIds.length > 0" @click="showAddGroupModel">添加至分组</a-button>
         <!--<a-button type="primary" class="del-btn" v-if="selectedIds.length > 0" @click="showDelDeviceConfirm()">删除</a-button>-->
+        <a-button type="primary" class="check-all-btn" v-if="selectedIds.length > 0" @click="showExportPop">导出历史数据</a-button>
       </div>
       <Paginagion :total="total" @pageSizeChange="pageSizeChange" @pageNumChange="pageNumChange"/>
     </div>
 
     <!--添加分组-->
-    <addGroup :visible="addGroupModel" @cancel="hideAddGroupModel()"  :deviceId='id'></addGroup>
+    <addGroup :visible="addGroupModel" @cancel="hideAddGroupModel()"  :deviceId='selectedIds'></addGroup>
 
     <!--导出历史数据选择时间弹窗-->
     <a-modal
@@ -385,8 +386,6 @@ export default {
     //删除设备
     showDelDeviceConfirm(e,id) {
       let self = this;
-      //let ids= self.tableData.map(item => item.id).join()
-      //console.log(ids,1111);
       this.$confirm({
         title: '提示',
         content: '确定删除当前设备？',
@@ -400,13 +399,6 @@ export default {
                self.$message.error(data.msg);
              }
            });
-          // api.equipment.delEquipment(self.ids).then(data => {
-          //   if (data.code == 200) {
-          //     self.getEquipmentList();
-          //   } else {
-          //     self.$message.error(data.msg);
-          //   }
-          // });
         },
         onCancel() {
           //console.log('Cancel');
@@ -445,6 +437,7 @@ export default {
       const { code, data, count } = await api.equipment.getEquipmentList({
         params: {
           deviceIds:this.deviceId,
+          //deviceIds:this.selectedIds,
           startTime:this.start_time,
           endTime:this.end_time,
         }
@@ -645,8 +638,8 @@ export default {
         }
         .download-icon{
           position: absolute;
-          right: 35px;
-          top: 12px;
+          right: 10px;
+          top: 40px;
           color: rgba(0, 0, 0, 0.4);
           font-size: 16px;
           z-index: 2;

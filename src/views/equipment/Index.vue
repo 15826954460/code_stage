@@ -62,7 +62,6 @@
 <script>
 import api from "@/axios/api";
 import Paginagion from "@/components/common/Pagination.vue";
-
 import CusModule from "@/components/common/CusModule.vue";
 import Equipment from "@/components/equipment/Equipment.vue";
 
@@ -186,11 +185,13 @@ export default {
 
 
     async create(values) {
-      const { code } = await api.equipment.createEquipment(values);
+      const { code ,msg} = await api.equipment.createEquipment(values);
       if (code === 200) {
         this.row = {};
         this.visible = false;
         this.getEquipmentList();
+      }else{
+        this.$message.error(msg);
       }
     },
 

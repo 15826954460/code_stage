@@ -9,6 +9,7 @@
        <div class="fun-box fr">
 <!--         <a-button type="primary" class="btn" @click="toExport">导出历史数据</a-button>-->
 <!--         <a-button type="primary" class="btn" @click="changeName">修改名称</a-button>-->
+         <a-button type="primary" class="btn" @click="showSetConfirm">设置</a-button>
          <a-button type="primary" class="btn" @click="showDeleteConfirm">删除</a-button>
        </div>
      </div>
@@ -74,29 +75,34 @@
     >
       <input type="text" value="detail.deviceName " v-model="getNewName" placeholder="请输入团队名称">
     </a-modal>
+
+    <!--设置弹窗-->
+    <Set :visible="setModel" @cancel="hideSetModel()"></Set>
   </div>
 </template>
 
 <script>
 import api from "@/axios/api";
 import moment from 'moment';
+import Set from "@/components/equipment/setting.vue";
+
 export default {
   name: "detail",
   data() {
     return {
-       dateFormat: 'YYYY-MM-DD',
-      // monthFormat: 'YYYY/MM',
-      // dateFormatList: ['DD/MM/YYYY', 'DD/MM/YY'],
+      dateFormat: 'YYYY-MM-DD',
       visible: false,
       confirmLoading: false,
       detail:[],
+      getNewName:'',
       v1:'',
       v2:'',
       v3:'',
       v4:'',
-      getNewName:'',
+      setModel:false,  //显示添加分组弹窗
     };
   },
+  components: {Set},
   created() {
     this.getEquipmentList();
   },
@@ -178,6 +184,16 @@ export default {
 
     toHistory(id){
       this.$router.push({path:'/history',query:{id:this.$route.query.id}});
+    },
+
+    //显示设置弹窗
+    showSetConfirm(){
+      this.setModel = true;
+    },
+
+    //隐藏设置弹窗
+    hideSetModel() {
+      this.setModel = false;
     },
 
   },
