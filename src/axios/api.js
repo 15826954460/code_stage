@@ -319,11 +319,11 @@ export default {
     },
 
     //（绑定/解绑）设备至设备分组
-    bindGroup(type,groupId,deviceIds) {
+    bindGroup({ params = {} } = {}) {
       return postFetch({
         url: "/group/devices",
         interfaceKey: "bindGroup",
-        params:{type,groupId,deviceIds},
+        params,
         method: "POST",
       });
     },
