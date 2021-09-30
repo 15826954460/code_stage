@@ -18,9 +18,11 @@
           <h4 class="title fl">设备信息</h4>
         </div>
         <div class="info">
+          <div class="info-item">下一次校准日期：2021-10-30 <span style="color:red;font-size: 12px;margin-left: 5px">小提示: 距离校准到期只剩下30天了哦~</span></div>
+          <div class="info-item">设备到期日期：2021-12-30 <span style="color:red;font-size: 12px;margin-left: 5px">小提示: 距离校准到期只剩下30天了哦~</span></div>
           <div class="info-item">分组：{{ detail.groupName }}</div>
-          <div class="info-item" v-if="detail.status = 1">状态：在线</div>
-          <div class="info-item" v-else-if ="detail.status = 2">状态：离线</div>
+          <div class="info-item" v-if="detail.status == 1">状态：在线</div>
+          <div class="info-item" v-else-if ="detail.status == 0">状态：离线</div>
           <div class="info-item">网关型号：{{ detail.gatewayName }}</div>
           <div class="info-item">类型：{{ detail.modelName }}</div>
           <div class="info-item">MAC：{{ detail.deviceMac }}</div>
@@ -182,8 +184,8 @@ export default {
       this.$router.push({path:'/export',query:{}});
     },
 
-    toHistory(id){
-      this.$router.push({path:'/history',query:{id:this.$route.query.id}});
+    toHistory(id,deviceName){
+      this.$router.push({path:'/history',query:{id:this.$route.query.id,deviceName:this.deviceName}});
     },
 
     //显示设置弹窗

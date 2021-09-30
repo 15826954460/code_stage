@@ -4,7 +4,7 @@
     <div class=""> <a-icon type="left" class="left-icon" @click="$router.back(-1)"/>历史数据</div>
   </div>
   <div class="container">
-    <div class="name"><img src="../../assets/image/devices/name.png" alt="设备名称"><b>设备名称</b></div>
+    <div class="name"><img src="../../assets/image/devices/name.png" alt="设备名称"><b>{{ this.$route.query.deviceName }}</b></div>
     <a-tabs default-active-key="1">
       <a-tab-pane key="1" tab="温度">
         <a-table :columns="columnsTemp" :data-source="tableData"  row-key="key"/>

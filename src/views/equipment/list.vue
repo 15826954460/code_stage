@@ -45,7 +45,7 @@
             <a-checkbox  :checked="selectedIds.indexOf(item.id) != -1" class="check-icon"  @click.stop="onChecked($event,item.id)"></a-checkbox>
             <a-tooltip placement="bottom">
               <template slot="title">导出历史数据</template>
-              <span class="download-icon" @click.stop="showExportPop($event,item.id)" :class="selectedIds.indexOf(item.id) != -1  ? 'download-icon-b' : ''"><a-icon type="download" /></span>
+              <span class="download-icon" @click.stop="showExportPop($event,item.id,item.deviceName)" :class="selectedIds.indexOf(item.id) != -1  ? 'download-icon-b' : ''"><a-icon type="download" /></span>
             </a-tooltip>
             <div class="del-icon" :class="selectedIds.indexOf(item.id) != -1  ? 'del-icon-b' : ''"  @click.stop="showDelDeviceConfirm($event,item.id)"></div>
             <div class="item-top name">{{ item.deviceName }}<span class="status-icon" :class="item.status == 1  ? 'online' : 'offline'"></span></div>
@@ -88,7 +88,7 @@
         >
           <p slot="action" slot-scope="record">
             <a-button type="danger" size="small" @click.stop="showDelDeviceConfirm($event,record.id)"> 删除</a-button>
-            <a-button type="primary" size="small" @click.stop="showExportPop($event,record.id)" style="margin-left: 10px;">导出数据</a-button>
+            <a-button type="primary" size="small" @click.stop="showExportPop($event,record.id,record.deviceName)" style="margin-left: 10px;">导出数据</a-button>
           </p>
         </a-table>
       </div>
@@ -425,9 +425,10 @@ export default {
       });
     },
 
-    showExportPop(e,id){
+    showExportPop(e,id,deviceName){
       this.exportShow = true;
       this.deviceId = id;
+      this.deviceName = deviceName
       //console.log(this.deviceId,2);
     },
     onChangeTime(date, dateString) {
@@ -441,21 +442,15 @@ export default {
 
     async exportOk() {
       this.loading = true;
-      if( this.start_time && this.end_time == ''){
-        console.log('请选时间');
-      }
       let params = {
         deviceIds:this.deviceId,
         startTime:this.start_time,
         endTime:this.end_time,
         responseType:'blob',
       }
-
       this.exportShow = false;
-      // this.start_time = ''
-      // this.end_time = ''
       this.createValue=[]
-      const res = await api.export.getExportData({params}); //这里会等待接口返回数据  时间清空问题 来来来
+      const res = await api.export.getExportData({params});
       console.log(res)
       if (res) {
         /** 接收文件流 */
@@ -465,7 +460,7 @@ export default {
         let link = document.createElement("a");
         link.style.display = "none";
         link.href = url;
-        link.setAttribute("download", 'aa');
+        link.setAttribute("download", this.deviceName + '的历史数据');
         document.body.appendChild(link);
         link.click();
       }
