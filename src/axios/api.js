@@ -365,7 +365,7 @@ export default {
     },
   },
 
-  /** 设备警报模块 */
+  /** 导出数据模块 */
   export: {
     // 获取实时警报列表
     getExportData({ params = {} } = {}) {

@@ -43,10 +43,10 @@
         <div class="clearfix"  v-if="tableData && tableData.length > 0">
           <div class="card-item"  v-for="(item,index) in tableData" :key="index" @click.prevent="toDetail(item.id)" :class="selectedIds.indexOf(item.id) != -1  ? 'card-item-b' : ''">
             <a-checkbox  :checked="selectedIds.indexOf(item.id) != -1" class="check-icon"  @click.stop="onChecked($event,item.id)"></a-checkbox>
-<!--            <a-tooltip placement="bottom">
+            <a-tooltip placement="bottom">
               <template slot="title">导出历史数据</template>
               <span class="download-icon" @click.stop="showExportPop($event,item.id)" :class="selectedIds.indexOf(item.id) != -1  ? 'download-icon-b' : ''"><a-icon type="download" /></span>
-            </a-tooltip>-->
+            </a-tooltip>
             <div class="del-icon" :class="selectedIds.indexOf(item.id) != -1  ? 'del-icon-b' : ''"  @click.stop="showDelDeviceConfirm($event,item.id)"></div>
             <div class="item-top name">{{ item.deviceName }}<span class="status-icon" :class="item.status == 1  ? 'online' : 'offline'"></span></div>
             <div class="item-top group">{{item.groupName}}</div>
@@ -99,13 +99,13 @@
         <a-button type="primary" class="check-all-btn" @click="selectAll" v-if="layout == 'card'">全选</a-button>
         <a-button type="primary" class="check-all-btn" v-if="selectedIds.length > 0" @click="showAddGroupModel">添加至分组</a-button>
         <!--<a-button type="primary" class="del-btn" v-if="selectedIds.length > 0" @click="showDelDeviceConfirm()">删除</a-button>-->
-        <a-button type="primary" class="check-all-btn" v-if="selectedIds.length > 0" @click="showExportPop">导出历史数据</a-button>
+<!--        <a-button type="primary" class="check-all-btn" v-if="selectedIds.length > 0" @click="showExportPop">导出历史数据</a-button>-->
       </div>
       <Paginagion :total="total" @pageSizeChange="pageSizeChange" @pageNumChange="pageNumChange"/>
     </div>
 
     <!--添加分组-->
-    <addGroup :visible="addGroupModel" @cancel="hideAddGroupModel()"  :deviceId='selectedIds'></addGroup>
+    <addGroup :visible="addGroupModel" @cancel="hideAddGroupModel()" :deviceList="deviceList" :deviceId='selectedIds'></addGroup>
 
     <!--导出历史数据选择时间弹窗-->
     <a-modal
@@ -114,7 +114,7 @@
         :ok-button-props="{ props: { disabled: false } }"
         @ok="exportOk"
     >
-      <a-range-picker @change="onChangeTime">
+      <a-range-picker @change="onChangeTime" :value="createValue">
         <a-icon slot="suffixIcon" type="calendar" />
       </a-range-picker>
     </a-modal>
@@ -164,6 +164,7 @@ export default {
 
   data() {
     return {
+      moment:moment,
       loading: false,
       value: undefined,
       groupList:[],
@@ -210,6 +211,8 @@ export default {
         })
       },
       exportShow: false,     // 导出历史数据选择时间弹窗
+      createValue:[],
+      deviceList:[]
     }
   },
 
@@ -229,8 +232,24 @@ export default {
     },
     rowSelection(newV){
       console.log(newV)
-    }
+    },
+    // selectedIds(newV){
+    //   if(newV && newV.length > 0){
+    //     let deviceList = []
+    //     this.tableData.forEach((v) => {
+    //         if(newV.indexOf(v.id) != -1){
+    //           deviceList.push(v)
+    //         }
+    //     })
+    //     this.deviceList = deviceList
+    //   }else{
+    //     this.deviceList = []
+    //   }
+    //   console.log('this.deviceList ')
+    //   console.log(this.deviceList )
+    // }
   },
+
   methods: {
     //列表--多选
     onChecked(e,id) {
@@ -411,39 +430,44 @@ export default {
       this.deviceId = id;
       //console.log(this.deviceId,2);
     },
-
-    /*onChangeTime(date, dateString) {
-      //console.log(date, dateString);
-      if (dateString && dateString != "") {
-        this.start_time = dateString[0];
-        this.end_time = dateString[1];
-        // this.start_time = (new Date(dateString[0])).getTime()/1000;;
-        // this.end_time = (new Date(dateString[1])).getTime()/1000;
-      }
-    },*/
     onChangeTime(date, dateString) {
       console.log(date, dateString);
+      this.createValue= date;
       if (dateString && dateString != "") {
         this.start_time = moment(dateString[0]).format('x') / 1000;
         this.end_time = moment(dateString[1]).format('x') / 1000;//零点时间
       }
-      console.log(this.start_time,this.end_time,222222);
-      console.log('dateString1',this.end_time);
-      console.log('dateString2',this.end_time);
     },
 
     async exportOk() {
       this.loading = true;
-      const { code, data, count } = await api.equipment.getEquipmentList({
-        params: {
-          deviceIds:this.deviceId,
-          //deviceIds:this.selectedIds,
-          startTime:this.start_time,
-          endTime:this.end_time,
-        }
-      });
-      if (code === 200) {
-        this.exportShow = false;
+      if( this.start_time && this.end_time == ''){
+        console.log('请选时间');
+      }
+      let params = {
+        deviceIds:this.deviceId,
+        startTime:this.start_time,
+        endTime:this.end_time,
+        responseType:'blob',
+      }
+
+      this.exportShow = false;
+      // this.start_time = ''
+      // this.end_time = ''
+      this.createValue=[]
+      const res = await api.export.getExportData({params}); //这里会等待接口返回数据  时间清空问题 来来来
+      console.log(res)
+      if (res) {
+        /** 接收文件流 */
+        const blob = res;
+        let url = URL.createObjectURL(blob);
+        /** 模拟浏览器操作Document，并模拟下载动作 */
+        let link = document.createElement("a");
+        link.style.display = "none";
+        link.href = url;
+        link.setAttribute("download", 'aa');
+        document.body.appendChild(link);
+        link.click();
       }
       this.loading = false;
     },

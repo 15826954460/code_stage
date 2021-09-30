@@ -43,6 +43,10 @@ function __createFormData(params = {}) {
 let _requestInstance = customAxios.interceptors.request.use(
   config => {
     /** 根据实际业务写逻辑 */
+    if(config.params && config.params.responseType){
+      config.responseType = config.params.responseType
+    }
+
     const { headers, method, data, params } = config;
     if (method.toUpperCase() !== "GET") {
       return {
