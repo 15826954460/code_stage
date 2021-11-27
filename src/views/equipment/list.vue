@@ -11,7 +11,7 @@
           <a-select-option value="" ><router-link to="group" class="link-btn" style="display:block;">分组管理</router-link> </a-select-option>
         </a-select>
 
-        <a-select  placeholder="设备类型" style="width: 200px" @change="typeChange">
+        <a-select  mode="multiple" placeholder="设备类型" style="min-width: 200px" @change="typeChange">
           <a-select-option v-for="item in deviceType" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
         </a-select>
       </div>
@@ -20,7 +20,18 @@
 
         <a-input-search class="search-box"  placeholder="请输入设备名称" style="width: 200px" @search="onSearch" />
 
-        <div class="tab">
+        <router-link to='/approvedDate' class="to-approved-date-btn">
+          <a-tooltip placement="bottomRight" >
+            <template slot="title">
+              <span>修改校准日期即将到期设备</span>
+            </template>
+            <a-badge count="5">
+              <a-icon type="bell" />
+            </a-badge>
+          </a-tooltip>
+        </router-link>
+
+        <div class="tab" style="display: none">
           <div class="tab-item" :class="{ 'active': layout == 'card'}" @click="layout = 'card'"><a-icon type="table" /></div>
           <div class="tab-item" :class="{ 'active': layout == 'list'}" @click="layout = 'list'"><a-icon type="unordered-list" /></div>
         </div>
@@ -164,7 +175,6 @@ export default {
 
   data() {
     return {
-      moment:moment,
       loading: false,
       value: undefined,
       groupList:[],
@@ -180,7 +190,7 @@ export default {
         // {tabIndex:4, icon: 'upgrade.png', num:'210',color:'#fff'},
       ],
       keyWord:'',
-      layout: 'card', // 列表展示方式 card,list
+      layout: 'list', // 列表展示方式 card,list
       tableData:[],  //设备列表
       columns,  //设备表格
       allSelectBtnShow:true,  //是否显示全选按钮
@@ -321,7 +331,7 @@ export default {
       if (!force) { return;}
       this.loading = true;
       let params = {
-        extData:2,
+        extData:1,
         page: this.startPage,
         pageSize: this.pageSize,
       }
@@ -517,6 +527,13 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    .search-area-r{
+      width: 260px;
+      .to-approved-date-btn{
+        margin-left: 5%;
+        cursor: pointer;
+      }
+    }
     .select-box{
       margin-right: 20px;
     }
@@ -565,7 +582,7 @@ export default {
     flex: 1;
     .status-box{
       padding: 15px 0 0;
-      border-bottom: 1px solid #f2f2f2;
+      //border-bottom: 1px solid #f2f2f2;
       .status-item{
         display: inline-block;
         min-width: 15%;
@@ -774,6 +791,9 @@ export default {
           }
         }
       }
+    }
+    .list{
+      padding-right: 15px;
     }
   }
   .fun-box{

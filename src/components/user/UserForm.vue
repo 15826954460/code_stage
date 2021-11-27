@@ -169,9 +169,9 @@ export default {
       if (value.length < 6) {
         message = "密码长度不能小于6";
       }
-      if (!pwdRegex.test(value)) {
-        message = "密码必须由大小写字母、数字、特殊字符组成";
-      }
+      // if (!pwdRegex.test(value)) {
+      //   message = "密码必须由大小写字母、数字、特殊字符组成";
+      // }
       callback(message);
     },
   },

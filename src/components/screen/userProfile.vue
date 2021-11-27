@@ -1,6 +1,6 @@
 <template>
   <dv-border-box-8 :reverse="true" class="user-profile">
-    <h3>用户分布</h3>
+    <h3>设备分布</h3>
     <dv-conical-column-chart :config="config" style="width:100%;height:100%;" />
   </dv-border-box-8>
 </template>

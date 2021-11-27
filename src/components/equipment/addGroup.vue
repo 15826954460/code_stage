@@ -11,7 +11,7 @@
       <li class="group-item"
           v-for="(item,index) in groupList"
           :key="item.id"
-          :class = "isActive == index ? 'cur-group' : '' "
+          :class = "isActive == index || (selectGroup.indexOf(item.id) != -1)? 'cur-group' : '' "
           @click='onCheckGroup(index,item.id)'
       >{{ item.groupName }}</li>
     </ul>
@@ -39,7 +39,7 @@ import api from "@/axios/api";
 
 export default {
   name: "addGroup",
-  props: ['visible','deviceId'],
+  props: ['visible','deviceId','deviceList'],
 
   data() {
     return {
@@ -60,10 +60,31 @@ export default {
   },
   created() {
     this.getGroupList();
+    console.log('this.deviceList')
+    console.log(this.deviceList)
   },
   watch:{
     getNewData:function (){
       return this.deviceId
+    }
+  },
+  computed:{
+    selectGroup:function(){
+      let _return = [],groupIds = []
+      this.groupList.forEach(v => {
+        groupIds.push(v.id)
+      })
+      console.log('groupIds')
+      console.log(groupIds)
+      console.log(this.groupList)
+      this.deviceList.forEach((v) => {
+        if(groupIds.indexOf(v.categoryId) != -1){
+          _return.push(v.categoryId)
+        }
+      })
+      console.log('_return')
+      console.log(_return)
+      return _return
     }
   },
   methods: {
@@ -137,7 +158,7 @@ export default {
       const { code, data, count } = await api.group.bindGroup({params})
       if (code === 200) {
         this.$emit('cancel')
-        this.$message.success({ content: '绑定该分组成功!' });
+        this.$message.success({ content: params.type == 1?'绑定该分组成功!':'解绑成功' });
         //this.visible = false;
       }
       this.loading = false;

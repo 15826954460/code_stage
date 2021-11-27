@@ -5,8 +5,10 @@ import store from "./store";
 
 import Antd from "ant-design-vue";
 import VueApexCharts from 'vue-apexcharts'
+import * as echarts from 'echarts';
 Vue.use(VueApexCharts)
 Vue.component('apexchart', VueApexCharts)
+Vue.prototype.$echarts = echarts
 
 import "@/assets/style/reset.scss";
 import "@/assets/style/common.scss";

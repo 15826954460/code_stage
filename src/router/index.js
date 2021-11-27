@@ -6,14 +6,20 @@ Vue.use(VueRouter);
 const routes = [
   // 大屏
   {path: '/screen', name: 'screen', component: () => import('../views/screen/index.vue'), hidden: true},
+  {path: '/homeScreen', name: 'screen', component: () => import('../views/screen/homeScreen.vue'), hidden: true},
   {
     path: "/",
     component: () => import("../views/Home.vue"),
     children: [
+      // {
+      //   path: "Test",
+      //   name: "test-home",
+      //   component: () => import("../views/Test.vue"),
+      // },
       {
         path: "",
         name: "test-home",
-        component: () => import("../views/Test.vue"),
+        component: () => import("../views/Index"),
       },
       // 用户分布中心
       {
@@ -86,6 +92,12 @@ const routes = [
         path: "history",
         name: "history",
         component: () => import("../views/equipment/history.vue"),
+      },
+      // 设备管理-校准日期
+      {
+        path: "approvedDate",
+        name: "approvedDate",
+        component: () => import("../views/equipment/approvedDate.vue"),
       },
       // 设备管理-导出历史数据
       {

@@ -58,7 +58,7 @@
 
 
           <a-sub-menu>
-            <span slot="title"> <a-icon type="setting" /> 用户中心 </span>
+            <span slot="title"> <a-icon type="user" /> 用户中心 </span>
             <a-menu-item key="/user-center" v-show="adminType === 1 || adminType === 2">用户分布 </a-menu-item>
             <a-menu-item key="/unit-list"> 单位管理 </a-menu-item>
             <a-menu-item key="/build-list"> 建筑管理 </a-menu-item>

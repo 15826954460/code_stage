@@ -29,9 +29,9 @@
       </div>
 
       <div class="item con-c" >
-        <div class="video-box" >
+<!--        <div class="video-box" >
           <video muted src="../../assets/image/screen/4dab01b9e86d7d639762753798121cd3.mp4" autoplay loop></video>
-        </div>
+        </div>-->
         <dv-border-box-1 class="con-c-list">
           <deviceList></deviceList>
         </dv-border-box-1>
@@ -193,19 +193,19 @@ export default {
         }
       }
       .con-c-list{
-        height: 240px;
+        height: 100%;
         align-self: flex-end;
         margin-bottom: 20px;
       }
-      @media only screen and (max-width: 1200px) {
-        .con-c-list {height: 360px;}
-      }
-      @media only screen and (max-width: 1300px) {
-        .con-c-list {height: 335px;}
-      }
-      @media screen and (max-width: 1600px) and (min-width: 1300px) {
-        .con-c-list {height: 300px;}
-      }
+      //@media only screen and (max-width: 1200px) {
+      //  .con-c-list {height: 360px;}
+      //}
+      //@media only screen and (max-width: 1300px) {
+      //  .con-c-list {height: 335px;}
+      //}
+      //@media screen and (max-width: 1600px) and (min-width: 1300px) {
+      //  .con-c-list {height: 300px;}
+      //}
     }
   }
 }

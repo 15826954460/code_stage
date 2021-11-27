@@ -48,7 +48,7 @@
       />
     </div>
 
-    <CusModule v-if="visible" @cancel="cancel" :visible="visible" :width="800">
+    <CusModule v-if="visible" @cancel="cancel" :visible="visible" :width="800" :title="'新增设备信息'">
       <Equipment ref="equipmentFormRef" :row="row"></Equipment>
 
       <div class="__flex __rfec">

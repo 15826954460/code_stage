@@ -10,8 +10,9 @@
 import zhCN from "ant-design-vue/lib/locale-provider/zh_CN";
 import { mapActions, createNamespacedHelpers, mapState } from "vuex";
 
+
 const { mapMutations: mapMutationsConfig, mapActions: mapActionsConfig } =
-  createNamespacedHelpers("config");
+    createNamespacedHelpers("config");
 
 export default {
   name: "app-home",
@@ -30,6 +31,7 @@ export default {
 
   watch: {
     token() {
+
       this.fetchTreeList();
       this.fetchCompanyAllList();
       this.fetchBuildList();
@@ -38,6 +40,7 @@ export default {
   },
 
   mounted() {
+
     this.fetchTreeList();
     this.fetchCompanyAllList();
     this.fetchBuildList();
