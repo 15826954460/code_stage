@@ -18,15 +18,13 @@
           <h4 class="title fl">设备信息</h4>
         </div>
         <div class="info">
-          <div class="info-item">下一次校准日期：2021-10-30 <span style="color:red;font-size: 12px;margin-left: 5px">小提示: 距离校准到期只剩下30天了哦~</span></div>
-          <div class="info-item">设备到期日期：2021-12-30 <span style="color:red;font-size: 12px;margin-left: 5px">小提示: 距离校准到期只剩下30天了哦~</span></div>
+          <div class="info-item">校准截止日期：{{detail.checkExpiredTime}}<span style="color:red;font-size: 12px;margin-left: 5px">小提示: 距离校准到期只剩下30天了哦~</span></div>
           <div class="info-item">分组：{{ detail.groupName }}</div>
           <div class="info-item" v-if="detail.status == 1">状态：在线</div>
           <div class="info-item" v-else-if ="detail.status == 0">状态：离线</div>
           <div class="info-item">网关型号：{{ detail.gatewayName }}</div>
           <div class="info-item">类型：{{ detail.modelName }}</div>
           <div class="info-item">MAC：{{ detail.deviceMac }}</div>
-      <!--<div class="info-item">电量：57%</div>-->
           <div class="info-item">数据更新时间：{{ detail.dataUpdateTime }}</div>
           <div class="info-item">地址：{{ detail.address }}</div>
           <div class="info-item">关联建筑：{{ detail.buildingName }}</div>
@@ -101,7 +99,7 @@ export default {
       v2:'',
       v3:'',
       v4:'',
-      setModel:false,  //显示添加分组弹窗
+      setModel:false,  //显示设置弹窗
     };
   },
   components: {Set},

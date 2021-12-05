@@ -112,6 +112,38 @@
         @change="handleSelectBuildSelectChange"
       ></SelectBuild>
     </a-form-item>
+    <a-form-item
+        label="设备校准开始日期"
+        :label-col="formItemLayout.labelCol"
+        :wrapper-col="formItemLayout.wrapperCol"
+    >
+      <a-date-picker
+          format="YYYY-MM-DD HH:mm:ss"
+          v-decorator="[
+          'checkStartTime',
+          {
+            initialValue: row.checkStartTime || '',
+            rules: [{ required: false, message: '请选择设备校准开始时间' }],
+          },
+        ]"
+      />
+    </a-form-item>
+    <a-form-item
+        label="设备校准截止日期"
+        :label-col="formItemLayout.labelCol"
+        :wrapper-col="formItemLayout.wrapperCol"
+    >
+      <a-date-picker
+          format="YYYY-MM-DD HH:mm:ss"
+          v-decorator="[
+          'checkExpiredTime',
+          {
+            initialValue: row.checkExpiredTime || '',
+            rules: [{ required: false, message: '请选择设备校准截止时间' }],
+          },
+        ]"
+      />
+    </a-form-item>
   </a-form>
 </template>
 
@@ -145,7 +177,7 @@ export default {
   data() {
     return {
       formItemLayout,
-      form: this.$form.createForm(this),
+      form: this.$form.createForm(this,),
     };
   },
 
@@ -158,21 +190,21 @@ export default {
 
   methods: {
     handleSelectBuildSelectChange(val) {
-      this.form.setFieldsValue({ buildingId: val });
+      this.form.setFieldsValue({buildingId: val});
     },
 
     handleSelectCategorysSelectChange(val) {
-      this.form.setFieldsValue({ categoryId: val });
+      this.form.setFieldsValue({categoryId: val});
     },
 
     handleSelectModelSelectChange(val) {
-      this.form.setFieldsValue({ modelId: val });
+      this.form.setFieldsValue({modelId: val});
     },
 
     handleSelectGetawaySelectChange(val) {
-      this.form.setFieldsValue({ gatewayId: val });
+      this.form.setFieldsValue({gatewayId: val});
     },
-  },
+  }
 };
 </script>
 

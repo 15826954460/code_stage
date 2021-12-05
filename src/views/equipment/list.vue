@@ -20,7 +20,7 @@
 
         <a-input-search class="search-box"  placeholder="请输入设备名称" style="width: 200px" @search="onSearch" />
 
-        <router-link to='/approvedDate' class="to-approved-date-btn">
+        <router-link to='/deviceSetting' class="to-approved-date-btn">
           <a-tooltip placement="bottomRight" >
             <template slot="title">
               <span>修改校准日期即将到期设备</span>
@@ -112,7 +112,8 @@
         <!--<a-button type="primary" class="del-btn" v-if="selectedIds.length > 0" @click="showDelDeviceConfirm()">删除</a-button>-->
 <!--        <a-button type="primary" class="check-all-btn" v-if="selectedIds.length > 0" @click="showExportPop">导出历史数据</a-button>-->
       </div>
-      <Paginagion :total="total" @pageSizeChange="pageSizeChange" @pageNumChange="pageNumChange"/>
+
+      <Paginagion v-show="total > 0" :total="total" @pageSizeChange="pageSizeChange" @pageNumChange="pageNumChange"/>
     </div>
 
     <!--添加分组-->
@@ -141,6 +142,10 @@ import Paginagion from "@/components/common/Pagination.vue";
 
 const columns = [
   {
+    title: "ID",
+    dataIndex: "id",
+  },
+  {
     title: "设备名称",
     dataIndex: "deviceName",
   },
@@ -159,6 +164,10 @@ const columns = [
   {
     title: "气压",
     dataIndex: "deviceData.v3",
+  },
+  {
+    title: "校准截止日期",
+    dataIndex: "checkExpiredTime",
   },
   {
     title: "数据最新更新时间",
@@ -243,21 +252,21 @@ export default {
     rowSelection(newV){
       console.log(newV)
     },
-    // selectedIds(newV){
-    //   if(newV && newV.length > 0){
-    //     let deviceList = []
-    //     this.tableData.forEach((v) => {
-    //         if(newV.indexOf(v.id) != -1){
-    //           deviceList.push(v)
-    //         }
-    //     })
-    //     this.deviceList = deviceList
-    //   }else{
-    //     this.deviceList = []
-    //   }
-    //   console.log('this.deviceList ')
-    //   console.log(this.deviceList )
-    // }
+    selectedIds(newV){
+      if(newV && newV.length > 0){
+        let deviceList = []
+        this.tableData.forEach((v) => {
+            if(newV.indexOf(v.id) != -1){
+              deviceList.push(v)
+            }
+        })
+        this.deviceList = deviceList
+      }else{
+        this.deviceList = []
+      }
+      console.log('this.deviceList ')
+      console.log(this.deviceList )
+    }
   },
 
   methods: {
@@ -331,7 +340,7 @@ export default {
       if (!force) { return;}
       this.loading = true;
       let params = {
-        extData:1,
+        extData:2,
         page: this.startPage,
         pageSize: this.pageSize,
       }
@@ -464,7 +473,8 @@ export default {
       console.log(res)
       if (res) {
         /** 接收文件流 */
-        const blob = res;
+        //const blob = res;
+        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});
         let url = URL.createObjectURL(blob);
         /** 模拟浏览器操作Document，并模拟下载动作 */
         let link = document.createElement("a");
@@ -502,7 +512,7 @@ export default {
         on: {
           click: () => {
             //console.log(record, index);
-            this.$router.push({path:'/equipmentDetail',query:{id:record}});
+            this.$router.push({path:'/equipmentDetail',query:{id:record.id}});
           },
         }
       };

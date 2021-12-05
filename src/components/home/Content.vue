@@ -54,6 +54,8 @@
             <a-menu-item key="/equipment-page"> 设备管理 </a-menu-item>
             <a-menu-item key="/equipmentList"> 设备展示 </a-menu-item>
             <a-menu-item key="/warning"> 设备警报 </a-menu-item>
+<!--            <a-menu-item key="/approvedDate"> 校准日期 </a-menu-item>-->
+            <a-menu-item key="/deviceSetting"> 设备设置 </a-menu-item>
           </a-sub-menu>
 
 

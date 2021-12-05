@@ -99,6 +99,12 @@ const routes = [
         name: "approvedDate",
         component: () => import("../views/equipment/approvedDate.vue"),
       },
+      // 设备管理--设备设置
+      {
+        path: "deviceSetting",
+        name: "deviceSetting",
+        component: () => import("../views/equipment/setting.vue"),
+      },
       // 设备管理-导出历史数据
       {
         path: "export",

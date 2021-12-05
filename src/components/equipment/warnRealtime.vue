@@ -18,7 +18,7 @@
                 :customRow="rowClick"
                 :rowKey="(record,index)=>{return index}" >
       </a-table>
-      <Paginagion :total="total" @pageSizeChange="pageSizeChange" @pageNumChange="pageNumChange" class="paginagion"/>
+      <Paginagion v-show="total > 0" :total="total" @pageSizeChange="pageSizeChange" @pageNumChange="pageNumChange" class="paginagion"/>
     </div>
   </div>
 </template>

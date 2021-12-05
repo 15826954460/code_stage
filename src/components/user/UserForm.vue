@@ -131,7 +131,7 @@ export default {
     },
     extra: {
       type: String,
-      default: "包含大小写字母、数字、特殊字符,长度>=6",
+      //default: "包含大小写字母、数字、特殊字符,长度>=6",
     }
   },
 

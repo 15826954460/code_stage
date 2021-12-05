@@ -48,7 +48,7 @@
       />
     </div>
 
-    <CusModule v-if="visible" @cancel="cancel" :visible="visible" :width="800" :title="'新增设备信息'">
+    <CusModule v-if="visible" @cancel="cancel" :visible="visible" :width="800" :title="'设备信息'">
       <Equipment ref="equipmentFormRef" :row="row"></Equipment>
 
       <div class="__flex __rfec">
@@ -64,6 +64,7 @@ import api from "@/axios/api";
 import Paginagion from "@/components/common/Pagination.vue";
 import CusModule from "@/components/common/CusModule.vue";
 import Equipment from "@/components/equipment/Equipment.vue";
+import moment from "moment";
 
 const columns = [
   {
@@ -73,6 +74,10 @@ const columns = [
     },
   },
   {
+    title: "ID",
+    dataIndex: "id",
+  },
+  {
     title: "设备名称",
     dataIndex: "deviceName",
   },
@@ -80,14 +85,6 @@ const columns = [
     title: "mac地址",
     dataIndex: "deviceMac",
   },
-  {
-    title: "设备id",
-    dataIndex: "id",
-  },
-  // {
-  //   title: "检测编号",
-  //   dataIndex: "categoryName",
-  // },
   {
     title: "设备型号",
     dataIndex: "modelName",
@@ -107,6 +104,10 @@ const columns = [
   {
     title: "关联建筑",
     dataIndex: "buildingName",
+  },
+  {
+    title: "校准截止日期",
+    dataIndex: "checkExpiredTime",
   },
   {
     title: "操作",
@@ -209,6 +210,8 @@ export default {
       this.$refs.equipmentFormRef.form.validateFields(async (err, values) => {
         if (err) return;
         const { id } = this.row;
+        values.checkStartTime = moment(values.checkStartTime).format('X')
+        values.checkExpiredTime = moment(values.checkExpiredTime).format('X')
         if (id) {
           this.update({
             id,

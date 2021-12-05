@@ -94,11 +94,14 @@ export default {
 <style lang='scss' scoped>
 .logo-wrapper {
   height: 50px;
+  color: #fff;
+  font-size: 18px;
+  margin-bottom: 40px;
   .logo-img {
     width: 80px;
     height: 40px;
     margin-right: 10px;
-    background-image: url("../../assets/image/logo.jpeg");
+    background-image: url("../../assets/image/logo.png");
   }
 }
 
