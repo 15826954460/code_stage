@@ -2,7 +2,7 @@
  <div class="">
    <div class="chart-box chart-l">
      <div class="chart-top">
-       <h4 class="name fl">{{areaYear}}年用户地区分布</h4>
+       <h4 class="name fl">用户地区分布</h4>
        <a-range-picker
            @panelChange="handleAreaPanelChange"
            @openChange="handleAreaOpenChange"
@@ -19,7 +19,7 @@
 
    <div class="chart-box chart-l">
      <div class="chart-top">
-       <h4 class="name fl">{{industryYear}}年用户行业分布</h4>
+       <h4 class="name fl">用户行业分布</h4>
        <a-range-picker
            @panelChange="handleIndustryPanelChange"
            @openChange="handleIndustryOpenChange"

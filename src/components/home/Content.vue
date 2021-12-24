@@ -8,10 +8,10 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        padding: 0 30px 0 50px;
+        padding: 0 30px 0 25px;
       "
     >
-      <div class="logo" />
+      <div class="logo">上海释格物流</div>
       <a-dropdown>
         <p
           class="__flex __rcc user-name-wrapper"
@@ -174,10 +174,13 @@ export default {
 }
 
 .logo {
-  display: inline-block;
-  width: 120px;
-  height: 30px;
-  background: rgba(255, 255, 255, 0.2);
+  //display: inline-block;
+  //width: 120px;
+  //height: 30px;
+  //background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .user-name-wrapper {

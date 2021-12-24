@@ -272,7 +272,7 @@ const columns = [
   {
     title: "序号",
     fixed: "left",
-    width: 100,
+    width: 50,
     customRender: (text, record, index) => {
       return index + 1;
     },

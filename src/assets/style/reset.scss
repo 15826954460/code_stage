@@ -54,7 +54,7 @@ input {
 ::-webkit-scrollbar {
     width: 10px;
 }
-  
+
 ::-webkit-scrollbar-thumb {
     border-radius: 50px;
 }
@@ -65,4 +65,15 @@ input {
 
 .highcharts-credits {
     display: none;
+}
+th,td{
+    text-align: center !important;
+}
+.red-hint{
+    color: red;
+    font-size: 10px;
+    display: block;
+    i{
+        font-size: 13px;
+    }
 }

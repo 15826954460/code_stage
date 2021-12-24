@@ -24,6 +24,7 @@
       </template>
       <Login ref="loginRef"></Login>
     </a-modal>-->
+    <p class="copyright">《释格物联使用许可》，沪公网安备沪ICP备15035311号-1</p>
   </div>
 </template>
 
@@ -78,6 +79,16 @@ export default {
   }
   .btn{
     margin-top: 50px;
+  }
+  .copyright{
+    width: 100%;
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    color: #fff;
+    position: fixed;
+    bottom: 0;
+    left: 0;
   }
 }
 /*#border-none {

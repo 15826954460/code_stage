@@ -6,7 +6,7 @@
   >
     <p class="__flex __rcc logo-wrapper">
       <i class="__icon logo-img" />
-      <span>释格物联管理后台</span>
+      <span>释格天宸物联平台</span>
     </p>
     <a-form-item>
       <a-input
