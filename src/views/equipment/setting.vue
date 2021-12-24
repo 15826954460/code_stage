@@ -15,8 +15,10 @@
           <a-button type="primary" size="small" @click.stop="showApprovedDatePop(record.id)" class="btn">修改校准日期</a-button>
         </template >
         <template slot="checkExpiredTime" slot-scope="text">
-          <span v-if="Math.floor(((new Date(text).getTime()) - (new Date().getTime()))/ 1000 / 60 / 60 / 24) <= 30" style="color: red">{{text}}</span>
-          <span  v-else>{{text}}</span>
+          <div v-if="Math.floor(((new Date(text).getTime()) - (new Date().getTime()))/ 1000 / 60 / 60 / 24) <= 30" >{{text}}
+            <span class="red-hint"><a-icon type="exclamation-circle" theme="filled" />该设备校准日期将过期,请及时修改</span>
+          </div>
+          <div  v-else>{{text || '--' }}</div>
         </template>
       </a-table>
 

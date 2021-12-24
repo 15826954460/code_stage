@@ -28,10 +28,12 @@ import moment from 'moment'
 import api from "@/axios/api";
 import Paginagion from "@/components/common/Pagination.vue";
 const columns = [
- /* {
-    title: "设备名称",
-    dataIndex: "",
-  },*/
+  {
+    title: "序号",
+    customRender: (text, record, index) => {
+      return index + 1;
+    },
+  },
   {
     title: "设备编码",
     dataIndex: "dmac",

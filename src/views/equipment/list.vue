@@ -11,7 +11,8 @@
           <a-select-option value="" ><router-link to="group" class="link-btn" style="display:block;">分组管理</router-link> </a-select-option>
         </a-select>
 
-        <a-select  mode="multiple" placeholder="设备类型" style="min-width: 200px" @change="typeChange">
+        <a-select  placeholder="设备类型" style="min-width: 200px" @change="typeChange">
+          <a-select-option value="all">全部类型</a-select-option>
           <a-select-option v-for="item in deviceType" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
         </a-select>
       </div>
@@ -101,6 +102,13 @@
             <a-button type="danger" size="small" @click.stop="showDelDeviceConfirm($event,record.id)"> 删除</a-button>
             <a-button type="primary" size="small" @click.stop="showExportPop($event,record.id,record.deviceName)" style="margin-left: 10px;">导出数据</a-button>
           </p>
+
+          <template slot="checkExpiredTime" slot-scope="text">
+            <div v-if="Math.floor(((new Date(text).getTime()) - (new Date().getTime()))/ 1000 / 60 / 60 / 24) <= 30" >{{text}}
+              <span class="red-hint"><a-icon type="exclamation-circle" theme="filled" />该设备校准日期将过期,请及时修改</span>
+            </div>
+            <div  v-else>{{text || '--' }}</div>
+          </template>
         </a-table>
       </div>
     </div>
@@ -150,28 +158,39 @@ const columns = [
     dataIndex: "deviceName",
   },
   {
+    title: "状态",
+    dataIndex: "status",
+    customRender: (text, record, index) => text == 1 ? '在线' : '离线',
+    align:'center',
+  },
+  {
     title: "分组",
     dataIndex: "groupName",
   },
   {
     title: "温度",
     dataIndex: "deviceData.v1",
+    customRender: (text, record, index) => text || '--',
   },
   {
     title: "湿度",
     dataIndex: "deviceData.v2",
+    customRender: (text, record, index) => text || '--',
   },
   {
     title: "气压",
     dataIndex: "deviceData.v3",
+    customRender: (text, record, index) => text || '--',
   },
   {
     title: "校准截止日期",
     dataIndex: "checkExpiredTime",
+    scopedSlots: { customRender: 'checkExpiredTime' },
   },
   {
     title: "数据最新更新时间",
-    dataIndex: "utime",
+    dataIndex: "ltime",
+    customRender: (text, record, index) => text || '--',
   },
   {
     title: "操作",
@@ -194,9 +213,6 @@ export default {
         {tabIndex:"",status:'全部', icon: 'all.png',color:'#fff'},
         {tabIndex:1,status:'在线', icon: 'online-white.png',color:'#1890ff'},
         {tabIndex:0,status:'离线', icon: 'offline-white.png',color:'#c1bfbf'},
-        // {tabIndex:2,icon: 'alarm.png', num:'210',color:'#fff'},
-        // {tabIndex:3,icon: 'alarm.png', num:'210',color:'#ffc518'},
-        // {tabIndex:4, icon: 'upgrade.png', num:'210',color:'#fff'},
       ],
       keyWord:'',
       layout: 'list', // 列表展示方式 card,list
@@ -347,7 +363,7 @@ export default {
       if(this.groupId != 'all' && this.groupId){
         params.groupId = this.groupId
       }
-      if(this.modelId){
+      if(this.modelId != 'all' &&  this.modelId){
         params.modelId = this.modelId
       }
       if(this.keyWord){
@@ -820,3 +836,4 @@ export default {
   text-align: center;
 }
 </style>
+

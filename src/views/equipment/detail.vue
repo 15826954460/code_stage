@@ -18,14 +18,14 @@
           <h4 class="title fl">设备信息</h4>
         </div>
         <div class="info">
-          <div class="info-item">校准截止日期：{{detail.checkExpiredTime}}<span style="color:red;font-size: 12px;margin-left: 5px">小提示: 距离校准到期只剩下30天了哦~</span></div>
+          <div class="info-item">校准截止日期：{{detail.checkExpiredTime || '--'}}<span class="red" v-if="this.timeDifference <= 30">提示: 校准日期即将到期，请及时修改校准日期哦~</span></div>
           <div class="info-item">分组：{{ detail.groupName }}</div>
           <div class="info-item" v-if="detail.status == 1">状态：在线</div>
           <div class="info-item" v-else-if ="detail.status == 0">状态：离线</div>
           <div class="info-item">网关型号：{{ detail.gatewayName }}</div>
           <div class="info-item">类型：{{ detail.modelName }}</div>
           <div class="info-item">MAC：{{ detail.deviceMac }}</div>
-          <div class="info-item">数据更新时间：{{ detail.dataUpdateTime }}</div>
+          <div class="info-item">数据更新时间：{{ detail.ltime }}</div>
           <div class="info-item">地址：{{ detail.address }}</div>
           <div class="info-item">关联建筑：{{ detail.buildingName }}</div>
         </div>
@@ -60,7 +60,7 @@
           </li>
           <li>
             <p><img src="../../assets/image/devices/battery.svg" alt="">电池电压</p>
-            <b>{{ v4 || 0 }}</b>
+            <b>{{ v4 || 0 }}V</b>
           </li>
         </ul>
       </div>
@@ -100,6 +100,7 @@ export default {
       v3:'',
       v4:'',
       setModel:false,  //显示设置弹窗
+      timeDifference:'',
     };
   },
   components: {Set},
@@ -125,6 +126,7 @@ export default {
         this.v3 =  data.deviceData.v3;
         this.v4 =  data.deviceData.v4;
         this.deviceName = data.deviceName
+        this.timeDifference = Math.floor(((new Date(data.checkExpiredTime).getTime()) - (new Date().getTime()))/ 1000 / 60 / 60 / 24)
       }
       this.loading = false;
     },
@@ -253,6 +255,11 @@ export default {
         .info-item{
           padding: 6px 0;
           color: #333;
+          .red{
+            color: red;
+            font-size: 12px;
+            margin-left: 5px;
+          }
         }
       }
     }

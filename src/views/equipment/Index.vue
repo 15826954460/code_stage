@@ -38,6 +38,12 @@
           <a-button type="danger" size="small"> 删除</a-button>
         </a-popconfirm>
       </p>
+      <template slot="checkExpiredTime" slot-scope="text">
+        <div v-if="Math.floor(((new Date(text).getTime()) - (new Date().getTime()))/ 1000 / 60 / 60 / 24) <= 30" >{{text}}
+          <span class="red-hint"><a-icon type="exclamation-circle" theme="filled" />该设备校准日期将过期,请及时修改</span>
+        </div>
+        <div  v-else>{{text || '--' }}</div>
+      </template>
     </a-table>
 
     <div class="pagination-wrap">
@@ -108,6 +114,7 @@ const columns = [
   {
     title: "校准截止日期",
     dataIndex: "checkExpiredTime",
+    scopedSlots: { customRender: 'checkExpiredTime' },
   },
   {
     title: "操作",
