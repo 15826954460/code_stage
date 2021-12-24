@@ -13,19 +13,7 @@ export default {
   data() {
     return {
       config:{
-        header: ['设备编码', '警报内容', '警报时间'],
-        // data:[
-        //   ['582D344C08E7', '高湿度','2021-09-28 22:36:00'],
-        //   ['582D344C08E7', '高湿度','2021-09-28 22:36:00'],
-        //   ['582D344C08E7', '高湿度','2021-09-28 22:36:00'],
-        //   ['582D344C08E7', '高湿度','2021-09-28 22:36:00'],
-        //   ['582D344C08E7', '高湿度','2021-09-28 22:36:00'],
-        //   ['582D344C08E7', '高湿度','2021-09-28 22:36:00'],
-        //   ['582D344C08E7', '高湿度','2021-09-28 22:36:00'],
-        //   ['582D344C08E7', '高湿度','2021-09-28 22:36:00'],
-        //   ['582D344C08E7', '高湿度','2021-09-28 22:36:00'],
-        //   ['582D344C08E7', '高湿度','2021-09-28 22:36:00'],
-        // ],
+        header: ['ID', '警报内容', '警报时间'],
         data:[],
         rowNum: 8,
         align: ['left'],
@@ -33,37 +21,31 @@ export default {
         headerBGC:'',
         oddRowBGC:'',
         evenRowBGC:'',
+        columnWidth: [58]
       }
     }
   },
-  // created() {
-  //   this.getWarnRealTime()
-  // },
   created() {
     this.$nextTick(() => {
-      this.getWarnRealTime();
+      this.getWarnList();
     });
   },
   methods: {
     //获取实时警告数据
-    async getWarnRealTime(force = true) {
+    async getWarnList(force = true) {
       if (!force) { return;}
       this.loading = true;
-      const { code, data , count} = await api.warn.getWarnRealTime();
+      let params = {limit:10,}
+      const { code, data , count} = await api.screen.getScreenWarn({params});
       if (code === 200) {
-        //this.config.data = data
-        // this.config = { ...this.config }
-        // console.log(this.config.data);
-        //
         const arr = [];
         for (let i of data){
           arr.push({
-            dmac: i.dmac,
+            id: i.id,
             msg: i.msg,
             wtime: moment.unix(i.wtime).format('YYYY-MM-DD HH:mm:ss'),
           })
         }
-        //console.log('loop', arr)
         this.config.data = arr;
         this.config = { ...this.config }
       }

@@ -1,31 +1,26 @@
 <template>
   <div class="device-total">
     <h3>设备统计</h3>
-    <b class="total-num">总共<span>8</span>台</b>
+    <b class="total-num">总共<span>{{ this.onlineNum +  this.offlineNum}}</span>台</b>
     <dv-active-ring-chart :config="config" style="width:300px;height:300px"/>
-    <div class="online-num">在线<span class="num">66</span></div>
-    <div class="offline-num"><span class="num">22</span>离线</div>
+    <div class="online-num">在线<span class="num">{{ this.onlineNum }}</span></div>
+    <div class="offline-num"><span class="num">{{ this.offlineNum }}</span>离线</div>
   </div>
 </template>
 
 <script>
+import api from "@/axios/api";
+
 export default {
   name: "deviceTotal",
   radius: '40%',
   activeRadius: '45%',
   data() {
     return {
+      onlineNum:0,  // 在线
+      offlineNum:0,  //离线
       config: {
-        data: [
-          {
-            name: "在线",
-            value: 6
-          },
-          {
-            name: "离线",
-            value: 2
-          },
-        ],
+        data: [],
         color: [
           "#FF5D1D",
           "#FFA91F",
@@ -49,6 +44,43 @@ export default {
       }
     }
   },
+  created() {
+    this.$nextTick(() => {
+      this.getDeviceStatistic()
+    })
+  },
+
+  mounted() {},
+
+  methods: {
+    //获取设备统计
+    async getDeviceStatistic(force = true) {
+      if (!force) { return;}
+      this.loading = true;
+      let params = {
+        type:1,
+      }
+      const { code ,data} = await api.screen.getScreenStatistic({params});
+      if (code === 200) {
+        this.offlineNum= data[0];
+        this.onlineNum =  data[1];
+        this.config = {
+          ...this.config,
+          data: [
+            {
+              name: "在线",
+              value: this.onlineNum,
+            },
+            {
+              name: "离线",
+              value: this.offlineNum,
+            },
+          ],
+        }
+      }
+      this.loading = false;
+    },
+  }
 }
 </script>
 

@@ -18,12 +18,16 @@
       <div class="item con-l">
         <div class="item-con" :style="{ height: (clientHeight -140)/2  + 'px' }">
           <dv-border-box-10 class="part">
+            <dv-border-box-8>
             <deviceTotal></deviceTotal>
+            </dv-border-box-8>
           </dv-border-box-10>
         </div>
         <div class="item-con" :style="{ height: (clientHeight -140)/2  + 'px' }">
           <dv-border-box-10 class="part" >
-            <userProfile></userProfile>
+            <dv-border-box-8>
+              <deviceType></deviceType>
+            </dv-border-box-8>
           </dv-border-box-10>
         </div>
       </div>
@@ -59,12 +63,11 @@ import moment from 'moment'
 import deviceList from "@/components/screen/deviceList.vue";
 import deviceTotal from "@/components/screen/deviceTotal.vue";
 import perfectnessRate from "@/components/screen/perfectnessRate.vue";
-import failureRate from "@/components/screen/failureRate.vue";
 import warinList from "@/components/screen/warinList.vue";
-import userProfile from "@/components/screen/userProfile.vue";
+import deviceType from "@/components/screen/deviceType.vue";
 export default {
   name: 'screenPage',
-  components:{deviceList,deviceTotal,perfectnessRate,warinList,userProfile},
+  components:{deviceList,deviceTotal,perfectnessRate,warinList,deviceType},
   data() {
     return {
       curData:moment().format("YYYY-MM-DD  h:mm:ss dddd"),

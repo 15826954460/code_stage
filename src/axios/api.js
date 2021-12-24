@@ -377,4 +377,35 @@ export default {
       });
     },
   },
+
+  // 大屏
+  screen: {
+    // 设备统计
+    getScreenStatistic({ params = {} } = {}) {
+      return getFetch({
+        url: "/tj/devices",
+        interfaceKey: "getScreenStatistic",
+        method: "GET",
+        params,
+      });
+    },
+    // 实时数据返回
+    getScreenList({ params = {} } = {}) {
+      return getFetch({
+        url: "/tj/devicesData",
+        interfaceKey: "getScreenList",
+        method: "GET",
+        params,
+      });
+    },
+    // 实时警报
+    getScreenWarn({ params = {} } = {}) {
+      return getFetch({
+        url: "/tj/warngings",
+        interfaceKey: "getScreenWarn",
+        method: "GET",
+        params,
+      });
+    },
+  },
 };

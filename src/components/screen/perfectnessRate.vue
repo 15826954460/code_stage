@@ -1,12 +1,12 @@
 <template>
   <dv-border-box-8 :reverse="true" class="item-con">
     <dv-charts :option="option" style="width:100%;height:100%"/>
-    <div class="rate-num"> <span>99</span>%</div>
+    <div class="rate-num"> <span>98</span>%</div>
   </dv-border-box-8>
 </template>
 
 <script>
-import moment from "moment";
+import api from "@/axios/api";
 
 export default {
   name: "perfectnessRate",
@@ -22,7 +22,7 @@ export default {
         series: [
           {
             type: 'gauge',
-            data: [ { name: 'itemA', value: 55 } ],
+            data: [ { name: 'itemA', value: 98 } ],
             center: ['50%', '60%'],
             axisLabel: {
               formatter: '{value}%',
@@ -41,6 +41,15 @@ export default {
       }
     }
   },
+
+  created() {
+
+  },
+
+  mounted() {},
+
+  methods: {
+  }
 }
 </script>
 
